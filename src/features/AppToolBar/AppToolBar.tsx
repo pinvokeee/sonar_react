@@ -3,13 +3,11 @@ import { AppBar, Toolbar, IconButton, Typography, Button, TextField, Input, Outl
 import { useContext, useState } from "react";
 import { templatesNodeContext, } from "../../context/contextTemplates";
 
-import { LoaderTemplates } from "../../loader/LoaderTemplates";
 import { LoadingDialog } from "../../components/LoadingDialog/LoadingDialog";
 import { SplitButton } from "../../components/SplitButton/SplitButton";
 import { SearchInput } from "../../components/SearchInput/SearchInput";
 
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
-import { ITemplateContentNode, ITemplateDirectoryNode } from "../../types";
 
 import { useLoadDialog } from "../../hooks/useLoadingDialog";
 
@@ -18,7 +16,7 @@ export const AppToolBar = () =>
     const tempContext = useContext(templatesNodeContext);
     const hookLoadDialog = useLoadDialog();
 
-    const [topNodes, setTopNodes] = useState<ITemplateDirectoryNode[]>([]);
+    const [topNodes, setTopNodes] = useState<any[]>([]);
 
     const onChangeTopNodeIndex = (index : number) =>
     {
@@ -58,10 +56,10 @@ export const AppToolBar = () =>
       });
     }
 
-    const createChildNodes = (topNode : ITemplateDirectoryNode) : ITemplateDirectoryNode[] =>
+    const createChildNodes = (topNode : any) : [] =>
     {
       if (topNode.children == null) return [];      
-      return topNode.children.filter(n => n.nodeType == "directory");
+      return topNode.children.filter((n : any) => n.nodeType == "directory");
     }
 
     const getTopNodeTitles = () : string[] =>

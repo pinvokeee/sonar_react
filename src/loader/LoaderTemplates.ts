@@ -1,12 +1,10 @@
-import { ITemplateContentNode, ITemplateDirectoryNode, ITemplateNode } from "../types";
-
 export class LoaderTemplates
 {
     constructor()
     {
     }
     
-    private createDirectoryNode(name : string) : ITemplateDirectoryNode
+    private createDirectoryNode(name : string) : any
     {
         return {
             name : name,
@@ -16,7 +14,7 @@ export class LoaderTemplates
         };
     } 
 
-    private createContentNode(name : string) : ITemplateContentNode
+    private createContentNode(name : string) : any
     {
         return {
             name : name,
@@ -36,16 +34,16 @@ export class LoaderTemplates
         onProgress? : (currentFile : string)  => void, 
         onGotMaxCount? : (count : number) => void)
     {
-        const topNode : ITemplateDirectoryNode = this.createDirectoryNode("top");
+        const topNode : any = this.createDirectoryNode("top");
 
         this.getEntriesCountFromDirectoryHandle(handle).then(c => onGotMaxCount?.call(this, c));
 
-        return new Promise(async (resolve : (resultNode : ITemplateDirectoryNode) => void, reject) =>
+        return new Promise(async (resolve : (resultNode : any) => void, reject) =>
         {
             const templatesFolderHandle = await handle.getDirectoryHandle("テンプレート");
 
             await this.callLoadFromDirectoryHandle(templatesFolderHandle, topNode, "", onProgress);
-            resolve(topNode as ITemplateDirectoryNode);
+            resolve(topNode);
         });
     }
 
@@ -56,7 +54,7 @@ export class LoaderTemplates
      */
     async callLoadFromDirectoryHandle(
         handle : FileSystemDirectoryHandle, 
-        parentNode : ITemplateDirectoryNode, 
+        parentNode : any, 
         currentPath? : string, 
         onProgress? : (currentFile : string) => void)
     {
@@ -66,7 +64,7 @@ export class LoaderTemplates
         {
             if (value.kind == "directory")
             {
-                const newNode : ITemplateDirectoryNode = this.createDirectoryNode(name);       
+                const newNode = this.createDirectoryNode(name);       
                 newNode.parent = parentNode;
                 parentNode.children?.push(newNode);
 
@@ -78,7 +76,7 @@ export class LoaderTemplates
 
                 onProgress?.call(this, currentPath + "/" + file.name);
 
-                const newNode : ITemplateContentNode = this.createContentNode(name);
+                const newNode : any = this.createContentNode(name);
                 newNode.parent = parentNode;
                 newNode.content = await (file).text();
                 newNode.content = (file).name;

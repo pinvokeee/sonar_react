@@ -1,9 +1,8 @@
 import { createContext, useCallback, useState } from "react";
 import { CreateContextEnviroment, CreateDefaultContextEnviroment, IContextEnviroment } from ".";
-import { ITemplateDirectoryNode } from "../types";
 
-export const templatesNodeContext = createContext<IContextEnviroment<ITemplateDirectoryNode>>(CreateDefaultContextEnviroment<ITemplateDirectoryNode>());
-export const useContextTemplateNode = () : IContextEnviroment<ITemplateDirectoryNode> => CreateContextEnviroment<ITemplateDirectoryNode>();
+export const templatesNodeContext = createContext<IContextEnviroment<any>>(CreateDefaultContextEnviroment<any>());
+export const useContextTemplateNode = () : IContextEnviroment<any> => CreateContextEnviroment<any>();
 
 export interface typeAAA
 {

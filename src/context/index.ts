@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { ITemplateNode } from "../types";
 
 /**
  * コンテキストの継承元

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { ITemplateDirectoryNode, ITemplateNode } from "../types"
 
 // const defaultTemplateNode : ITemplateDirectoryNode = { name: "" }
 

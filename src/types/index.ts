@@ -1,16 +1,21 @@
-export interface ITemplateNode
-{
-    name: string;
-    nodeType?: string;
-    parent : ITemplateNode | null;
-}
+// export interface ITemplateNode
+// {
+//     name: string;
+//     nodeType?: string;
+//     parent : ITemplateNode | null;
+// }
 
-export interface ITemplateDirectoryNode extends ITemplateNode
-{
-    children?: ITemplateNode[];
-}
+// export interface ITemplateDirectoryNode extends ITemplateNode
+// {
+//     children?: ITemplateNode[];
+// }
 
-export interface ITemplateContentNode extends ITemplateNode
+// export interface ITemplateContentNode extends ITemplateNode
+// {
+//     content : string;
+// }
+
+export type a_a =
 {
-    content : string;
+
 }

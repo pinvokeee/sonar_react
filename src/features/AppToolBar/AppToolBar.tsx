@@ -9,69 +9,86 @@ import { SplitButton } from "../../components/SplitButton/SplitButton";
 import { SearchInput } from "../../components/SearchInput/SearchInput";
 
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
+import { ITemplateContentNode, ITemplateDirectoryNode } from "../../types";
+
+import { useLoadDialog } from "../../hooks/useLoadingDialog";
 
 export const AppToolBar = () =>
-{
+{    
     const tempContext = useContext(templatesNodeContext);
-    const templateLoader = new LoaderTemplates();
+    const hookLoadDialog = useLoadDialog();
 
-    const [isLoading, setLoadingState] = useState<boolean>(false);
-
-    const [stateCurrentFile, setStateCurrentFile] = useState<string>("");
-
-    const onProgress = (file : string) =>
-    {
-        setStateCurrentFile(file);
-    }
+    const [topNodes, setTopNodes] = useState<ITemplateDirectoryNode[]>([]);
 
     const onChangeTopNodeIndex = (index : number) =>
     {
-        const aa = getTopNodes();
-        if (aa == null) return ;
-        console.log(index, aa[index]);
+      // setTopNodes(tempContext.current);
+      // if (tempContext.current?.children == null) return;
+      // const a = createChildNodes(tempContext.current);
+      // console.log(a);
+      // setTopNodes(a);
+
+        // const aa = getTopNodes();
+        // if (aa == null) return ;
+        // console.log(index, aa[index]);
+
+        // topNodes[1].name = "ABBC";
+        // setTopNodes( topNodes.map((n, index) => index == 1 ? {...n, name: "AABBC"} : n) );
     }
 
-    const a = () =>
+    // const t = () =>
+    // {
+    //   if (tempContext.current?.children == null) return;
+    //   tempContext.current.children[4].name = "TEST";
+
+    //   console.log(tempContext.current);
+
+    //   tempContext.setValue(tempContext.current);
+    // }
+
+    const clickSelectFolder = () =>
     {
-      const handle = window.showDirectoryPicker().then(h => 
+      hookLoadDialog.showDirectoryPicker().then(resultNode =>
       {
-          setLoadingState(true);
+        console.log(resultNode);
+        tempContext.setValue(resultNode);
+        setTopNodes(createChildNodes(resultNode));
 
-          templateLoader?.loadFromDirectoryHandle(h, onProgress).then(resultTopNode => 
-          {
-            // console.log(r);
-            // console.log(r.children?.length);
-
-            tempContext.setValue(resultTopNode);
-            setLoadingState(false);
-          });
+        console.log(JSON.stringify(resultNode));
       });
     }
 
-    const getTopNodes = () =>
+    const createChildNodes = (topNode : ITemplateDirectoryNode) : ITemplateDirectoryNode[] =>
     {
-      if (tempContext.current?.children == null) return [];      
-      return tempContext.current.children.filter(n => n.nodeType=="directory").map(n => n.name);
+      if (topNode.children == null) return [];      
+      return topNode.children.filter(n => n.nodeType == "directory");
+    }
+
+    const getTopNodeTitles = () : string[] =>
+    {
+      return topNodes.map(n => n.name);
     }
     
     return (
         <AppBar position="sticky">
           <Toolbar>
-            <SplitButton options={getTopNodes()} onChangeSelectedIndex={onChangeTopNodeIndex}></SplitButton>
-
+            <SplitButton options={getTopNodeTitles()} onChangeSelectedIndex={onChangeTopNodeIndex}></SplitButton>
             {/* <OutlinedInput  placeholder="検索(Ctrl+F)"/> */}
-
             <SearchInput></SearchInput>
 
             <Tooltip title="フォルダーを選択する">
-              <IconButton color="inherit" onClick={a}>
+              <IconButton color="inherit" onClick={ clickSelectFolder }>
                 <DriveFolderUploadIcon></DriveFolderUploadIcon>
               </IconButton>
             </Tooltip>
             {/* <Button sx={{ marginLeft: "auto" }} color="inherit" onClick={a}>フォルダー選択</Button> */}
           </Toolbar>
 
-          <LoadingDialog isOpen={isLoading} currentFile={stateCurrentFile}></LoadingDialog>
+          <LoadingDialog 
+          isOpen={!hookLoadDialog.progress.isComplete} 
+          currentFile={hookLoadDialog.progress.currentFile}
+          currentProgress={hookLoadDialog.progress.currentValue} 
+          maximumValue={hookLoadDialog.progress.maximumValue}></LoadingDialog>
 
         </AppBar>
     );

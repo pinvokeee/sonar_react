@@ -1,26 +1,21 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './App.css'
+import { AppToolBar } from './features/AppToolBar/AppToolBar'
+import { templatesNodeContext, useContextTemplateNode, useTestContext } from './context/contextTemplates';
+import { TemplateSelecter } from './features/TemplateSelecter/TemplateSelecter';
 
-function App() {
+export const App = () => 
+{  
+  const contextTemplates = useContextTemplateNode();
+  const contextA = useTestContext();
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <templatesNodeContext.Provider value={contextTemplates}>
+        <AppToolBar></AppToolBar>
+        <TemplateSelecter></TemplateSelecter>
+      </templatesNodeContext.Provider>
     </div>
-  );
+  )
 }
 
 export default App;

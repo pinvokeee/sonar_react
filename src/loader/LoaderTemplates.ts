@@ -24,7 +24,22 @@ export class LoaderTemplates
             content: "",
             parent : null,
         };
-    } 
+    }
+
+    /**
+     * 子ノードを再帰で走査して親ノードを割り当てる
+     * @param node 対象の親ノード
+     */
+    rootingParentNode = (node : ITemplateDirectoryNode) =>
+    {
+        if (node.children == null) return ;
+
+        for (const n of node.children)
+        {
+            n.parent = node;
+            if (n.nodeType == "directory") this.rootingParentNode(n);
+        }
+    }
 
     /**
      * 渡されたディレクトリハンドルから読み込んだノードツリーを返す
@@ -42,9 +57,11 @@ export class LoaderTemplates
 
         return new Promise(async (resolve : (resultNode : ITemplateDirectoryNode) => void, reject) =>
         {
-            const templatesFolderHandle = await handle.getDirectoryHandle("テンプレート");
+            // const templatesFolderHandle = await handle.getDirectoryHandle("テンプレート");
 
-            await this.callLoadFromDirectoryHandle(templatesFolderHandle, topNode, "", onProgress);
+            await this.callLoadFromDirectoryHandle(handle, topNode, "", onProgress);
+            this.rootingParentNode(topNode);
+
             resolve(topNode as ITemplateDirectoryNode);
         });
     }

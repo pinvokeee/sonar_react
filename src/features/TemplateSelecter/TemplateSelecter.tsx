@@ -1,6 +1,6 @@
 import { Accordion, AccordionSummary } from "@mui/material";
 import { useContext, useState } from "react";
-import { templatesNodeContext } from "../../context/contextTemplates";
+import { selectedNodeContext, templatesNodeContext } from "../../context/contextTemplates";
 import { ITemplateDirectoryNode, ITemplateNode } from "../../types";
 
 const getFirstNode = (node : ITemplateDirectoryNode) : ITemplateDirectoryNode | null =>
@@ -12,7 +12,9 @@ const getFirstNode = (node : ITemplateDirectoryNode) : ITemplateDirectoryNode | 
 export const TemplateSelecter = () =>
 {
     const context = useContext(templatesNodeContext);
-    const targetNode = context?.current as ITemplateDirectoryNode;
+    const selectedContext = useContext(selectedNodeContext);
+    
+    const targetNode = selectedContext.current as ITemplateDirectoryNode;
     const firstNode : ITemplateDirectoryNode | null = getFirstNode(targetNode);
 
     return (

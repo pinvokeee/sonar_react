@@ -1,7 +1,7 @@
 import styled from "@emotion/styled/types/base";
 import { AppBar, Toolbar, IconButton, Typography, Button, TextField, Input, OutlinedInput, Tooltip } from "@mui/material";
 import { useContext, useState } from "react";
-import { templatesNodeContext, } from "../../context/contextTemplates";
+import { selectedNodeContext, templatesNodeContext, } from "../../context/contextTemplates";
 
 import { LoaderTemplates } from "../../loader/LoaderTemplates";
 import { LoadingDialog } from "../../components/LoadingDialog/LoadingDialog";
@@ -16,12 +16,21 @@ import { useLoadDialog } from "../../hooks/useLoadingDialog";
 export const AppToolBar = () =>
 {    
     const tempContext = useContext(templatesNodeContext);
+    const selectedContext = useContext(selectedNodeContext);
     const hookLoadDialog = useLoadDialog();
+
+    const [selectedNode, setSelectedNode] = useState<ITemplateDirectoryNode | null>(null);
 
     const [topNodes, setTopNodes] = useState<ITemplateDirectoryNode[]>([]);
 
     const onChangeTopNodeIndex = (index : number) =>
     {
+      // const nodes = tempContext.current;
+      // const topNodes = 
+      selectedContext.setValue(topNodes[index]);
+
+      // const a = topNodes(index);
+
       // setTopNodes(tempContext.current);
       // if (tempContext.current?.children == null) return;
       // const a = createChildNodes(tempContext.current);
@@ -48,13 +57,29 @@ export const AppToolBar = () =>
 
     const clickSelectFolder = () =>
     {
+      // const src : string | null = window.localStorage.getItem("test");
+      // const aaa : ITemplateDirectoryNode = JSON.parse(src as string);
+
+
+      // const l : LoaderTemplates = new LoaderTemplates();
+      // l.rootingParentNode(aaa);
+
+      // console.log(aaa);
+
+      // tempContext.setValue(aaa);
+      // setTopNodes(createChildNodes(aaa));
+      
       hookLoadDialog.showDirectoryPicker().then(resultNode =>
       {
         console.log(resultNode);
         tempContext.setValue(resultNode);
         setTopNodes(createChildNodes(resultNode));
 
-        console.log(JSON.stringify(resultNode));
+        window.localStorage.setItem("test", JSON.stringify(resultNode, (k, v) => k == "parent" ? null : v));
+
+        // const aaa : ITemplateDirectoryNode = JSON.parse(JSON.stringify(resultNode));
+        // console.log(aaa);
+        // console.log();
       });
     }
 

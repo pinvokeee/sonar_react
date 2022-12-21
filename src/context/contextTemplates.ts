@@ -5,6 +5,10 @@ import { ITemplateDirectoryNode } from "../types";
 export const templatesNodeContext = createContext<IContextEnviroment<ITemplateDirectoryNode>>(CreateDefaultContextEnviroment<ITemplateDirectoryNode>());
 export const useContextTemplateNode = () : IContextEnviroment<ITemplateDirectoryNode> => CreateContextEnviroment<ITemplateDirectoryNode>();
 
+export const selectedNodeContext = createContext<IContextEnviroment<ITemplateDirectoryNode>>(CreateDefaultContextEnviroment<ITemplateDirectoryNode>());
+export const useContextTemplateSelectedNode = () : IContextEnviroment<ITemplateDirectoryNode> => CreateContextEnviroment<ITemplateDirectoryNode>();
+
+
 export interface typeAAA
 {
     a : string,

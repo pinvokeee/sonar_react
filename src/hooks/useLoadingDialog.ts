@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LoaderTemplates } from "../loader/LoaderTemplates";
-import { ITemplateDirectoryNode } from "../types";
+import { ITemplateNode } from "../types";
 
 export const useLoadDialog = () =>
 {
@@ -27,7 +27,7 @@ export const useLoadDialog = () =>
 
     const showDirectoryPicker = () =>
     {
-        return new Promise((resolve : (resultTopNode : ITemplateDirectoryNode) => void, reject) =>
+        return new Promise((resolve : (resultTopNode : ITemplateNode) => void, reject) =>
         {
             const handle = window.showDirectoryPicker().then(h => 
             {

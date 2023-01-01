@@ -43,7 +43,7 @@ export const SplitButton = (props : SplitButtonProps) =>
                 anchorEl={anchorRef}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                 keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                open={Boolean(anchorRef)} 
+                open={Boolean(anchorRef)}                 
                 onClose={handleClose} >
                     {
                         props.options.map((name, index) =>(

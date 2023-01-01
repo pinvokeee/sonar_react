@@ -7,9 +7,8 @@ import { LoaderTemplates } from "../../loader/LoaderTemplates";
 import { LoadingDialog } from "../../components/LoadingDialog/LoadingDialog";
 import { SplitButton } from "../../components/SplitButton/SplitButton";
 import { SearchInput } from "../../components/SearchInput/SearchInput";
-
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
-import { ITemplateContentNode, ITemplateDirectoryNode } from "../../types";
+import { ITemplateNode } from "../../types";
 
 import { useLoadDialog } from "../../hooks/useLoadingDialog";
 
@@ -19,9 +18,9 @@ export const AppToolBar = () =>
     const selectedContext = useContext(selectedNodeContext);
     const hookLoadDialog = useLoadDialog();
 
-    const [selectedNode, setSelectedNode] = useState<ITemplateDirectoryNode | null>(null);
+    const [selectedNode, setSelectedNode] = useState<ITemplateNode | null>(null);
 
-    const [topNodes, setTopNodes] = useState<ITemplateDirectoryNode[]>([]);
+    const [topNodes, setTopNodes] = useState<ITemplateNode[]>([]);
 
     const onChangeTopNodeIndex = (index : number) =>
     {
@@ -68,7 +67,7 @@ export const AppToolBar = () =>
 
       // tempContext.setValue(aaa);
       // setTopNodes(createChildNodes(aaa));
-      
+
       hookLoadDialog.showDirectoryPicker().then(resultNode =>
       {
         console.log(resultNode);
@@ -83,9 +82,9 @@ export const AppToolBar = () =>
       });
     }
 
-    const createChildNodes = (topNode : ITemplateDirectoryNode) : ITemplateDirectoryNode[] =>
+    const createChildNodes = (topNode : ITemplateNode) : ITemplateNode[] =>
     {
-      if (topNode.children == null) return [];      
+      // if (topNode.children == null) return [];
       return topNode.children.filter(n => n.nodeType == "directory");
     }
 
@@ -95,7 +94,7 @@ export const AppToolBar = () =>
     }
     
     return (
-        <AppBar position="sticky">
+        <AppBar position="static">
           <Toolbar>
             <SplitButton options={getTopNodeTitles()} onChangeSelectedIndex={onChangeTopNodeIndex}></SplitButton>
             {/* <OutlinedInput  placeholder="検索(Ctrl+F)"/> */}

@@ -1,4 +1,4 @@
-import { ITemplateContentNode, ITemplateDirectoryNode, ITemplateNode } from "../types";
+import { ITemplateNode } from "../types";
 
 export class LoaderTemplates
 {
@@ -6,21 +6,23 @@ export class LoaderTemplates
     {
     }
     
-    private createDirectoryNode(name : string) : ITemplateDirectoryNode
+    private createDirectoryNode(name : string) : ITemplateNode
     {
         return {
             name : name,
             nodeType: "directory",
             children: [],
+            content: null,
             parent : null,
         };
     } 
 
-    private createContentNode(name : string) : ITemplateContentNode
+    private createContentNode(name : string) : ITemplateNode
     {
         return {
             name : name,
             nodeType: "content",
+            children: [],
             content: "",
             parent : null,
         };
@@ -30,7 +32,7 @@ export class LoaderTemplates
      * 子ノードを再帰で走査して親ノードを割り当てる
      * @param node 対象の親ノード
      */
-    rootingParentNode = (node : ITemplateDirectoryNode) =>
+    rootingParentNode = (node : ITemplateNode) =>
     {
         if (node.children == null) return ;
 
@@ -51,18 +53,18 @@ export class LoaderTemplates
         onProgress? : (currentFile : string)  => void, 
         onGotMaxCount? : (count : number) => void)
     {
-        const topNode : ITemplateDirectoryNode = this.createDirectoryNode("top");
+        const topNode : ITemplateNode = this.createDirectoryNode("top");
 
         this.getEntriesCountFromDirectoryHandle(handle).then(c => onGotMaxCount?.call(this, c));
 
-        return new Promise(async (resolve : (resultNode : ITemplateDirectoryNode) => void, reject) =>
+        return new Promise(async (resolve : (resultNode : ITemplateNode) => void, reject) =>
         {
             // const templatesFolderHandle = await handle.getDirectoryHandle("テンプレート");
 
             await this.callLoadFromDirectoryHandle(handle, topNode, "", onProgress);
             this.rootingParentNode(topNode);
 
-            resolve(topNode as ITemplateDirectoryNode);
+            resolve(topNode as ITemplateNode);
         });
     }
 
@@ -73,7 +75,7 @@ export class LoaderTemplates
      */
     async callLoadFromDirectoryHandle(
         handle : FileSystemDirectoryHandle, 
-        parentNode : ITemplateDirectoryNode, 
+        parentNode : ITemplateNode, 
         currentPath? : string, 
         onProgress? : (currentFile : string) => void)
     {
@@ -83,7 +85,7 @@ export class LoaderTemplates
         {
             if (value.kind == "directory")
             {
-                const newNode : ITemplateDirectoryNode = this.createDirectoryNode(name);       
+                const newNode : ITemplateNode = this.createDirectoryNode(name);       
                 newNode.parent = parentNode;
                 parentNode.children?.push(newNode);
 
@@ -95,7 +97,7 @@ export class LoaderTemplates
 
                 onProgress?.call(this, currentPath + "/" + file.name);
 
-                const newNode : ITemplateContentNode = this.createContentNode(name);
+                const newNode : ITemplateNode = this.createContentNode(name);
                 newNode.parent = parentNode;
                 newNode.content = await (file).text();
                 newNode.content = (file).name;

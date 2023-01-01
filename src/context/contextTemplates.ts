@@ -1,13 +1,15 @@
 import { createContext, useCallback, useState } from "react";
 import { CreateContextEnviroment, CreateDefaultContextEnviroment, IContextEnviroment } from ".";
-import { ITemplateDirectoryNode } from "../types";
+import { ITemplateNode } from "../types";
 
-export const templatesNodeContext = createContext<IContextEnviroment<ITemplateDirectoryNode>>(CreateDefaultContextEnviroment<ITemplateDirectoryNode>());
-export const useContextTemplateNode = () : IContextEnviroment<ITemplateDirectoryNode> => CreateContextEnviroment<ITemplateDirectoryNode>();
+export const templatesNodeContext = createContext<IContextEnviroment<ITemplateNode>>(CreateDefaultContextEnviroment<ITemplateNode>());
+export const useContextTemplateNode = () : IContextEnviroment<ITemplateNode> => CreateContextEnviroment<ITemplateNode>();
 
-export const selectedNodeContext = createContext<IContextEnviroment<ITemplateDirectoryNode>>(CreateDefaultContextEnviroment<ITemplateDirectoryNode>());
-export const useContextTemplateSelectedNode = () : IContextEnviroment<ITemplateDirectoryNode> => CreateContextEnviroment<ITemplateDirectoryNode>();
+export const tabContext = createContext<IContextEnviroment<string>>(CreateDefaultContextEnviroment<string>());
+export const useContextTabState = (defaultValue : string) : IContextEnviroment<string> => CreateContextEnviroment<string>(defaultValue);
 
+export const selectedNodeContext = createContext<IContextEnviroment<ITemplateNode>>(CreateDefaultContextEnviroment<ITemplateNode>());
+export const useContextTemplateSelectedNode = () : IContextEnviroment<ITemplateNode> => CreateContextEnviroment<ITemplateNode>();
 
 export interface typeAAA
 {

@@ -10,8 +10,19 @@ export const MainContainer = styled(Box)(({ theme }) =>
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        height: "100vh",
-        maxHeight: "100vh",
+
+        "@media screen and (max-width:600px)": 
+        {
+          height: "calc(100vh - 56px)",
+        },
+
+        "@media screen and (min-width:600px)": 
+        {
+          height: "calc(100vh - 64px)",
+        },
+
+        // height: "100vh",
+        // maxHeight: "100vh",
     }
 ));
 
@@ -40,8 +51,10 @@ export const App = () =>
 
 
 
+
+      <AppToolBar></AppToolBar>
+      
       <MainContainer>
-        <AppToolBar></AppToolBar>
         <Tabs value={ contextTabState.current } onChange={ (event : React.SyntheticEvent, value : string) => contextTabState.setValue(value) }>
           <Tab label="テンプレート" value="template"/>
           <Tab label="ドキュメント" value="doc"/>

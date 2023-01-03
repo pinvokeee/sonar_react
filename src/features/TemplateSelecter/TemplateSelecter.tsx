@@ -56,14 +56,15 @@ export const SplitContainer = styled(Box)(({ theme }) =>
     }
 ));
 
-export const MainContainer = styled(Box)(({ theme }) => 
+export const Content = styled(Box)(({ theme }) => 
 (
     {
         display: "flex",
         flexDirection: "column",
+        justifyContent: "stretch",
         width: "100%",
-        height: "100vh",
-        maxHeight: "100vh",
+        // height: "100vh",
+        // maxHeight: "100vh",
     }
 ));
 
@@ -133,7 +134,7 @@ export const TemplateSelecter = () =>
 
 
             {/* <div style={{ width: "100%", height: "100vh",  }}> */}
-            <MainContainer>
+            <Content>
                 <VSplitView  minSize={100} sizes={[20, 20, 60]} gutterAlign="center" gutterSize={6} gutterStyle={GutterStyle}>
                     <Box>
                         <HSplitView direction="vertical" sizes={[50, 50]} gutterSize={6} gutterStyle={GutterStyle}>
@@ -146,7 +147,7 @@ export const TemplateSelecter = () =>
                     <Box>bb</Box>
                     <Box>cc</Box>
                 </VSplitView>
-            </MainContainer>
+            </Content>
 
              {/* </div> */}
     

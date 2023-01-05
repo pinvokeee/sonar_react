@@ -3,36 +3,24 @@ import { AppToolBar } from './features/AppToolBar/AppToolBar'
 import * as context from './context/contextTemplates';
 import { TemplateSelecter } from './features/TemplateSelecter/TemplateSelecter';
 import { Tabs, Tab, styled, Box, Container } from '@mui/material';
+import TabPanel from '@mui/lab/TabPanel';
+import { TabContext, TabList } from '@mui/lab';
+import { useState } from 'react';
 
-export const MainContainer = styled(Box)(({ theme }) => 
+export const MainContainer = styled("div")(({ theme }) => 
 (
     {
-        display: "flex",
-        flexDirection: "column",
+        display: "grid",
         width: "100%",
-
-        "@media screen and (max-width:600px)": 
-        {
-          height: "calc(100vh - 56px)",
-        },
-
-        "@media screen and (min-width:600px)": 
-        {
-          height: "calc(100vh - 64px)",
-        },
-
-        // height: "100vh",
-        // maxHeight: "100vh",
+        height: "100vh",
+        gridTemplateRows: "auto auto minmax(0, 1fr)",
     }
 ));
 
-export const TabPanel = styled(Box)(({ theme }) => 
+export const TabPanelEx = styled(TabPanel)(({ theme }) => 
 (
   {
-      display: "flex",
-      flexDirection: "column",
-      width: "100%",
-      height: "100%",
+    padding: "0px",
   }
 ));
 
@@ -49,49 +37,27 @@ export const App = () =>
       <context.selectedNodeContext.Provider value={contextSelectedNode}>
       <context.tabContext.Provider value={contextTabState}>
 
-
-
-
-      <AppToolBar></AppToolBar>
-      
       <MainContainer>
-        <Tabs value={ contextTabState.current } onChange={ (event : React.SyntheticEvent, value : string) => contextTabState.setValue(value) }>
-          <Tab label="テンプレート" value="template"/>
-          <Tab label="ドキュメント" value="doc"/>
-        </Tabs>   
+        <AppToolBar></AppToolBar>
 
-        <TabPanel hidden={contextTabState.current == "template"}>
-          <TemplateSelecter></TemplateSelecter>
-        </TabPanel>     
-      </MainContainer>
-
-        {/* <MainContainer>
-          <Tabs value={ contextTabState.current } onChange={ (event : React.SyntheticEvent, value : string) => contextTabState.setValue(value) }>
+        <TabContext value={contextTabState.current as string}>
+          
+          <TabList onChange={ (event : React.SyntheticEvent, value : string) => contextTabState.setValue(value)}>
             <Tab label="テンプレート" value="template"/>
             <Tab label="ドキュメント" value="doc"/>
-          </Tabs>
-
-          <TabPanel hidden={contextTabState.current == "template"}>
+          </TabList>
+          
+          <TabPanelEx value="template">
             <TemplateSelecter></TemplateSelecter>
-          </TabPanel>
+          </TabPanelEx>
 
-          {/* <TabPanel hidden={contextTabState.current == "doc"}>
+        </TabContext>
 
-          </TabPanel> */}
+      </MainContainer>
 
-          {/* <TabPanel value="template"> */}
-              {/* Item One */}
-          {/* </TabPanel> */}
-
-          {/* <TabPanel value="doc"> */}
-            {/* <TemplateSelecter></TemplateSelecter> */}
-          {/* </TabPanel> */}
-
-        {/*</MainContainer> */}
-
-        </context.tabContext.Provider>
-        </context.selectedNodeContext.Provider>
-        </context.templatesNodeContext.Provider>
+      </context.tabContext.Provider>
+      </context.selectedNodeContext.Provider>
+      </context.templatesNodeContext.Provider>
     </div>
   )
 }

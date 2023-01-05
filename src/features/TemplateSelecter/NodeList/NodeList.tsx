@@ -11,7 +11,7 @@ export interface INodeLIstBoxProp
 export const ScrollPanel = styled("div")(({ theme }) => 
 (
     {
-        overflow: "auto",
+        // overflow: "auto",
     }
 ));
 
@@ -23,21 +23,28 @@ export const NodeListBox = (prop : INodeLIstBoxProp) =>
         prop.onChange?.call(this, targetNode);
     }
 
+
     return (
-        <ScrollPanel>
-            <List component="nav" aria-label="secondary mailbox folder">
+        // <ScrollPanel>
+        <div style={{ overflow: "auto", boxSizing: "border-box" }} >
+            {/* <List sx={{ overflow: "auto", boxSizing: "border-box" }} aria-label="secondary mailbox folder"> */}
                 {
                     prop.targetNode != null ? prop.targetNode.children.map(el =>
                     {
                         return (                        
-                            <ListItemButton disableRipple={true} onChange={ (event) => onChange(event, el) }>
-                                <ListItemText primaryTypographyProps={{ fontSize: "90%", }} primary={el.name} />
+                            // <div style>
+                                // {el.name}
+                            // </div>
+                            <ListItemButton sx={{ boxSizing: "border-box" }} disableRipple={true} onChange={ (event) => onChange(event, el) }>
+                                { el.name }
+                                {/* <ListItemText primaryTypographyProps={{ fontSize: "90%", }} primary={el.name} /> */}
                             </ListItemButton>
                         )
                     }) : <></>
                 }
-            </List>
-        </ScrollPanel>
+            {/* </List> */}
+            </div>
+        // </ScrollPanel>
 
     )
 }

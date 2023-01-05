@@ -56,21 +56,98 @@ export const SplitContainer = styled(Box)(({ theme }) =>
     }
 ));
 
-export const Content = styled(Box)(({ theme }) => 
+export const Content = styled("div")(({ theme }) => 
 (
     {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "stretch",
-        width: "100%",
+        // display: "grid",
+        // gridTemplateColumns: "auto auto minmax(0, 1fr)",
+        height: "100%",
+
+
+        // display: "flex",
+        // flexDirection: "column",
+        // justifyContent: "stretch",
+        // width: "100%",
         // height: "100vh",
         // maxHeight: "100vh",
     }
 ));
 
-export const VSplitView = styled(Split)(({ theme }) => 
+export const VSplitContainer = styled(Split)(({ theme }) => 
 (
     {
+        display: "grid",
+        gridTemplateColumns: "auto auto minmax(0, 1fr)",
+        // display: "flex",
+        // flexDirection: "row",
+        // width: "100%",
+        height: "100%",
+        // maxHeight: "100vh",
+    }
+));
+
+export const VSplitContent = styled("div")(({ theme }) => 
+(
+    {
+        display: "flex",
+        flexDirection: "row",
+        height: "100%",
+    }
+));
+
+export const HSplitContainer = styled(Split)(({ theme }) => 
+(
+    {
+        display: "grid",
+        gridTemplateColumns: "auto auto minmax(0, 1fr)",
+        // display: "flex",
+        // flexDirection: "row",
+        // width: "100%",
+        height: "100%",
+        // maxHeight: "100vh",
+    }
+));
+
+export const HSplitContent = styled("div")(({ theme }) => 
+(
+    {
+        display: "flex",
+        flexDirection: "row",
+        height: "100%",
+    }
+));
+
+
+export const HSplitView = styled(Split)(({ theme }) => 
+(
+    {
+        display: "grid",
+        gridTemplateRows: "minmax(0, 1fr) minmax(0, 1fr)",
+        // display: "flex",
+        // flexDirection: "column",
+        height: "100%",
+        // maxHeight: "100vh",
+    }
+));
+
+export const HSplitBox = styled(Split)(({ theme }) => 
+(
+    {
+        // display: "grid",
+        // gridTemplateRows: "auto auto minmax(0, 1fr)",
+        // display: "flex",
+        // flexDirection: "row",
+        // width: "100%",
+        height: "100%",
+        // maxHeight: "100vh",
+    }
+));
+
+export const VSplitBox = styled(Split)(({ theme }) => 
+(
+    {
+        // display: "grid",
+        // gridTemplateRows: "auto auto minmax(0, 1fr)",
         display: "flex",
         flexDirection: "row",
         // width: "100%",
@@ -79,15 +156,7 @@ export const VSplitView = styled(Split)(({ theme }) =>
     }
 ));
 
-export const HSplitView = styled(Split)(({ theme }) => 
-(
-    {
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        // maxHeight: "100vh",
-    }
-));
+
 
 export const GutterStyle = (dimension : "width" | "height", gutterSize : number) => 
 {
@@ -117,41 +186,14 @@ export const TemplateSelecter = () =>
 
     return (
         <>
-            {/* <Split
-                sizes={[25, 75]}
-                minSize={100}
-                expandToMin={false}
-                gutterSize={10}
-                gutterAlign="center"
-                snapOffset={30}
-                dragInterval={1}
-                direction="horizontal"
-                cursor="col-resize"
-            >
-                <div>aa</div>
-                <div>bbb</div>
-            </Split> */}
-
-
-            {/* <div style={{ width: "100%", height: "100vh",  }}> */}
-            <Content>
-                <VSplitView  minSize={100} sizes={[20, 20, 60]} gutterAlign="center" gutterSize={6} gutterStyle={GutterStyle}>
-                    <Box>
-                        <HSplitView direction="vertical" sizes={[50, 50]} gutterSize={6} gutterStyle={GutterStyle}>
-                            <ScrollPanel>
-                                <NodeListBox targetNode={selectedContext.current as ITemplateNode}></NodeListBox>
-                            </ScrollPanel>
-                            <div>D</div>
-                        </HSplitView>
-                    </Box>
-                    <Box>bb</Box>
-                    <Box>cc</Box>
-                </VSplitView>
-            </Content>
-
-             {/* </div> */}
-    
-            {/* <ChildTemplateSelecter node={targetNode as ITemplateDirectoryNode}/> */}
+            <VSplitBox direction="horizontal" minSize={100} sizes={[20, 20, 60]} gutterAlign="center" gutterSize={6} gutterStyle={GutterStyle}>
+                <HSplitBox direction="vertical" sizes={[50, 50]} gutterSize={6} gutterStyle={GutterStyle}>
+                    <NodeListBox targetNode={selectedContext.current as ITemplateNode}></NodeListBox>
+                    <div>D</div>
+                </HSplitBox>
+                <Box>bb</Box>
+                <Box>cc</Box>
+            </VSplitBox>
         </>
     );
 }

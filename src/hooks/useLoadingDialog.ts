@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { LoaderTemplates } from "../loader/LoaderTemplates";
-import { ITemplateNode } from "../types";
+import { loadFromDirectoryHandle } from "../loader";
+import { FileNode } from "../types";
 
 export const useLoadDialog = () =>
 {
@@ -8,8 +8,6 @@ export const useLoadDialog = () =>
     const [stateCurrentProgress, setStateCurrentProgress] = useState<number>(0);
     const [stateMaxProgress, setStateMaxProgress] = useState<number>(0);
     const [stateIsLoading, setLoadingState] = useState<boolean>(false);
-
-    const templateLoader = new LoaderTemplates();
 
     let count = 0;
 
@@ -27,7 +25,7 @@ export const useLoadDialog = () =>
 
     const showDirectoryPicker = () =>
     {
-        return new Promise((resolve : (resultTopNode : ITemplateNode) => void, reject) =>
+        return new Promise((resolve : (resultTopNode : FileNode) => void, reject) =>
         {
             const handle = window.showDirectoryPicker().then(h => 
             {
@@ -35,7 +33,7 @@ export const useLoadDialog = () =>
                 setStateCurrentProgress(0);
                 setLoadingState(true);
 
-                templateLoader?.loadFromDirectoryHandle(h, onProgress, onGotMaxProgress).then(resultTopNode => 
+                loadFromDirectoryHandle(h, onProgress, onGotMaxProgress).then(resultTopNode => 
                 {
                     setLoadingState(false);
                     resolve(resultTopNode);

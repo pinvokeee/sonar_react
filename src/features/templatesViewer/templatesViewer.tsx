@@ -1,43 +1,44 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, List, ListItemButton, ListItemText, styled } from "@mui/material";
-import { useContext, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import Split from 'react-split'
-import { selectedNodeContext, templatesNodeContext } from "../../context/contextTemplates";
-import { ITemplateNode } from "../../types";
+import { selectedNodeContext, templatesNodeContext } from "../../out/contextTemplates";
+import { FileNode } from "../../types";
 import { NodeListBox } from "./NodeList/NodeList";
 
-const getFirstNode = (node : ITemplateNode) : ITemplateNode | null =>
+const getFirstNode = (node : FileNode) : FileNode | null =>
 {
     if (node?.children == null) return null;
     return node.children[0];
 }
 
-export interface IPropsTemplateSelecter
+type Props = 
 {
-    node : ITemplateNode,
+    node : FileNode,
 }
 
-export const ChildTemplateSelecter = (props : IPropsTemplateSelecter) =>
+export const ChildTemplatesViewer = (props : Props) =>
 {
     const [expanded, setExpanded] = useState<string | false>("");
 
-    const handleAcordion = (text : string) =>
+    const handleAcordion = useCallback((text : string | undefined) =>
     {
-        return  (event: React.SyntheticEvent, newExpanded: boolean) => 
+        return (event: React.SyntheticEvent, newExpanded: boolean) =>
         {
-            return setExpanded(newExpanded ? text : false);
-        };
-    }
+            setExpanded(newExpanded ? (text != null ? text : "" ) : false);
+        }
 
+    }, []);
+    
     return (
         <>
         {
             props.node?.children?.map(n => 
             {
                 return (
-                <Accordion expanded={ expanded == n?.name } onChange={ handleAcordion(n?.name) }>
-                    <AccordionSummary>{n?.name}</AccordionSummary>
+                <Accordion expanded={ expanded == n?.file?.name } onChange={ handleAcordion(n?.file?.name) }>
+                    <AccordionSummary>{n?.file?.name}</AccordionSummary>
                     <AccordionDetails>
-                        <ChildTemplateSelecter node={n}></ChildTemplateSelecter>
+                        <ChildTemplatesViewer node={n}></ChildTemplatesViewer>
                     </AccordionDetails>
                 </Accordion>
                 );
@@ -156,8 +157,6 @@ export const VSplitBox = styled(Split)(({ theme }) =>
     }
 ));
 
-
-
 export const GutterStyle = (dimension : "width" | "height", gutterSize : number) => 
 {
     const bgcolor = "#eee";
@@ -174,21 +173,23 @@ export const ScrollPanel = styled("div")(({ theme }) =>
     }
 ));
 
-export const TemplateSelecter = () =>
+export const TemplatesViewer = () =>
 {
     const context = useContext(templatesNodeContext);
     const selectedContext = useContext(selectedNodeContext);
 
     const useSelectedNodes = useState({ node1 : null, node2: null, node3: null });
     
-    const targetNode = selectedContext.current as ITemplateNode;
-    const firstNode : ITemplateNode | null = getFirstNode(targetNode);
+    const targetNode = selectedContext.current as FileNode;
+    const firstNode : FileNode | null = getFirstNode(targetNode);
+
+    console.log(selectedContext);
 
     return (
         <>
             <VSplitBox direction="horizontal" minSize={100} sizes={[20, 20, 60]} gutterAlign="center" gutterSize={6} gutterStyle={GutterStyle}>
                 <HSplitBox direction="vertical" sizes={[50, 50]} gutterSize={6} gutterStyle={GutterStyle}>
-                    <NodeListBox targetNode={selectedContext.current as ITemplateNode}></NodeListBox>
+                    <NodeListBox targetNode={selectedContext.current as FileNode}></NodeListBox>
                     <div>D</div>
                 </HSplitBox>
                 <Box>bb</Box>

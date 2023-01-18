@@ -1,16 +1,15 @@
 import styled from "@emotion/styled/types/base";
 import { AppBar, Toolbar, IconButton, Typography, Button, TextField, Input, OutlinedInput, Tooltip } from "@mui/material";
 import { useContext, useState } from "react";
-import { selectedNodeContext, templatesNodeContext, } from "../../context/contextTemplates";
+import { selectedNodeContext, templatesNodeContext, } from "../../out/contextTemplates";
 
-import { LoaderTemplates } from "../../loader/LoaderTemplates";
-import { LoadingDialog } from "../../components/LoadingDialog/LoadingDialog";
-import { SplitButton } from "../../components/SplitButton/SplitButton";
-import { SearchInput } from "../../components/SearchInput/SearchInput";
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
-import { ITemplateNode } from "../../types";
+import { FileNode } from "../../types";
 
 import { useLoadDialog } from "../../hooks/useLoadingDialog";
+import SplitButton from "./components/SplitButton";
+import { SearchInput } from "./components/SearchInput";
+import { LoadingDirectoryDialog } from "../../components/common/dialog/loadingDirectoryDialog/LoadingDirectoryDialog";
 
 export const AppToolBar = () =>
 {    
@@ -18,9 +17,9 @@ export const AppToolBar = () =>
     const selectedContext = useContext(selectedNodeContext);
     const hookLoadDialog = useLoadDialog();
 
-    const [selectedNode, setSelectedNode] = useState<ITemplateNode | null>(null);
+    const [selectedNode, setSelectedNode] = useState<FileNode | null>(null);
 
-    const [topNodes, setTopNodes] = useState<ITemplateNode[]>([]);
+    const [topNodes, setTopNodes] = useState<FileNode[]>([]);
 
     const onChangeTopNodeIndex = (index : number) =>
     {
@@ -82,10 +81,10 @@ export const AppToolBar = () =>
       });
     }
 
-    const createChildNodes = (topNode : ITemplateNode) : ITemplateNode[] =>
+    const createChildNodes = (topNode : FileNode) : FileNode[] =>
     {
-      // if (topNode.children == null) return [];
-      return topNode.children.filter(n => n.nodeType == "directory");
+      if (topNode.children == null) return [];
+      return topNode.children?.filter(n => n.kind == "directory");
     }
 
     const getTopNodeTitles = () : string[] =>
@@ -108,11 +107,11 @@ export const AppToolBar = () =>
             {/* <Button sx={{ marginLeft: "auto" }} color="inherit" onClick={a}>フォルダー選択</Button> */}
           </Toolbar>
 
-          <LoadingDialog 
+          <LoadingDirectoryDialog 
           isOpen={!hookLoadDialog.progress.isComplete} 
           currentFile={hookLoadDialog.progress.currentFile}
           currentProgress={hookLoadDialog.progress.currentValue} 
-          maximumValue={hookLoadDialog.progress.maximumValue}></LoadingDialog>
+          maximumValue={hookLoadDialog.progress.maximumValue}></LoadingDirectoryDialog>
 
         </AppBar>
     );

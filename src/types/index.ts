@@ -1,18 +1,16 @@
-export interface ITemplateNode
+export type FileNode =
 {
-    name: string;
-    nodeType: "directory" | "content";
-    parent : ITemplateNode | null;
-    children: ITemplateNode[];
-    content : string | null;
+    kind: "file" | "directory",
+    children?: FileNode[],
+    parent: FileNode | null,
+    handle?: FileSystemFileHandle | FileSystemDirectoryHandle,
+    name: string,
+    file? : FileInfo,
 }
 
-// export interface ITemplateDirectoryNode extends ITemplateNode
-// {
-//     children: ITemplateNode[];
-// }
-
-// export interface ITemplateContentNode extends ITemplateNode
-// {
-
-// }
+export type FileInfo =
+{
+    name: string,
+    extension: string,
+    binary?: ArrayBuffer,
+}

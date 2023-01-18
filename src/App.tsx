@@ -1,11 +1,12 @@
 import './App.css'
-import { AppToolBar } from './features/AppToolBar/AppToolBar'
-import * as context from './context/contextTemplates';
-import { TemplateSelecter } from './features/TemplateSelecter/TemplateSelecter';
+import * as context from './out/contextTemplates';
 import { Tabs, Tab, styled, Box, Container } from '@mui/material';
 import TabPanel from '@mui/lab/TabPanel';
 import { TabContext, TabList } from '@mui/lab';
 import { useMemo, useState } from 'react';
+
+import { TemplatesViewer } from './features/templatesViewer/templatesViewer';
+import { AppToolBar } from './features/toolbar';
 
 export const MainContainer = styled("div")(({ theme }) => 
 (
@@ -62,7 +63,7 @@ export const App = () =>
           </TabList>
           
           <TabPanelEx value="template">
-            <TemplateSelecter></TemplateSelecter>
+            <TemplatesViewer />
           </TabPanelEx>
 
         </TabContext>

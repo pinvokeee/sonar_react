@@ -2,7 +2,7 @@ import { Button, ButtonGroup, IconButton, Menu, MenuItem, MenuList, Paper, Poppe
 import React, { useState } from "react";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-export interface SplitButtonProps
+interface SplitButtonProps
 {
     options : string[],
     onChangeSelectedIndex? : (selectedIndex : number) => void,
@@ -57,3 +57,5 @@ export const SplitButton = (props : SplitButtonProps) =>
         </React.Fragment>
     )
 }
+
+export default SplitButton;

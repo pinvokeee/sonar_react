@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, LinearProgress, Typography } from "@mui/material"
 
-export interface LoadingDialogProps 
+interface Props 
 {
     isOpen : boolean,
     currentFile? : string,
@@ -8,7 +8,7 @@ export interface LoadingDialogProps
     currentProgress? : number,
 }
 
-export const LoadingDialog = (props : LoadingDialogProps) =>
+export const LoadingDirectoryDialog = (props : Props) =>
 {
     const getProgeres = () =>
     {
@@ -20,13 +20,7 @@ export const LoadingDialog = (props : LoadingDialogProps) =>
         <Dialog fullWidth={true} open={props.isOpen}>
             <DialogTitle id="alert-dialog-title">読み込み中 ({props.currentProgress} / {props.maximumValue})</DialogTitle>
             <DialogContent>
-                <Box >
-                    {/* <div>
-                        {props.maxProgress}
-                    </div>
-                    <div>
-                        {props.currentProgress}
-                    </div> */}
+                <Box>
                     {
                         props.maximumValue == null || props.maximumValue == 0
                             ? 

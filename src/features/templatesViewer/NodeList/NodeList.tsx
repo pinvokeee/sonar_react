@@ -19,7 +19,7 @@ export const ScrollPanel = styled("div")(({ theme }) =>
 
 const createTreeNode = (node: FileNode, onChangeEvent: any, filter?: string) =>
 {
-    console.log(node);
+    // console.log(node);
 
 
     if (node == null) return <></>;
@@ -47,7 +47,7 @@ export const NodeListBox = (prop : INodeLIstBoxProp) =>
 { 
     const onChange = useCallback((event : any, targetNode : FileNode) => prop.onChange?.call(this, targetNode), []);
     
-    console.log(prop);
+    // console.log(prop);
 
     return (
         // <ScrollPanel>

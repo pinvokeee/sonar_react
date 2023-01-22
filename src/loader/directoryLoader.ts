@@ -20,32 +20,9 @@ export const rootingParentNode = (node : FileNode) =>
  * @param handle 
  * @returns 
  */
-export const loadFromDirectoryHandle = 
-(
-    handle : FileSystemDirectoryHandle, 
-    onProgress? : (currentFile : string)  => void, 
-    onGotMaxCount? : (count : number) => void) => 
+export const loadFromDirectoryHandle = async (handle : FileSystemDirectoryHandle, onProgress? : (currentFile : string)  => void) =>
 {
-    const firstNode : FileNode = {
-        kind: "directory",
-        parent: null,
-        children: [],
-        name: "top",
-    }
-
-    getEntriesCountFromDirectoryHandle(handle).then(c => onGotMaxCount?.call(this, c));
-
-    return new Promise(async (resolve : (resultNode : FileNode) => void, reject) =>
-    {
-        // const templatesFolderHandle = await handle.getDirectoryHandle("テンプレート");
-
-        await callLoadFromDirectoryHandle(handle, firstNode, "", onProgress);
-        rootingParentNode(firstNode);
-
-        console.log(firstNode);
-
-        resolve(firstNode as FileNode);
-    });
+    return await callLoadFromDirectoryHandle(handle, null, "", onProgress);
 }
 
 /**
@@ -55,11 +32,11 @@ export const loadFromDirectoryHandle =
  */
 const callLoadFromDirectoryHandle = async (
     handle : FileSystemDirectoryHandle, 
-    parentNode : FileNode, 
+    parentNode : FileNode | null, 
     currentPath? : string, 
     onProgress? : (currentFile : string) => void) =>
 {
-    let ccount = 0;
+    const nodes = [];
 
     for await (const [name, value] of handle.entries())
     {
@@ -73,9 +50,9 @@ const callLoadFromDirectoryHandle = async (
                 children: [],
             }
 
-            parentNode.children?.push(newNode);
+            newNode.children?.push(...await callLoadFromDirectoryHandle(value, newNode, currentPath + "/" + name, onProgress));
 
-            await callLoadFromDirectoryHandle(value, newNode, currentPath + "/" + name, onProgress);
+            nodes.push(newNode);
         }
         else if (value.kind == "file")
         {
@@ -97,12 +74,12 @@ const callLoadFromDirectoryHandle = async (
                     // binary: (await file.arrayBuffer()),
                 }
             }
-            
-            parentNode.children?.push(newNode);
 
-            ccount++;
+            nodes.push(newNode);
         }
     }
+
+    return nodes;
 }
 
 /**
@@ -112,12 +89,10 @@ const callLoadFromDirectoryHandle = async (
  */
 export const getEntriesCountFromDirectoryHandle = async (handle : FileSystemDirectoryHandle) =>
 {
-    return new Promise(async (resolve : (resultCount : number) => void, reject) =>
-    {
-        let count = 0;
-        await callGetEntriesCountFromDirectoryHandle(handle, () =>  count++ );
-        resolve(count);
-    });
+    let count = 0;
+    await callGetEntriesCountFromDirectoryHandle(handle, () =>  count++ );
+
+    return count;
 }
 
 const callGetEntriesCountFromDirectoryHandle = async (handle : FileSystemDirectoryHandle, progress : (count : number) => void) =>

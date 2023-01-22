@@ -1,7 +1,6 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, List, ListItemButton, ListItemText, styled } from "@mui/material";
 import { useCallback, useContext, useMemo, useState } from "react";
 import Split from 'react-split'
-import { selectedNodeContext, templatesNodeContext } from "../../out/contextTemplates";
 import { FileNode } from "../../types";
 import { NodeListBox } from "./NodeList/NodeList";
 
@@ -175,21 +174,21 @@ export const ScrollPanel = styled("div")(({ theme }) =>
 
 export const TemplatesViewer = () =>
 {
-    const context = useContext(templatesNodeContext);
-    const selectedContext = useContext(selectedNodeContext);
+    // const context = useContext(templatesNodeContext);
+    // const selectedContext = useContext(selectedNodeContext);
 
     const useSelectedNodes = useState({ node1 : null, node2: null, node3: null });
     
-    const targetNode = selectedContext.current as FileNode;
-    const firstNode : FileNode | null = getFirstNode(targetNode);
+    // const targetNode = selectedContext.current as FileNode;
+    // const firstNode : FileNode | null = getFirstNode(targetNode);
 
-    console.log(selectedContext);
+    // console.log(selectedContext);
 
     return (
         <>
             <VSplitBox direction="horizontal" minSize={100} sizes={[20, 20, 60]} gutterAlign="center" gutterSize={6} gutterStyle={GutterStyle}>
                 <HSplitBox direction="vertical" sizes={[50, 50]} gutterSize={6} gutterStyle={GutterStyle}>
-                    <NodeListBox targetNode={selectedContext.current as FileNode}></NodeListBox>
+                    {/* <NodeListBox targetNode={selectedContext.current as FileNode}></NodeListBox> */}
                     <div>D</div>
                 </HSplitBox>
                 <Box>bb</Box>

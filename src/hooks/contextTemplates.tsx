@@ -1,32 +1,19 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
+import { TemplateNode } from "../loader/templateLoader";
 import { FileNode } from "../types";
-import { useTemplates } from "./useTemplates";
 
-type TemplatesContext = 
+export type HookTemplates = 
 {
-    fileNode: FileNode,
+    templates: TemplateNode[],
+    setTemplates: (t: TemplateNode[]) => void, 
 }
 
-export const TemplatesContext = createContext<TemplatesContext>(
-    {
-        fileNode: {
-            name: "",
-            kind: "directory",
-            parent: null,
-        },
-    }
-);
-
-export const TemplatesProvider = (fileNode : FileNode) =>
+export const useTemplates = () : HookTemplates =>
 {
-    // const store = useContext(TemplatesContext);
-    const store = useTemplates({ TopFileNode: fileNode });
+    const [templates, setTemplates] = useState<TemplateNode[]>([]);
 
-    store.nodes
-
-    return <>
-        <TemplatesContext.Provider value={store}>
-            
-        </TemplatesContext.Provider>
-    </>;
+    return {
+        templates,
+        setTemplates,
+    }
 }

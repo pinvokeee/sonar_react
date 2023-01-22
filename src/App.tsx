@@ -8,6 +8,9 @@ import { useMemo, useState } from 'react';
 import { TemplatesViewer } from './features/templatesViewer/templatesViewer';
 import { AppToolBar } from './features/toolbar';
 
+import { DirectoryProvider, useDirectory } from './hooks/contextFile';
+import { useTemplates } from './hooks/contextTemplates';
+
 export const MainContainer = styled("div")(({ theme }) => 
 (
     {
@@ -31,7 +34,7 @@ class a
 
   constructor()
   {
-    console.log("AAAA");
+    // console.log("AAAA");
   }
 
 
@@ -41,38 +44,45 @@ export const App = () =>
 {  
   const aaa = useMemo(() => new a(), []);
 
-  const contextTemplates = context.useContextTemplateNode();
-  const contextSelectedNode = context.useContextTemplateSelectedNode();
+  // const contextTemplates = context.useContextTemplateNode();
+  // const contextSelectedNode = context.useContextTemplateSelectedNode();
 
-  const contextTabState = context.useContextTabState("template");
+  // const contextTabState = context.useContextTabState("template");
+
+  const temHook = useTemplates();
+  const dirHook = useDirectory();
 
   return (
     <div className="App">
-      <context.templatesNodeContext.Provider value={contextTemplates}>
-      <context.selectedNodeContext.Provider value={contextSelectedNode}>
-      <context.tabContext.Provider value={contextTabState}>
+      
+        {/* <context.templatesNodeContext.Provider value={contextTemplates}>
+        <context.selectedNodeContext.Provider value={contextSelectedNode}>
+        <context.tabContext.Provider value={contextTabState}> */}
 
-      <MainContainer>
-        <AppToolBar></AppToolBar>
+        <MainContainer>
+            <AppToolBar templatesHook={temHook} dirHook={dirHook}></AppToolBar>
 
-        <TabContext value={contextTabState.current as string}>
-          
-          <TabList onChange={ (event : React.SyntheticEvent, value : string) => contextTabState.setValue(value)}>
-            <Tab label="テンプレート" value="template"/>
-            <Tab label="ドキュメント" value="doc"/>
-          </TabList>
-          
-          <TabPanelEx value="template">
-            <TemplatesViewer />
-          </TabPanelEx>
+            {/* <TabContext value={contextTabState.current as string}> */}
+            <TabContext value="template">
 
-        </TabContext>
+              {/* <TabList onChange={ (event : React.SyntheticEvent, value : string) => contextTabState.setValue(value)}> */}
+              <TabList>
+                <Tab label="テンプレート" value="template"/>
+                <Tab label="ドキュメント" value="doc"/>
+              </TabList>
 
-      </MainContainer>
+              <TabPanelEx value="template">
+                <TemplatesViewer />
+              </TabPanelEx>
 
-      </context.tabContext.Provider>
-      </context.selectedNodeContext.Provider>
-      </context.templatesNodeContext.Provider>
+            </TabContext>
+
+        </MainContainer>
+
+        {/* </context.tabContext.Provider>
+        </context.selectedNodeContext.Provider>
+        </context.templatesNodeContext.Provider> */}
+
     </div>
   )
 }

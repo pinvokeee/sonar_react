@@ -72,7 +72,7 @@ export const App = () =>
               </TabList>
 
               <TabPanelEx value="template">
-                <TemplatesViewer />
+                <TemplatesViewer templatesHook={temHook} />
               </TabPanelEx>
 
             </TabContext>

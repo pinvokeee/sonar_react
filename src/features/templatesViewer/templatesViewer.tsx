@@ -1,6 +1,8 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, List, ListItemButton, ListItemText, styled } from "@mui/material";
 import { useCallback, useContext, useMemo, useState } from "react";
 import Split from 'react-split'
+import { HookTemplates } from "../../hooks/contextTemplates";
+import { TemplateNode } from "../../loader/templateLoader";
 import { FileNode } from "../../types";
 import { NodeListBox } from "./NodeList/NodeList";
 
@@ -172,13 +174,26 @@ export const ScrollPanel = styled("div")(({ theme }) =>
     }
 ));
 
-export const TemplatesViewer = () =>
+export type Prop =
+{
+    templatesHook: HookTemplates,
+}
+
+export const TemplatesViewer = (props: Prop) =>
 {
     // const context = useContext(templatesNodeContext);
     // const selectedContext = useContext(selectedNodeContext);
 
     const useSelectedNodes = useState({ node1 : null, node2: null, node3: null });
     
+    const targetNode = useMemo<TemplateNode | null>(() => props.templatesHook.node1, []);
+
+    const node1_change = useCallback((node: TemplateNode) => 
+    {
+        props.templatesHook.setNode1(node);
+
+    }, []);
+    console.log(props.templatesHook);
     // const targetNode = selectedContext.current as FileNode;
     // const firstNode : FileNode | null = getFirstNode(targetNode);
 
@@ -188,7 +203,7 @@ export const TemplatesViewer = () =>
         <>
             <VSplitBox direction="horizontal" minSize={100} sizes={[20, 20, 60]} gutterAlign="center" gutterSize={6} gutterStyle={GutterStyle}>
                 <HSplitBox direction="vertical" sizes={[50, 50]} gutterSize={6} gutterStyle={GutterStyle}>
-                    {/* <NodeListBox targetNode={selectedContext.current as FileNode}></NodeListBox> */}
+                    <NodeListBox nodes={props.templatesHook.templates} onChange={node1_change}></NodeListBox>
                     <div>D</div>
                 </HSplitBox>
                 <Box>bb</Box>

@@ -6,9 +6,9 @@ import { TemplateNode } from "../../loader/templateLoader";
 import { FileNode } from "../../types";
 import { NodeListBox } from "./NodeList/NodeList";
 
-const getFirstNode = (node : FileNode) : FileNode | null =>
+const getFirstNode = (node : FileNode) : FileNode | undefined =>
 {
-    if (node?.children == null) return null;
+    if (node?.children == undefined) return undefined;
     return node.children[0];
 }
 
@@ -25,7 +25,7 @@ export const ChildTemplatesViewer = (props : Props) =>
     {
         return (event: React.SyntheticEvent, newExpanded: boolean) =>
         {
-            setExpanded(newExpanded ? (text != null ? text : "" ) : false);
+            setExpanded(newExpanded ? (text != undefined ? text : "" ) : false);
         }
 
     }, []);
@@ -179,35 +179,57 @@ export type Prop =
     templatesHook: HookTemplates,
 }
 
+const utf8_decoder: TextDecoder = new TextDecoder();
+const sjis_decoder = new TextDecoder("shift-jis");
+
+const isDirectory = (s: string) => s == "directory";
+const isNotDirectory = (s: string) => s != "directory";
+
 export const TemplatesViewer = (props: Prop) =>
 {
-    // const context = useContext(templatesNodeContext);
-    // const selectedContext = useContext(selectedNodeContext);
-
-    const useSelectedNodes = useState({ node1 : null, node2: null, node3: null });
-    
-    const targetNode = useMemo<TemplateNode | null>(() => props.templatesHook.node1, []);
-
     const node1_change = useCallback((node: TemplateNode) => 
     {
-        props.templatesHook.setNode1(node);
-
+        props.templatesHook.setNode2(node);
     }, []);
-    console.log(props.templatesHook);
-    // const targetNode = selectedContext.current as FileNode;
-    // const firstNode : FileNode | null = getFirstNode(targetNode);
 
-    // console.log(selectedContext);
+    const node2_change = useCallback((node: TemplateNode) => 
+    {
+        props.templatesHook.setNode3(node);
+    }, []);
+
+    const node3_change = useCallback((node: TemplateNode) => 
+    {
+        props.templatesHook.setSelectedTemplate(node);
+        console.log(node);
+        // props.templatesHook.setNode3(node);
+    }, []);
+
+    const node1 = props.templatesHook?.node1, node2 = props.templatesHook?.node2, node3 = props.templatesHook?.node3;
+
+    const node1_children = node1?.children;
+    const node2_children = node2?.children;
+    const node3_children = node3?.children;
+    const template = props.templatesHook.selectedTemplate;
+
+    const files = node3 != null ? node3_children : node2 != null ? node2_children : node1 != null ? node1_children : [];
 
     return (
         <>
             <VSplitBox direction="horizontal" minSize={100} sizes={[20, 20, 60]} gutterAlign="center" gutterSize={6} gutterStyle={GutterStyle}>
                 <HSplitBox direction="vertical" sizes={[50, 50]} gutterSize={6} gutterStyle={GutterStyle}>
-                    <NodeListBox nodes={props.templatesHook.templates} onChange={node1_change}></NodeListBox>
-                    <div>D</div>
+                    <div>
+                        <NodeListBox filter={isDirectory} targetNode={node2} nodes={node1_children} onChange={node1_change}></NodeListBox>
+                    </div>
+                    <div>
+                        <NodeListBox filter={isDirectory} targetNode={node3} nodes={node2_children} onChange={node2_change}></NodeListBox>
+                    </div>
                 </HSplitBox>
-                <Box>bb</Box>
-                <Box>cc</Box>
+                <HSplitBox direction="vertical"  gutterSize={6} gutterStyle={GutterStyle}>
+                    <div>
+                        <NodeListBox filter={isNotDirectory} nodes={files} targetNode={template} onChange={node3_change}></NodeListBox>
+                    </div>
+                </HSplitBox>
+                <Box>{utf8_decoder.decode(props.templatesHook.selectedTemplate?.bytes)}</Box>
             </VSplitBox>
         </>
     );

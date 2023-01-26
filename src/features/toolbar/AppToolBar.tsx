@@ -1,6 +1,6 @@
 import styled from "@emotion/styled/types/base";
 import { AppBar, Toolbar, IconButton, Typography, Button, TextField, Input, OutlinedInput, Tooltip } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 import { FileNode } from "../../types";
@@ -27,9 +27,12 @@ export const AppToolBar = (props: Prop) =>
 
     const hookLoadDialog = useLoadDialog();
 
+    const topNodes = props.templatesHook.templates.filter(node => node.type == "directory");
+    const topNodeTiles = topNodes.map(node => node.name);
+
     const onChangeTopNodeIndex = (index : number) =>
     {
-
+      props.templatesHook.setNode1(topNodes[index]);
     }
     
     const clickSelectFolder = () =>
@@ -41,22 +44,15 @@ export const AppToolBar = (props: Prop) =>
         createTemplateTree(directories).then(templates =>
         {
           props.templatesHook.setTemplates(templates);
-
-          console.log(templates);
         })
         
       });
-    }
-
-    const getTopNodeTitles = () : string[] =>
-    {
-      return props.dirHook.directories.filter(d => d.kind == "directory").map(d => d.name);
     }
     
     return (
         <AppBar position="static">
           <Toolbar>
-            <SplitButton options={getTopNodeTitles()} onChangeSelectedIndex={onChangeTopNodeIndex}></SplitButton>
+            <SplitButton options={topNodeTiles} onChangeSelectedIndex={onChangeTopNodeIndex}></SplitButton>
             <SearchInput></SearchInput>
 
             <Tooltip title="フォルダーを選択する">

@@ -5,6 +5,7 @@ type TemplateNodeType = "directory" | "unknown" | "text" | "excelbook" | "html";
 export type TemplateNode = 
 {
     name: string,
+    fullName: string,
     type: TemplateNodeType,
     bytes?: ArrayBuffer,
     children?: TemplateNode[],
@@ -31,6 +32,7 @@ const callCreateTemplateTree = async (sourceFileNode: FileNode[], parentNode?: T
             const node : TemplateNode = 
             {
                 name: n.file?.name as string,
+                fullName: `${n.file?.name}.${n.file?.extension}`,
                 bytes: type != "unknown" ? (await file.arrayBuffer()) : undefined,
                 type
             }
@@ -42,11 +44,12 @@ const callCreateTemplateTree = async (sourceFileNode: FileNode[], parentNode?: T
             const node : TemplateNode = 
             {
                 name: n.name,
+                fullName: `${n.name}`,
                 type: "directory",
                 children: [],
             }
 
-            if (n.children != null) node.children?.push(...await callCreateTemplateTree(n.children, node));
+            if (n.children != undefined) node.children?.push(...await callCreateTemplateTree(n.children, node));
             
             temp.push(node);
         }

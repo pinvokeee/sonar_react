@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useReducer, useState } from "react";
 import { TemplateNode } from "../loader/templateLoader";
 import { FileNode } from "../types";
 
@@ -7,26 +7,51 @@ export type HookTemplates =
     templates: TemplateNode[],
     setTemplates: (t: TemplateNode[]) => void, 
 
-    node1: TemplateNode | null,
-    node2: TemplateNode | null,
-    node3: TemplateNode | null,
+    node1: TemplateNode | undefined,
+    node2: TemplateNode | undefined,
+    node3: TemplateNode | undefined,
+    selectedTemplate: TemplateNode | undefined,
 
-    setNode1: (t: TemplateNode | null) => void,
-    setNode2: (t: TemplateNode | null) => void,
-    setNode3: (t: TemplateNode | null) => void, 
+    setNode1: (t: TemplateNode | undefined) => void,
+    setNode2: (t: TemplateNode | undefined) => void,
+    setNode3: (t: TemplateNode | undefined) => void, 
+    setSelectedTemplate: (t: TemplateNode | undefined) => void, 
 }
 
 export const useTemplates = () : HookTemplates =>
 {
     const [templates, setTemplates] = useState<TemplateNode[]>([]);
-    const [node1, setNode1] = useState<TemplateNode | null>(null);
-    const [node2, setNode2] = useState<TemplateNode | null>(null);
-    const [node3, setNode3] = useState<TemplateNode | null>(null);
+    const [node1, _setNode1] = useState<TemplateNode | undefined>(undefined);
+    const [node2, _setNode2] = useState<TemplateNode | undefined>(undefined);
+    const [node3, _setNode3] = useState<TemplateNode | undefined>(undefined);
+
+    const [selectedTemplate, setSelectedTemplate] = useState<TemplateNode | undefined>(undefined);
+
+    const setNode1 = (node: TemplateNode | undefined) =>
+    {
+        _setNode1(node);
+        _setNode2(undefined);
+        _setNode3(undefined);
+        setSelectedTemplate(undefined);
+    }
+
+    const setNode2 = (node: TemplateNode | undefined) =>
+    {
+        _setNode2(node);
+        _setNode3(undefined);
+        setSelectedTemplate(undefined);
+    }
+
+    const setNode3 = (node: TemplateNode | undefined) =>
+    {
+        _setNode3(node);
+        setSelectedTemplate(undefined);
+    }
 
     return {
         templates,
         setTemplates,
-        node1, node2, node3,
-        setNode1, setNode2, setNode3,
+        node1, node2, node3, selectedTemplate,
+        setNode1, setNode2, setNode3, setSelectedTemplate
     }
 }

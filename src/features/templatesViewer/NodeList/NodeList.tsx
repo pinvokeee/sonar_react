@@ -1,13 +1,13 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Box, List, ListItemButton, ListItemText, Paper, styled } from "@mui/material";
 import { FileNode } from "../../../types"
 import { TemplateNode } from '../../../loader/templateLoader';
 
 export interface INodeLIstBoxProp
 {
-    nodes: TemplateNode[],
-    targetNode? : TemplateNode | null,
-    filter?: string,
+    nodes: TemplateNode[] | undefined,
+    targetNode? : TemplateNode | undefined,
+    filter?: (type: string) => boolean,
 
     onChange? : (newValue : TemplateNode) => void,
 }
@@ -24,12 +24,12 @@ const createTreeNode = (node: TemplateNode, onChangeEvent: any, filter?: string)
     // console.log(node);
 
 
-    if (node == null) return <></>;
+    if (node == undefined) return <></>;
     
-    const nodes = filter != null ? node.children?.filter(f => f.type == filter) : node.children;
+    const nodes = filter != undefined ? node.children?.filter(f => f.type == filter) : node.children;
 
 
-    if (nodes == null) return <></>
+    if (nodes == undefined) return <></>
 
     return nodes.map(node => 
     {
@@ -46,41 +46,32 @@ const createTreeNode = (node: TemplateNode, onChangeEvent: any, filter?: string)
 }
 
 export const NodeListBox = (prop : INodeLIstBoxProp) =>
-{ 
-    const onChange = useCallback((event : any, targetNode : TemplateNode) => prop.onChange?.call(this, targetNode), []);
-    
-    // console.log(prop);
+{
+    const onChange = useCallback((event : any, targetNode : TemplateNode) => 
+    {
+        prop.onChange?.call(this, targetNode);
+    }, []);
+
+    const nodes = prop.filter != undefined ? prop.nodes?.filter(n => prop.filter?.call(this, n.type)) : prop.nodes;
 
     return (
         // <ScrollPanel>
-        <div style={{ overflow: "auto", boxSizing: "border-box" }} >
-            <List sx={{ overflow: "auto", boxSizing: "border-box" }} aria-label="secondary mailbox folder">
+        <div style={{ height: "100%", overflowWrap: 'anywhere', overflow: "auto", boxSizing: "border-box" }} >
+            <List aria-label="secondary mailbox folder">
+            {/* <List sx={{ overflow: "auto", boxSizing: "border-box" }} aria-label="secondary mailbox folder"> */}
                 {
-                    prop.nodes.map(n => 
+                    nodes?.map(n => 
                     {
                         return <ListItemButton 
-                        key={n.name}
+                        key={n.fullName}
                         sx={{ boxSizing: "border-box" }} 
                         disableRipple={true} 
-                        onClick={(e) => prop.onChange?.call(this, n)}
+                        onClick={(e) => onChange(e, n)}
+                        selected={ n == prop.targetNode }
                         >
                         { n.name }   
                         </ListItemButton>
                     })
-
-                    // prop.targetNode != null ? createTreeNode(prop.targetNode, onChange, prop.filter) : <></>
-                    // prop.targetNode != null ? prop.targetNode.children?.map(el =>
-                    // {
-                    //     return (                        
-                    //         // <div style>
-                    //             // {el.name}
-                    //         // </div>
-                    //         <ListItemButton sx={{ boxSizing: "border-box" }} disableRipple={true} onChange={ (event) => onChange(event, el) }>
-                    //             { el.name }
-                    //             {/* <ListItemText primaryTypographyProps={{ fontSize: "90%", }} primary={el.name} /> */}
-                    //         </ListItemButton>
-                    //     )
-                    // }) : <></>
                 }
             </List>
             </div>

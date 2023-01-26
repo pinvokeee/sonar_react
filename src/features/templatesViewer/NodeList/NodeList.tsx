@@ -55,10 +55,8 @@ export const NodeListBox = (prop : INodeLIstBoxProp) =>
     const nodes = prop.filter != undefined ? prop.nodes?.filter(n => prop.filter?.call(this, n.type)) : prop.nodes;
 
     return (
-        // <ScrollPanel>
         <div style={{ height: "100%", overflowWrap: 'anywhere', overflow: "auto", boxSizing: "border-box" }} >
             <List aria-label="secondary mailbox folder">
-            {/* <List sx={{ overflow: "auto", boxSizing: "border-box" }} aria-label="secondary mailbox folder"> */}
                 {
                     nodes?.map(n => 
                     {
@@ -74,8 +72,6 @@ export const NodeListBox = (prop : INodeLIstBoxProp) =>
                     })
                 }
             </List>
-            </div>
-        // </ScrollPanel>
-
+        </div>
     )
 }

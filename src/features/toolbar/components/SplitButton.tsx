@@ -36,7 +36,12 @@ export const SplitButton = (props : SplitButtonProps) =>
                 </Button>
             </ButtonGroup> */}
             
-            <Typography onClick={handleMenu} color="inherit" sx={{ width, cursor: "pointer" }}>{props.options[selectedIndex]}</Typography>    
+            <Typography onClick={handleMenu} 
+            overflow={"hidden"} 
+            textOverflow={"ellipsis"} 
+            whiteSpace={"nowrap"} 
+            color="inherit" 
+            sx={{ userSelect: "none", textAlign: "left", padding:"6px", width, cursor: "pointer" }}>{props.options[selectedIndex]}</Typography>    
             <IconButton onClick={handleMenu} color="inherit">                
                 <ArrowDropDownIcon color="inherit" />
             </IconButton>

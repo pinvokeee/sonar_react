@@ -1,3 +1,6 @@
+
+
+
 import './App.css'
 import * as context from './out/contextTemplates';
 import { Tabs, Tab, styled, Box, Container } from '@mui/material';
@@ -10,6 +13,9 @@ import { AppToolBar } from './features/toolbar';
 
 import { DirectoryProvider, useDirectory } from './hooks/contextFile';
 import { useTemplates } from './hooks/contextTemplates';
+
+
+
 
 export const MainContainer = styled("div")(({ theme }) => 
 (

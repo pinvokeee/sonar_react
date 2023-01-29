@@ -6,131 +6,137 @@ import { TemplateNode } from "../../loader/templateLoader";
 import { FileNode } from "../../types";
 import { NodeListBox } from "./NodeList/NodeList";
 
-const getFirstNode = (node : FileNode) : FileNode | undefined =>
-{
-    if (node?.children == undefined) return undefined;
-    return node.children[0];
-}
+import {aaaa} from "./excel";
+import { TextViewer } from "./textViewer";
 
-type Props = 
-{
-    node : FileNode,
-}
+// import XlsxPopulate from "xlsx-populate";
 
-export const ChildTemplatesViewer = (props : Props) =>
-{
-    const [expanded, setExpanded] = useState<string | false>("");
 
-    const handleAcordion = useCallback((text : string | undefined) =>
-    {
-        return (event: React.SyntheticEvent, newExpanded: boolean) =>
-        {
-            setExpanded(newExpanded ? (text != undefined ? text : "" ) : false);
-        }
+// const getFirstNode = (node : FileNode) : FileNode | undefined =>
+// {
+//     if (node?.children == undefined) return undefined;
+//     return node.children[0];
+// }
 
-    }, []);
+// type Props = 
+// {
+//     node : FileNode,
+// }
+
+// export const ChildTemplatesViewer = (props : Props) =>
+// {
+//     const [expanded, setExpanded] = useState<string | false>("");
+
+//     const handleAcordion = useCallback((text : string | undefined) =>
+//     {
+//         return (event: React.SyntheticEvent, newExpanded: boolean) =>
+//         {
+//             setExpanded(newExpanded ? (text != undefined ? text : "" ) : false);
+//         }
+
+//     }, []);
     
-    return (
-        <>
-        {
-            props.node?.children?.map(n => 
-            {
-                return (
-                <Accordion expanded={ expanded == n?.file?.name } onChange={ handleAcordion(n?.file?.name) }>
-                    <AccordionSummary>{n?.file?.name}</AccordionSummary>
-                    <AccordionDetails>
-                        <ChildTemplatesViewer node={n}></ChildTemplatesViewer>
-                    </AccordionDetails>
-                </Accordion>
-                );
-            })
-        }
-        </>
+//     return (
+//         <>
+//         {
+//             props.node?.children?.map(n => 
+//             {
+//                 return (
+//                 <Accordion expanded={ expanded == n?.file?.name } onChange={ handleAcordion(n?.file?.name) }>
+//                     <AccordionSummary>{n?.file?.name}</AccordionSummary>
+//                     <AccordionDetails>
+//                         <ChildTemplatesViewer node={n}></ChildTemplatesViewer>
+//                     </AccordionDetails>
+//                 </Accordion>
+//                 );
+//             })
+//         }
+//         </>
 
-    );
-}
+//     );
+// }
 
-export const SplitContainer = styled(Box)(({ theme }) => 
-(
-    {
-        width: 1,
-        height: 1,
-    }
-));
+// export const SplitContainer = styled(Box)(({ theme }) => 
+// (
+//     {
+//         width: 1,
+//         height: 1,
+//     }
+// ));
 
-export const Content = styled("div")(({ theme }) => 
-(
-    {
-        // display: "grid",
-        // gridTemplateColumns: "auto auto minmax(0, 1fr)",
-        height: "100%",
-
-
-        // display: "flex",
-        // flexDirection: "column",
-        // justifyContent: "stretch",
-        // width: "100%",
-        // height: "100vh",
-        // maxHeight: "100vh",
-    }
-));
-
-export const VSplitContainer = styled(Split)(({ theme }) => 
-(
-    {
-        display: "grid",
-        gridTemplateColumns: "auto auto minmax(0, 1fr)",
-        // display: "flex",
-        // flexDirection: "row",
-        // width: "100%",
-        height: "100%",
-        // maxHeight: "100vh",
-    }
-));
-
-export const VSplitContent = styled("div")(({ theme }) => 
-(
-    {
-        display: "flex",
-        flexDirection: "row",
-        height: "100%",
-    }
-));
-
-export const HSplitContainer = styled(Split)(({ theme }) => 
-(
-    {
-        display: "grid",
-        gridTemplateColumns: "auto auto minmax(0, 1fr)",
-        // display: "flex",
-        // flexDirection: "row",
-        // width: "100%",
-        height: "100%",
-        // maxHeight: "100vh",
-    }
-));
-
-export const HSplitContent = styled("div")(({ theme }) => 
-(
-    {
-        display: "flex",
-        flexDirection: "row",
-        height: "100%",
-    }
-));
+// export const Content = styled("div")(({ theme }) => 
+// (
+//     {
+//         // display: "grid",
+//         // gridTemplateColumns: "auto auto minmax(0, 1fr)",
+//         height: "100%",
 
 
-export const HSplitView = styled(Split)(({ theme }) => 
-(
-    {
-        display: "grid",
-        gridTemplateRows: "minmax(0, 1fr) minmax(0, 1fr)",
-        // display: "flex",
-        // flexDirection: "column",
-        height: "100%",
-        // maxHeight: "100vh",
-    }
-));
+//         // display: "flex",
+//         // flexDirection: "column",
+//         // justifyContent: "stretch",
+//         // width: "100%",
+//         // height: "100vh",
+//         // maxHeight: "100vh",
+//     }
+// ));
+
+// export const VSplitContainer = styled(Split)(({ theme }) => 
+// (
+//     {
+//         display: "grid",
+//         gridTemplateColumns: "auto auto minmax(0, 1fr)",
+//         // display: "flex",
+//         // flexDirection: "row",
+//         // width: "100%",
+//         height: "100%",
+//         // maxHeight: "100vh",
+//     }
+// ));
+
+// export const VSplitContent = styled("div")(({ theme }) => 
+// (
+//     {
+//         display: "flex",
+//         flexDirection: "row",
+//         height: "100%",
+//     }
+// ));
+
+// export const HSplitContainer = styled(Split)(({ theme }) => 
+// (
+//     {
+//         display: "grid",
+//         gridTemplateColumns: "auto auto minmax(0, 1fr)",
+//         // display: "flex",
+//         // flexDirection: "row",
+//         // width: "100%",
+//         height: "100%",
+//         // maxHeight: "100vh",
+//     }
+// ));
+
+// export const HSplitContent = styled("div")(({ theme }) => 
+// (
+//     {
+//         display: "flex",
+//         flexDirection: "row",
+//         height: "100%",
+//     }
+// ));
+
+
+// export const HSplitView = styled(Split)(({ theme }) => 
+// (
+//     {
+//         display: "grid",
+//         gridTemplateRows: "minmax(0, 1fr) minmax(0, 1fr)",
+//         // display: "flex",
+//         // flexDirection: "column",
+//         height: "100%",
+//         // maxHeight: "100vh",
+//     }
+// ));
 
 export const HSplitBox = styled(Split)(({ theme }) => 
 (
@@ -200,9 +206,28 @@ export const TemplatesViewer = (props: Prop) =>
     const node3_change = useCallback((node: TemplateNode) => 
     {
         props.templatesHook.setSelectedTemplate(node);
-        console.log(node);
         // props.templatesHook.setNode3(node);
     }, []);
+
+    const a = (node: TemplateNode | undefined) =>
+    {
+        if (node == null) return <></>
+
+
+        if (node.type == "text")
+        {
+            return <TextViewer text={utf8_decoder.decode(node.bytes)}></TextViewer>;
+        }
+
+        // if (bytes == undefined) return <></>
+
+        // console.log(bytes);/
+        // aaaa(bytes);        
+
+
+        return <>
+        </>
+    }
 
     const node1 = props.templatesHook?.node1, node2 = props.templatesHook?.node2, node3 = props.templatesHook?.node3;
 
@@ -229,7 +254,16 @@ export const TemplatesViewer = (props: Prop) =>
                         <NodeListBox filter={isNotDirectory} nodes={files} targetNode={template} onChange={node3_change}></NodeListBox>
                     </div>
                 </HSplitBox>
-                <Box>{utf8_decoder.decode(props.templatesHook.selectedTemplate?.bytes)}</Box>
+                {/* <Box> */}
+                <Box>
+                {
+                    a(props.templatesHook.selectedTemplate)
+                    // createTemplateTextView(utf8_decoder.decode(props.templatesHook.selectedTemplate?.bytes))
+                }
+                </Box>
+                {/* </Box> */}
+
+
             </VSplitBox>
         </>
     );

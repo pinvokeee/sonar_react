@@ -52,7 +52,7 @@ export const AppToolBar = (props: Prop) =>
     return (
         <AppBar position="static">
           <Toolbar>
-            <SplitButton options={topNodeTiles} onChangeSelectedIndex={onChangeTopNodeIndex}></SplitButton>
+            <SplitButton width="60px" options={topNodeTiles} onChangeSelectedIndex={onChangeTopNodeIndex}></SplitButton>
             <SearchInput></SearchInput>
 
             <Tooltip title="フォルダーを選択する">

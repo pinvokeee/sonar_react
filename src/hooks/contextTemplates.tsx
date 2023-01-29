@@ -52,9 +52,9 @@ export const useTemplates = () : HookTemplates =>
         console.log(this);
 
         _setNode1(node);
-        // _setNode2(undefined);
-        // _setNode3(undefined);
-        // setSelectedTemplate(undefined);
+        _setNode2(undefined);
+        _setNode3(undefined);
+        setSelectedTemplate(undefined);
     }
 
     const setNode2 = (node: TemplateNode | undefined) =>
@@ -68,7 +68,6 @@ export const useTemplates = () : HookTemplates =>
 
     const setNode3 = (node: TemplateNode | undefined) =>
     {
-        console.log("AA");
         if (node == node3) return ;
 
         _setNode3(node);

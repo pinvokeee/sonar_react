@@ -4,6 +4,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 interface SplitButtonProps
 {
+    width?: string,
     options : string[],
     onChangeSelectedIndex? : (selectedIndex : number) => void,
 }
@@ -24,6 +25,8 @@ export const SplitButton = (props : SplitButtonProps) =>
         props.onChangeSelectedIndex?.call(this, newIndex);
     }
 
+    const width = props.width != undefined ? props.width : "";
+
     return (
         <React.Fragment>
             {/* <ButtonGroup color="inherit">
@@ -33,7 +36,7 @@ export const SplitButton = (props : SplitButtonProps) =>
                 </Button>
             </ButtonGroup> */}
             
-            <Typography onClick={handleMenu} color="inherit" sx={{ cursor: "pointer" }}>{props.options[selectedIndex]}</Typography>    
+            <Typography onClick={handleMenu} color="inherit" sx={{ width, cursor: "pointer" }}>{props.options[selectedIndex]}</Typography>    
             <IconButton onClick={handleMenu} color="inherit">                
                 <ArrowDropDownIcon color="inherit" />
             </IconButton>
@@ -53,7 +56,6 @@ export const SplitButton = (props : SplitButtonProps) =>
                         onClick={(event) => selectionMenu(index) }>{name}</MenuItem>))
                     }
             </Menu>
-
         </React.Fragment>
     )
 }

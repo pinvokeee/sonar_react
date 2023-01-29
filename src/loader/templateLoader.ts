@@ -1,6 +1,6 @@
 import { FileNode } from "../types";
 
-type TemplateNodeType = "directory" | "unknown" | "text" | "excelbook" | "html";
+type TemplateNodeType = "directory" | "unknown" | "text" | "excelbook" | "html" | "markdown";
 
 export type TemplateNode = 
 {
@@ -63,6 +63,7 @@ const getTemplateType = (extension: string) : TemplateNodeType =>
     if (extension == "txt") return "text";
     if (extension == "xlsx") return "excelbook";
     if (extension == "html") return "html";
+    if (extension == "md") return "markdown";
 
     return "unknown";
 }

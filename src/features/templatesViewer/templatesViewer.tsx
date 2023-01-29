@@ -8,6 +8,7 @@ import { NodeListBox } from "./NodeList/NodeList";
 
 import {aaaa} from "./excel";
 import { TextViewer } from "./textViewer";
+import { MarkdownView } from "./markdownView";
 
 // import XlsxPopulate from "xlsx-populate";
 
@@ -211,13 +212,11 @@ export const TemplatesViewer = (props: Prop) =>
 
     const a = (node: TemplateNode | undefined) =>
     {
-        if (node == null) return <></>
+        console.log(node);
 
-
-        if (node.type == "text")
-        {
-            return <TextViewer text={utf8_decoder.decode(node.bytes)}></TextViewer>;
-        }
+        if (node == null) return <></>;
+        if (node.type == "text") return <TextViewer text={utf8_decoder.decode(node.bytes)}></TextViewer>;
+        if (node.type == "markdown") return <MarkdownView source={utf8_decoder.decode(node.bytes)}></MarkdownView>;
 
         // if (bytes == undefined) return <></>
 

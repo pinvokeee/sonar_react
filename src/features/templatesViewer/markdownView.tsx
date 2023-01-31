@@ -6,7 +6,7 @@ type Prop =
     source: string,
 }
 
-const md = new markdown();
+const md = new markdown({ html: true });
 
 const View = styled("div")(({theme}) =>
 (
@@ -20,17 +20,19 @@ const Frame = styled("iframe")(({theme}) =>
 (
     {
         width: "100%",
-        height: "calc(100% - 4px)",
+        height: "100%",
+        // height: "calc(100% - 4px)",
         padding: 0,
         margin: 0,
         border: "none",
+        // border: "solid gray 1px",
+        boxSizing: "content-box",
     }
 ));
 
 export const MarkdownView = (props: Prop) =>
 {
     const __html =  md.render(props.source);
-
     return <>
         <Frame sandbox="" srcDoc={__html}>
         </Frame>

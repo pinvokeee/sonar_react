@@ -1,5 +1,4 @@
-import styled from "@emotion/styled/types/base";
-import { AppBar, Toolbar, IconButton, Typography, Button, TextField, Input, OutlinedInput, Tooltip } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Typography, Button, TextField, Input, OutlinedInput, Tooltip, Box, styled } from "@mui/material";
 import { useContext, useMemo, useState } from "react";
 
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
@@ -13,6 +12,22 @@ import { DirectoryContext, HookDirectory, useDirectory } from "../../hooks/conte
 import { loadFromDirectoryHandle } from "../../loader";
 import { HookTemplates } from "../../hooks/contextTemplates";
 import { createTemplateTree } from "../../loader/templateLoader";
+
+const Flex = styled("div")(({theme}) =>
+(
+  {
+    display: "flex",
+    maxWidth: "20%",
+  }
+));
+
+const ButtonCase = styled("div")(({theme}) =>
+(
+  {
+    display: "flex",
+    justifyContent: "flex-end",
+  }
+));
 
 type Prop = 
 {
@@ -50,16 +65,21 @@ export const AppToolBar = (props: Prop) =>
     }
     
     return (
-        <AppBar position="static">
-          <Toolbar>
-            <SplitButton width="200px" options={topNodeTiles} onChangeSelectedIndex={onChangeTopNodeIndex}></SplitButton>
-            <SearchInput></SearchInput>
+        <AppBar elevation={0} position="static">
+          <Toolbar sx={{ justifyContent: "space-between" }}>
+            <SplitButton sx={{ width: 0, flex: 1 }} options={topNodeTiles} onChangeSelectedIndex={onChangeTopNodeIndex}></SplitButton>
+            {/* sx={{ flex: "1 1 auto" }} */}
 
-            <Tooltip title="フォルダーを選択する">
-              <IconButton color="inherit" onClick={ clickSelectFolder }>
-                <DriveFolderUploadIcon></DriveFolderUploadIcon>
-              </IconButton>
-            </Tooltip>
+            <SearchInput  sx={{ flex: 2 }}></SearchInput>
+
+            <ButtonCase sx={{ flex: 1 }}>
+              <Tooltip title="フォルダーを選択する">
+                <IconButton color="inherit" onClick={ clickSelectFolder }>
+                  <DriveFolderUploadIcon></DriveFolderUploadIcon>
+                </IconButton>
+              </Tooltip>
+            </ButtonCase>
+
           </Toolbar>
 
           <LoadingDirectoryDialog 

@@ -74,6 +74,7 @@ export const App = () =>
               {/* <TabList onChange={ (event : React.SyntheticEvent, value : string) => contextTabState.setValue(value)}> */}
               <TabList>
                 <Tab label="テンプレート" value="template"/>
+                <Tab label="検索" value="doc"/>
                 <Tab label="ドキュメント" value="doc"/>
               </TabList>
 

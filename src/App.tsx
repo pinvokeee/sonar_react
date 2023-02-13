@@ -13,6 +13,7 @@ import { AppToolBar } from './features/toolbar';
 
 import { DirectoryProvider, useDirectory } from './hooks/contextFile';
 import { useTemplates } from './hooks/contextTemplates';
+import { SearchKeywordDialog } from './components/common/dialog/searchKeywordDialog/SearchKeywordDialog';
 
 
 
@@ -65,6 +66,11 @@ export const App = () =>
         <context.selectedNodeContext.Provider value={contextSelectedNode}>
         <context.tabContext.Provider value={contextTabState}> */}
 
+        <SearchKeywordDialog>
+          
+        </SearchKeywordDialog>
+
+
         <MainContainer>
             <AppToolBar templatesHook={temHook} dirHook={dirHook}></AppToolBar>
 
@@ -85,6 +91,7 @@ export const App = () =>
             </TabContext>
 
         </MainContainer>
+        
 
         {/* </context.tabContext.Provider>
         </context.selectedNodeContext.Provider>

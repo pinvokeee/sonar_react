@@ -9,11 +9,15 @@ import { TabContext, TabList } from '@mui/lab';
 import { useMemo, useState } from 'react';
 
 import { TemplatesViewer } from './features/templatesViewer/templatesViewer';
-import { AppToolBar } from './features/toolbar';
+import { AppHeader } from './features/toolbar';
 
-import { DirectoryProvider, useDirectory } from './hooks/contextFile';
+import { useDirectory } from './hooks/contextFile';
 import { useTemplates } from './hooks/contextTemplates';
 import { SearchKeywordDialog } from './components/common/dialog/searchKeywordDialog/SearchKeywordDialog';
+import { useSearchState } from './hooks/useSeachState';
+import { atom, RecoilRoot, useRecoilValue } from 'recoil';
+import { currentDirectoryState } from './recoil/atoms/atomCurrentDirectory';
+import { FlowView } from './features/flowView/main';
 
 
 
@@ -58,21 +62,17 @@ export const App = () =>
 
   const temHook = useTemplates();
   const dirHook = useDirectory();
+  const searchHook = useSearchState();
+
 
   return (
     <div className="App">
-      
-        {/* <context.templatesNodeContext.Provider value={contextTemplates}>
-        <context.selectedNodeContext.Provider value={contextSelectedNode}>
-        <context.tabContext.Provider value={contextTabState}> */}
-
-        <SearchKeywordDialog>
-          
-        </SearchKeywordDialog>
-
+        <RecoilRoot>
+                  {/* <SearchKeywordDialog searchState={searchHook}>          
+        </SearchKeywordDialog> */}
 
         <MainContainer>
-            <AppToolBar templatesHook={temHook} dirHook={dirHook}></AppToolBar>
+            <AppHeader templatesHook={temHook} dirHook={dirHook} searchState={searchHook}></AppHeader>
 
             {/* <TabContext value={contextTabState.current as string}> */}
             <TabContext value="template">
@@ -85,13 +85,20 @@ export const App = () =>
               </TabList>
 
               <TabPanelEx value="template">
-                <TemplatesViewer templatesHook={temHook} />
+                <FlowView></FlowView>
+                {/* <TemplatesViewer templatesHook={temHook} /> */}
               </TabPanelEx>
 
             </TabContext>
 
         </MainContainer>
         
+
+        </RecoilRoot>
+        {/* <context.templatesNodeContext.Provider value={contextTemplates}>
+        <context.selectedNodeContext.Provider value={contextSelectedNode}>
+        <context.tabContext.Provider value={contextTabState}> */}
+
 
         {/* </context.tabContext.Provider>
         </context.selectedNodeContext.Provider>

@@ -1,4 +1,7 @@
-import { createContext, useState } from "react";
+import { createContext, useCallback, useState } from "react";
+import { useRecoilState } from "recoil";
+import { getEntriesCountFromDirectoryHandle, loadFromDirectoryHandle } from "../loader";
+import { currentDirectoryState } from "../recoil/atoms/atomCurrentDirectory";
 import { FileNode } from "../types";
 
 type Prop = 
@@ -25,37 +28,67 @@ export const useDirectory = () : HookDirectory =>
     }
 }
 
-
-
-
-
-// 以下用途どうしよう----------------------------------------
-
-type Context = {
-    directories: FileNode[],
-    setDirectories: (nodes: FileNode[]) => void,
+type State = 
+{
+    isProgress: boolean,
+    maximum: number,
+    current: number,
+    file: string,
 }
 
-export const DirectoryContext = createContext<Context>(
-    {
-        directories: [],
-        setDirectories: (nodes: FileNode[]) => {},
-    }
-);
-
-export const DirectoryProvider = (props: Prop) =>
+type UseCurrentDirectory = 
 {
-    const hook = useDirectory();
+    state: State,
+    asyncPickDirectory: () => void,
+}
 
-    const context : Context = 
+/**
+ * ディレクトリ選択・読み込み関連のカスタムフック
+ */
+export const useCurrentDirectory = () : UseCurrentDirectory => 
+{
+    const [isProgress, setIsProgress] = useState<boolean>(false);
+    const [maximum, setMaximum] = useState<number>(0);
+    const [current, setCurrent] = useState<number>(0);
+    const [file, setFile] = useState<string>("");
+
+    const [directory, setDirectory] = useRecoilState(currentDirectoryState);
+
+    const asyncPickDirectory = useCallback(async () =>
     {
-        directories: hook.directories,
-        setDirectories: hook.setDirectories,
-    }
+        const handle = await window.showDirectoryPicker();
+        const max = await getEntriesCountFromDirectoryHandle(handle);
 
-    return <>
-        <DirectoryContext.Provider value={context}>
-            {props.children}
-        </DirectoryContext.Provider>
-    </>
+        setMaximum(max);
+        setIsProgress(true);
+
+        await loadFromDirectoryHandle(handle, (e) =>
+        {
+            console.log(e);
+            setCurrent((count) => count++);
+            setFile(e);
+        })
+
+        setIsProgress(false);
+  
+        return ;
+
+    }, []);
+
+    // const loadFromHandle = useCallback((handle: ) =>
+    // {
+    //     // setDirectory()
+
+    // }, []);
+
+
+    return {
+        asyncPickDirectory,
+        state: {
+            isProgress,
+            maximum,
+            current,
+            file
+        }
+    }
 }

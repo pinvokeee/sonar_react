@@ -4,7 +4,9 @@ import React, { useCallback, useState } from "react"
 const flows : FlowPart[] = [
 {
     id: 0,
-    text: "フロー開始dddddddddddddddddddddddddddddddddddddddawdwa",
+    text: `フロー開始ddddddddddddddddddddddddddd
+    dddddddddd
+    dadwadaddawdwa`,
     children:
     [
         {
@@ -19,13 +21,13 @@ const flows : FlowPart[] = [
 
                 {
                     id: 3,
-                    text: "test1-child1-child2",
+                    text: "test1-child1-child2\ntest1-child1-child2",
                     children: []
                 },
 
                 {
                     id: 3,
-                    text: "test1-child1-child3",
+                    text: "test1-child1-child3\ntest1-child1-child3\ntest1-child1-child3",
                     children: [
                         {
                             id: 4,
@@ -103,17 +105,57 @@ const CardSpacer = styled("div")(({theme})=>
     }
 ));
 
-const TextCard = styled("div")(({theme})=>
+const TextCard = styled("pre")(({theme})=>
 (
     {
+        fontFamily: "inherit",
         padding: "16px 8px 16px 8px",
         border: "solid 2px gray",
         userSelect: "none",
         cursor: "pointer",
         borderRadius: "3px",
-        whiteSpace: "nowrap",
+        // whiteSpace: "nowrap",
+        margin: "auto",
+        width: "fit-content"
     }
 ));
+
+const Triangle = styled("div")(({theme}) =>
+(
+    {
+        width: 0,
+        height: 0,
+        borderStyle: "solid",
+        borderWidth: "12.1px 7px 0 7px",
+        borderColor: "#787878 transparent transparent transparent", 
+        position: "absolute",       
+        marginLeft: "calc(50% - 12px)",
+
+
+        // ":before":{
+        //     "position": "absolute",
+        //     "top": "8px",
+        //     "left": "0",
+        //     "border": "6px solid transparent",
+        //     "border-top": "7px solid #555",
+
+        //     // borde: 30px solid transparent;
+        //     // border-right: 30px solid transparent;
+        //     // border-bottom: 30px solid aqua;
+        // }
+    }
+));
+
+
+
+// .triangle{
+//     width: 0;
+//     height: 0;
+//     border-left: 30px solid transparent;
+//     border-right: 30px solid transparent;
+//     border-bottom: 30px solid aqua;
+//   }
+  
 
 
 const click = (flow: FlowPart) =>
@@ -189,7 +231,9 @@ const Flow = (prop: FlowPartProp) =>
                 {   prop.isMostLeft && prop.isMostRight ? <></> :
                     prop.isMostLeft ? createLeftLineBox() : 
                         prop.isMostRight ? createRightLineBox() : createMidLineBox()  }
-                <div style={{ height: "100%", width: "2px", backgroundColor: "gray", marginLeft: "calc(50%)", }}></div> 
+                <Triangle></Triangle>
+                    <div style={{ height: "100%", width: "2px", backgroundColor: "gray", marginLeft: "calc(50%)", }}>
+                    </div>
                 </Box>
                 : <></>
             }

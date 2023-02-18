@@ -173,13 +173,17 @@ export const FlowView = () =>
         selectionFlowPart(flow);
     }, [])    
 
-    return <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center"}}>
-        {
-            flows.map(f => 
-                <Flow part={f} onClick={ (ff) => select(ff) } isSelected={f == selectedFlowPart}></Flow>
-            )
-        }
-    </Box>
+    return <> 
+        <Box sx={{ width: "100%" }}>
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center"}}>
+            {
+                flows.map(f => 
+                    <Flow part={f} onClick={ (ff) => select(ff) } isSelected={f == selectedFlowPart}></Flow>
+                )
+            }
+            </Box>
+        </Box>
+    </>
 }
 
 type FlowPartProp =
@@ -223,7 +227,7 @@ const createMidLineBox = () =>
 const Flow = (prop: FlowPartProp) =>
 {
     return <React.Fragment>
-        <Box >
+        <Box>
 
             {   
                 prop.parent != undefined ? 

@@ -48,6 +48,7 @@ const callLoadFromDirectoryHandle = async (
                 parent: parentNode,
                 handle: value,
                 children: [],
+                path: currentPath + "/" + name,
             }
 
             newNode.children?.push(...await callLoadFromDirectoryHandle(value, newNode, currentPath + "/" + name, onProgress));
@@ -72,7 +73,8 @@ const callLoadFromDirectoryHandle = async (
                     name: filename[0],
                     extension: filename[1],
                     // binary: (await file.arrayBuffer()),
-                }
+                },
+                path: currentPath + "/" + name,
             }
 
             nodes.push(newNode);

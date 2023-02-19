@@ -1,4 +1,4 @@
-import { Button, styled } from "@mui/material";
+import { Box, Button, styled } from "@mui/material";
 
 const Container = styled("div")((theme) => 
 (
@@ -55,6 +55,37 @@ const ButtonSpace = styled("div")(({theme}) =>
     }
 ));
 
+type CopyBlockProp =
+{
+    text: string,
+}
+
+const CopyBlock = (props: CopyBlockProp) =>
+{
+    return <>
+        <Box sx={{ border: "solid 1px gray", padding: "8px", position: "relative" }}>    
+            {/* <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                
+            </Box> */}
+            <Button sx={{ position: "absolute", right: 8 }} onClick={ () => navigator.clipboard.writeText(props.text) }>コピー</Button>
+            <Block>{props.text}</Block>
+        </Box>
+    </>
+}
+
+type HtmlBlockProp =
+{
+    text: string,
+}
+
+const HtmlBlock = (props: HtmlBlockProp) =>
+{
+    return <>
+    <div dangerouslySetInnerHTML={ { __html: props.text } }></div>
+    </>
+}
+
+
 const createTextblocks = (source: string) => 
 {
     const maker = "$$$$$";
@@ -63,6 +94,7 @@ const createTextblocks = (source: string) =>
 
     const blocks: Textblock[] = [];
 
+    //もしマーカーが含まれていなければただのテキストブロックとして返す
     if (p1 == -1)
     {
         blocks.push({
@@ -73,6 +105,7 @@ const createTextblocks = (source: string) =>
         return blocks;
     }
 
+    //もしマーカーが含まれていれば
     while (p1 > -1)
     {
         const p2 = source.indexOf(maker, p1 + 1);
@@ -81,10 +114,41 @@ const createTextblocks = (source: string) =>
         const text = source.slice(p1 + maker.length, p2).trim();
         p1 = source.indexOf(maker, p2 + 1);
 
-        blocks.push({
-            kind: "info",
-            text,
-        });
+        if (text.startsWith("赤:"))
+        {
+            blocks.push({
+                kind: "red",
+                text: text.slice(2, text.length),
+            });
+        }
+        else if (text.startsWith("青:"))
+        {
+            blocks.push({
+                kind: "blue",
+                text: text.slice(2, text.length),
+            });
+        }
+        else if (text.startsWith("html:"))
+        {
+            blocks.push({
+                kind: "html",
+                text: text.slice(5, text.length),
+            });
+        }
+        else if (text.startsWith("[") && text.endsWith("]"))
+        {
+            blocks.push({
+                kind: "copy",
+                text: text.slice(1, text.length - 1),
+            });
+        }
+        else
+        {
+            blocks.push({
+                kind: "info",
+                text,
+            });
+        }
 
         const last = p1 > -1 ? p1 : source.length;
 
@@ -101,11 +165,18 @@ const createTemplateTextView = (blocks: Textblock[]) =>
 {
     const elements = [];
 
+    let pre = undefined;
+
     for (const block of blocks)
     {
         if (block.kind == "info") elements.push(<BlockInfo>{block.text}</BlockInfo>);
+        if (block.kind == "copy") elements.push(<CopyBlock text={ block.text }/>);
         if (block.kind == "text") elements.push(<Block>{block.text}</Block>);
+        // if (block.kind == "html") elements.push(<HtmlBlock text={ block.text }></HtmlBlock>);
+        if (block.kind == "blue") elements.push(<BlockInfo sx={{ color: "blue" }}>{block.text}</BlockInfo>);
+        if (block.kind == "red") elements.push(<BlockInfo sx={{ color: "red" }}>{block.text}</BlockInfo>);
 
+        pre = block;
     }
 
     return elements;
@@ -118,13 +189,13 @@ type Prop =
 
 type Textblock = 
 {
-    kind: "text" | "info",
-    text: string,
+    kind: "text" | "info" | "copy" | "html" | "red" | "blue",
+    text: string, 
 }
 
 const copy = (textblocks: Textblock[]) =>
 {
-    const text = textblocks.filter(t => t.kind == "text").map(t => t.text).join("\r\n");
+    const text = textblocks.filter(t => t.kind == "text" || t.kind == "copy").map(t => t.text).join("\r\n");
 
     navigator.clipboard.writeText(text).then(() =>
     {

@@ -39,6 +39,7 @@ export const useLoadDialog = () =>
       state.maximum = max;
 
       return await loadFromDirectoryHandle(handle, onProgress);
+      
     }, []);
 
     return {

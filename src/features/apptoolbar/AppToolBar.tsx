@@ -5,10 +5,9 @@ import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 import { FileNode } from "../../types";
 
 import { useLoadDialog } from "../../hooks/useLoadingDialog";
-import SplitButton from "./components/SplitButton";
-import { SearchInput } from "./components/SearchInput";
-import { LoadingDirectoryDialog } from "../../components/common/dialog/loadingDirectoryDialog/LoadingDirectoryDialog";
-import { HookDirectory, useCurrentDirectory, useDirectory } from "../../hooks/contextFile";
+import SplitButton from "../../components/elements/toolbar/SplitButton";
+import { SearchInput } from "../../components/elements/toolbar/SearchInput";
+import { LoadingDirectoryDialog } from "../dialog/LoadingDirectoryDialog";
 import { loadFromDirectoryHandle } from "../../loader";
 import { HookTemplates } from "../../hooks/contextTemplates";
 import { createTemplateTree } from "../../loader/templateLoader";
@@ -17,6 +16,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import { currentDirectoryState } from "../../recoil/atoms/atomCurrentDirectory";
+import { useLoader, useSelectedTemplates } from "../../hooks/useLoader";
 
 const Flex = styled("div")(({theme}) =>
 (
@@ -52,30 +52,34 @@ const SearchIconEx = styled(SearchIcon)(({ theme }) =>
 
 type Prop = 
 {
-  dirHook: HookDirectory,
-  templatesHook: HookTemplates,
-  searchState: SearchState,
   children?: React.ReactNode,
 }
 
 export const AppHeader = (props: Prop) =>
 {    
-
+  const loader = useLoader();
 
     const hookLoadDialog = useLoadDialog();
+    const h = useSelectedTemplates();
 
-    const topNodes = props.templatesHook.templates.filter(node => node.type == "directory");
+    const topNodes = loader.templates.filter(node => node.type == "directory");
     const topNodeTiles = topNodes.map(node => node.name);
 
     const onChangeTopNodeIndex = (index : number) =>
     {
-      props.templatesHook.setNode1(topNodes[index]);
+      h.setNode1(topNodes[index]);
+
+      console.log(topNodes[index]);
+
+      // props.templatesHook.setNode1(topNodes[index]);
     }
     
     const clickSelectFolder = () =>
     {
       hookLoadDialog.showDirectoryPicker().then(directories => 
       {
+        
+
         // setDirectory(directories);
 
 
@@ -89,10 +93,10 @@ export const AppHeader = (props: Prop) =>
       });
     }
 
-    const currentDirectory = useCurrentDirectory();
+
 
     return (
-        <AppBar elevation={0} position="static">          
+        <AppBar elevation={0} sx={{ width: "100vw" }} position="static">          
             <Toolbar sx={{ justifyContent: "space-between" }}>
 
             <SplitButton sx={{ width: 0, flex: 1 }} options={topNodeTiles} onChangeSelectedIndex={onChangeTopNodeIndex}></SplitButton>
@@ -105,7 +109,7 @@ export const AppHeader = (props: Prop) =>
 
             <ButtonCase sx={{ flex: 1 }}>
               <Tooltip title="フォルダーを選択する">
-                <IconButton color="inherit" onClick={ () => currentDirectory.asyncPickDirectory() }>
+                <IconButton color="inherit" onClick={ () => loader.pickTargetFolder() }>
                   <DriveFolderUploadIcon></DriveFolderUploadIcon>
                 </IconButton>
               </Tooltip>
@@ -114,10 +118,10 @@ export const AppHeader = (props: Prop) =>
           </Toolbar>
 
           <LoadingDirectoryDialog 
-            isOpen={currentDirectory.state.isProgress}
-            currentFile={currentDirectory.state.file}
-            currentProgress={currentDirectory.state.current}
-            maximumValue={currentDirectory.state.maximum}
+            isOpen={loader.loadingState.isProgress}
+            currentFile={loader.loadingState.file}
+            currentProgress={loader.loadingState.current}
+            maximumValue={loader.loadingState.maximum}
           />
           
         </AppBar>

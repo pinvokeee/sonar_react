@@ -1,13 +1,14 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, List, ListItemButton, ListItemText, styled } from "@mui/material";
 import { useCallback, useContext, useMemo, useState } from "react";
 import Split from 'react-split'
-import { HookTemplates } from "../../hooks/contextTemplates";
-import { TemplateNode } from "../../loader/templateLoader";
+import { HookTemplates } from "../../../hooks/contextTemplates";
+import { TemplateNode } from "../../../loader/templateLoader";
 import { NodeListBox } from "./NodeList/NodeList";
 
-import { TextViewer } from "./textViewer";
-import { MarkdownView } from "./markdownView";
+import { TextViewer } from "../../../components/viewer/TextContent";
+import { MarkdownView } from "../../../components/viewer/Markdown";
 import { ThreeSelecter } from "./threeSelecter";
+import { useSelectedTemplates } from "../../../hooks/useLoader";
 
 export const HSplitBox = styled(Split)(({ theme }) => 
 (
@@ -47,7 +48,7 @@ export const ScrollPanel = styled("div")(({ theme }) =>
 
 export type Prop =
 {
-    templatesHook: HookTemplates,
+
 }
 
 const utf8_decoder: TextDecoder = new TextDecoder();
@@ -55,6 +56,7 @@ const sjis_decoder = new TextDecoder("shift-jis");
 
 export const TemplatesViewer = (props: Prop) =>
 {
+    const h = useSelectedTemplates();
 
     const a = (node: TemplateNode | undefined) =>
     {
@@ -78,10 +80,10 @@ export const TemplatesViewer = (props: Prop) =>
     return (
         <>
             <VSplitBox direction="horizontal" minSize={100} sizes={[20, 20, 60]} gutterAlign="center" gutterSize={6} gutterStyle={GutterStyle}>
-                <ThreeSelecter templatesHook={props.templatesHook}></ThreeSelecter>
+                <ThreeSelecter></ThreeSelecter>
                 <Box>
                 {
-                    a(props.templatesHook.selectedTemplate)
+                    a(h.selectedNodes.contentNode)
                     // createTemplateTextView(utf8_decoder.decode(props.templatesHook.selectedTemplate?.bytes))
                 }
                 </Box>                

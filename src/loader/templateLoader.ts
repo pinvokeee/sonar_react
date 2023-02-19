@@ -9,11 +9,60 @@ export type TemplateNode =
     type: TemplateNodeType,
     bytes?: ArrayBuffer,
     children?: TemplateNode[],
+    fileNode: FileNode,
+    handle: FileSystemFileHandle | FileSystemDirectoryHandle | undefined,
+    path?: string,
 }
 
 export const createTemplateTree = async (sourceFileNode: FileNode[]) =>
 {
     return await callCreateTemplateTree(sourceFileNode);
+}
+
+export const reloadTemplateData = async (node: TemplateNode) =>
+{
+    await readFileHandle(node.fileNode);
+}
+
+const readFileHandle = async (n: FileNode) =>
+{
+    if (n.kind == "file")
+    {
+        const handle : FileSystemFileHandle = n.handle as FileSystemFileHandle;
+        const file = await handle.getFile();
+
+        const type = getTemplateType(n.file?.extension as string);
+
+        const node : TemplateNode = 
+        {
+            name: n.file?.name as string,
+            fullName: `${n.file?.name}.${n.file?.extension}`,
+            bytes: type != "unknown" ? (await file.arrayBuffer()) : undefined,
+            handle,
+            type,
+            fileNode: n,
+            path: n.path,
+        }
+
+        return node;
+    }
+    else
+    {
+        const node : TemplateNode = 
+        {
+            name: n.name,
+            fullName: `${n.name}`,
+            type: "directory",
+            handle: n.handle,
+            children: [],
+            fileNode: n,
+            path: n.path,
+        }
+
+        if (n.children != undefined) node.children?.push(...await callCreateTemplateTree(n.children, node));
+        
+        return node;
+    }
 }
 
 const callCreateTemplateTree = async (sourceFileNode: FileNode[], parentNode?: TemplateNode) =>
@@ -22,37 +71,8 @@ const callCreateTemplateTree = async (sourceFileNode: FileNode[], parentNode?: T
 
     for (const n of sourceFileNode)
     {
-        if (n.kind == "file")
-        {
-            const handle : FileSystemFileHandle = n.handle as FileSystemFileHandle;
-            const file = await handle.getFile();
-
-            const type = getTemplateType(n.file?.extension as string);
-
-            const node : TemplateNode = 
-            {
-                name: n.file?.name as string,
-                fullName: `${n.file?.name}.${n.file?.extension}`,
-                bytes: type != "unknown" ? (await file.arrayBuffer()) : undefined,
-                type
-            }
-
-            temp.push(node);
-        }
-        else
-        {
-            const node : TemplateNode = 
-            {
-                name: n.name,
-                fullName: `${n.name}`,
-                type: "directory",
-                children: [],
-            }
-
-            if (n.children != undefined) node.children?.push(...await callCreateTemplateTree(n.children, node));
-            
-            temp.push(node);
-        }
+        const node = await readFileHandle(n);
+        temp.push(node);
     }
 
     return temp;

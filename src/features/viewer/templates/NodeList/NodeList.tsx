@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Box, Button, List, ListItemButton, ListItemText, Paper, styled } from "@mui/material";
-import { FileNode } from "../../../../types"
 import { reloadTemplateData, TemplateNode } from '../../../../loader/templateLoader';
 import { useTemplates } from '../../../../hooks/contextTemplates';
 import { useTemplates2 } from '../../../../hooks/useLoader';

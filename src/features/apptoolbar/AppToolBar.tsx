@@ -2,8 +2,6 @@ import { AppBar, Toolbar, IconButton, Typography, Button, TextField, Input, Outl
 import { useContext, useMemo, useState } from "react";
 
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
-import { FileNode } from "../../types";
-
 import { useLoadDialog } from "../../hooks/useLoadingDialog";
 import SplitButton from "../../components/elements/toolbar/SplitButton";
 import { SearchInput } from "../../components/elements/toolbar/SearchInput";
@@ -15,7 +13,7 @@ import { SearchState } from "../../hooks/useSeachState";
 import SearchIcon from '@mui/icons-material/Search';
 import { useRecoilState, useRecoilValue } from "recoil";
 
-import { currentDirectoryState } from "../../recoil/atoms/atomCurrentDirectory";
+import { currentDirectoryState } from "../../recoil/atomCurrentDirectory";
 import { useLoader, useSelectedTemplates } from "../../hooks/useLoader";
 
 const Flex = styled("div")(({theme}) =>

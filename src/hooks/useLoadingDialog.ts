@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import { getEntriesCountFromDirectoryHandle, loadFromDirectoryHandle } from "../loader";
-import { FileNode } from "../types";
-
 type State = 
 {
   currentFilePath: string,

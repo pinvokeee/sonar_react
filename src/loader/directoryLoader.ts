@@ -1,10 +1,10 @@
-import { FileNode } from "../types";
+import { FileSystemNode } from "../class/fileSystem/types";
 
 /**
  * 子ノードを再帰で走査して親ノードを割り当てる
  * @param node 対象の親ノード
  */
-export const rootingParentNode = (node : FileNode) =>
+export const rootingParentNode = (node : FileSystemNode) =>
 {
     if (node.children == null) return ;
 
@@ -32,54 +32,54 @@ export const loadFromDirectoryHandle = async (handle : FileSystemDirectoryHandle
  */
 const callLoadFromDirectoryHandle = async (
     handle : FileSystemDirectoryHandle, 
-    parentNode : FileNode | null, 
+    parentNode : FileSystemNode | null, 
     currentPath? : string, 
     onProgress? : (currentFile : string) => void) =>
 {
-    const nodes = [];
+    const nodes: FileSystemNode[] = [];
 
-    for await (const [name, value] of handle.entries())
-    {
-        if (value.kind == "directory")
-        {
-            const newNode : FileNode = {
-                name: name,
-                kind: "directory",
-                parent: parentNode,
-                handle: value,
-                children: [],
-                path: currentPath + "/" + name,
-            }
+    // for await (const [name, value] of handle.entries())
+    // {
+    //     if (value.kind == "directory")
+    //     {
+    //         const newNode : FileSystemNode = {
+    //             name: name,
+    //             kind: "directory",
+    //             parent: parentNode,
+    //             handle: value,
+    //             children: [],
+    //             path: currentPath + "/" + name,
+    //         }
 
-            newNode.children?.push(...await callLoadFromDirectoryHandle(value, newNode, currentPath + "/" + name, onProgress));
+    //         newNode.children?.push(...await callLoadFromDirectoryHandle(value, newNode, currentPath + "/" + name, onProgress));
 
-            nodes.push(newNode);
-        }
-        else if (value.kind == "file")
-        {
-            const file = await value.getFile();
+    //         nodes.push(newNode);
+    //     }
+    //     else if (value.kind == "file")
+    //     {
+    //         const file = await value.getFile();
 
-            onProgress?.call(this, currentPath + "/" + file.name);
+    //         onProgress?.call(this, currentPath + "/" + file.name);
 
-            const filename = parseFromFileName(file.name);
+    //         const filename = parseFromFileName(file.name);
 
-            const newNode : FileNode =
-            {
-                name: name,
-                kind: "file",
-                parent: parentNode,
-                handle: value,
-                file: {
-                    name: filename[0],
-                    extension: filename[1],
-                    // binary: (await file.arrayBuffer()),
-                },
-                path: currentPath + "/" + name,
-            }
+    //         const newNode : FileSystemNode =
+    //         {
+    //             name: name,
+    //             kind: "file",
+    //             parent: parentNode,
+    //             handle: value,
+    //             file: {
+    //                 name: filename[0],
+    //                 extension: filename[1],
+    //                 // binary: (await file.arrayBuffer()),
+    //             },
+    //             path: currentPath + "/" + name,
+    //         }
 
-            nodes.push(newNode);
-        }
-    }
+    //         nodes.push(newNode);
+    //     }
+    // }
 
     return nodes;
 }

@@ -1,4 +1,4 @@
-import { FileNode } from "../types";
+import { FileSystemNode } from "../class/fileSystem/types";
 
 type TemplateNodeType = "directory" | "unknown" | "text" | "excelbook" | "html" | "markdown";
 
@@ -9,12 +9,12 @@ export type TemplateNode =
     type: TemplateNodeType,
     bytes?: ArrayBuffer,
     children?: TemplateNode[],
-    fileNode: FileNode,
+    fileNode: FileSystemNode,
     handle: FileSystemFileHandle | FileSystemDirectoryHandle | undefined,
     path?: string,
 }
 
-export const createTemplateTree = async (sourceFileNode: FileNode[]) =>
+export const createTemplateTree = async (sourceFileNode: FileSystemNode[]) =>
 {
     return await callCreateTemplateTree(sourceFileNode);
 }
@@ -24,7 +24,7 @@ export const reloadTemplateData = async (node: TemplateNode) =>
     await readFileHandle(node.fileNode);
 }
 
-const readFileHandle = async (n: FileNode) =>
+const readFileHandle = async (n: FileSystemNode) =>
 {
     if (n.kind == "file")
     {
@@ -65,7 +65,7 @@ const readFileHandle = async (n: FileNode) =>
     }
 }
 
-const callCreateTemplateTree = async (sourceFileNode: FileNode[], parentNode?: TemplateNode) =>
+const callCreateTemplateTree = async (sourceFileNode: FileSystemNode[], parentNode?: TemplateNode) =>
 {
     const temp : TemplateNode[] = [];
 

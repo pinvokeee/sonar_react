@@ -1,6 +1,5 @@
 import { createContext, useContext, useReducer, useState } from "react";
 import { TemplateNode } from "../loader/templateLoader";
-import { FileNode } from "../types";
 
 export type HookTemplates = 
 {

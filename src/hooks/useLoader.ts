@@ -1,9 +1,10 @@
 import { useCallback, useState } from "react";
 import { useRecoilState } from "recoil";
+import { FileSystemNode } from "../class/fileSystem/types";
 import { getEntriesCountFromDirectoryHandle, loadFromDirectoryHandle } from "../loader";
 import { createTemplateTree, reloadTemplateData, TemplateNode } from "../loader/templateLoader";
-import { selectedTemplateNodes, templateLibrary } from "../recoil/atoms/atomCurrentDirectory";
-import { FileNode, LoadingState, SelectedTemplates } from "../types";
+import { selectedTemplateNodes, templateLibrary } from "../recoil/atomCurrentDirectory";
+import { LoadingState, SelectedTemplates } from "../types";
 
 type UseLoader = 
 {
@@ -69,10 +70,11 @@ export const useTemplates2 = () : UseTemplates =>
 type UseCurrentDirectory = 
 {
     state: LoadingState,
-    asyncPickDirectory: () => Promise<FileNode[]>,
-    asyncLoadDirectory: (handle: FileSystemDirectoryHandle) => Promise<FileNode[]>,
-    directory: FileNode[],
+    asyncPickDirectory: () => Promise<FileSystemNode[]>,
+    asyncLoadDirectory: (handle: FileSystemDirectoryHandle) => Promise<FileSystemNode[]>,
+    directory: FileSystemNode[],
 }
+
 
 /**
  * ディレクトリ選択・読み込み関連のカスタムフック
@@ -84,7 +86,7 @@ export const useCurrentDirectory = () : UseCurrentDirectory =>
     const [current, setCurrent] = useState<number>(0);
     const [file, setFile] = useState<string>("");
 
-    const [directory, setDirectory] = useState<FileNode[]>([]);
+    const [directory, setDirectory] = useState<FileSystemNode[]>([]);
 
     const asyncPickDirectory = useCallback(async () =>
     {

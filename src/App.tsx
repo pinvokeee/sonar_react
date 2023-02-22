@@ -14,8 +14,10 @@ import { useTemplates } from './hooks/contextTemplates';
 import { SearchKeywordDialog } from './features/dialog/SearchKeywordDialog';
 import { useSearchState } from './hooks/useSeachState';
 import { atom, RecoilRoot, useRecoilValue } from 'recoil';
-import { currentDirectoryState } from './recoil/atoms/atomCurrentDirectory';
+import { currentDirectoryState } from './recoil/atomCurrentDirectory';
 import { FlowView } from './features/viewer/flow/main';
+import React from 'react';
+import { DialogSelectRepository } from './features/dialog/DialogSelectRepository';
 
 export const MainContainer = styled("div")(({ theme }) => 
 (
@@ -23,7 +25,7 @@ export const MainContainer = styled("div")(({ theme }) =>
         display: "grid",
         width: "100%",
         height: "100vh",
-        gridTemplateRows: "auto auto minmax(0, 1fr)",
+        gridTemplateRows: "auto minmax(0, 1fr)",
     }
 ));
 
@@ -48,39 +50,17 @@ class a
 
 export const App = () => 
 {  
-  const aaa = useMemo(() => new a(), []);
-
-  // const contextTemplates = context.useContextTemplateNode();
-  // const contextSelectedNode = context.useContextTemplateSelectedNode();
-
-  // const contextTabState = context.useContextTabState("template");
-
   return (
     <div className="App">
         <RecoilRoot>
+
+        <DialogSelectRepository></DialogSelectRepository>
+
         <MainContainer>
             <AppHeader></AppHeader>
-
-            {/* <TabContext value={contextTabState.current as string}> */}
-            <TabContext value="template">
-
-              {/* <TabList onChange={ (event : React.SyntheticEvent, value : string) => contextTabState.setValue(value)}> */}
-              <TabList>
-                <Tab label="テンプレート" value="template"/>
-                <Tab label="検索" value="doc"/>
-                <Tab label="ドキュメント" value="doc"/>
-              </TabList>
-
-              <TabPanelEx value="template">
-                {/* <FlowView></FlowView> */}
-                <TemplatesViewer />
-              </TabPanelEx>
-
-            </TabContext>
-
+            <TemplatesViewer />
         </MainContainer>
         </RecoilRoot>
-
     </div>
   )
 }

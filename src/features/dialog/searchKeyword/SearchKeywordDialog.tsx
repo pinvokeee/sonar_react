@@ -1,5 +1,5 @@
 import { Backdrop, Card, CardContent, CardHeader, styled, TextField, Typography } from "@mui/material";
-import { SearchState } from "../../hooks/useSeachState";
+import { SearchState } from "../../../hooks/useSeachState";
 
 const GrassBackdrop = styled(Backdrop)(({theme})=>
 (

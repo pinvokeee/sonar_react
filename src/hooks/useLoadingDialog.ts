@@ -1,47 +1,48 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
-import { getEntriesCountFromDirectoryHandle, loadFromDirectoryHandle } from "../loader";
-type State = 
-{
-  currentFilePath: string,
-  progress: number,
-  maximum: number,
-  isCompleted: boolean,
-}
+export {}
+// import { useCallback, useEffect, useReducer, useState } from "react";
 
-const resetState = () : State => 
-{
-  return { 
-      currentFilePath: "",
-      isCompleted: true,
-      progress: 0,
-      maximum: 0,
-   }
-}
+// type State = 
+// {
+//   currentFilePath: string,
+//   progress: number,
+//   maximum: number,
+//   isCompleted: boolean,
+// }
 
-export const useLoadDialog = () =>
-{
-    const [state, setState] = useState<State>(resetState());
+// const resetState = () : State => 
+// {
+//   return { 
+//       currentFilePath: "",
+//       isCompleted: true,
+//       progress: 0,
+//       maximum: 0,
+//    }
+// }
 
-    const onProgress = useCallback((file: string) =>
-    {
-      setState({ ...state, currentFilePath: file, progress: state.progress++, 
-        isCompleted: (state.progress >= state.maximum) });
-    }, []);
+// export const useLoadDialog = () =>
+// {
+//     const [state, setState] = useState<State>(resetState());
 
-    const showDirectoryPicker = useCallback(async () =>
-    {
-      setState(resetState());
+//     const onProgress = useCallback((file: string) =>
+//     {
+//       setState({ ...state, currentFilePath: file, progress: state.progress++, 
+//         isCompleted: (state.progress >= state.maximum) });
+//     }, []);
 
-      const handle = await window.showDirectoryPicker();
-      const max = await getEntriesCountFromDirectoryHandle(handle);
-      state.maximum = max;
+//     const showDirectoryPicker = useCallback(async () =>
+//     {
+//       setState(resetState());
 
-      return await loadFromDirectoryHandle(handle, onProgress);
+//       const handle = await window.showDirectoryPicker();
+//       const max = await getEntriesCountFromDirectoryHandle(handle);
+//       state.maximum = max;
+
+//       return await loadFromDirectoryHandle(handle, onProgress);
       
-    }, []);
+//     }, []);
 
-    return {
-      showDirectoryPicker,
-      state,
-    }
-}
+//     return {
+//       showDirectoryPicker,
+//       state,
+//     }
+// }

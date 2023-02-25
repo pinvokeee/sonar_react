@@ -9,6 +9,7 @@ import { TextViewer } from "../../../components/viewer/TextContent";
 import { MarkdownView } from "../../../components/viewer/Markdown";
 import { ThreeSelecter } from "./threeSelecter";
 import { useSelectedTemplates } from "../../../hooks/useLoader";
+import { repositorySelector } from "../../../controller/repository";
 
 export const HSplitBox = styled(Split)(({ theme }) => 
 (
@@ -56,7 +57,11 @@ const sjis_decoder = new TextDecoder("shift-jis");
 
 export const TemplatesViewer = (props: Prop) =>
 {
-    const h = useSelectedTemplates();
+    // const h = useSelectedTemplates();
+
+    const files = repositorySelector.useFileNodesSelector();
+
+    console.log(files);
 
     const a = (node: TemplateNode | undefined) =>
     {
@@ -83,7 +88,7 @@ export const TemplatesViewer = (props: Prop) =>
                 <ThreeSelecter></ThreeSelecter>
                 <Box>
                 {
-                    a(h.selectedNodes.contentNode)
+                    // a(h.selectedNodes.contentNode)
                     // createTemplateTextView(utf8_decoder.decode(props.templatesHook.selectedTemplate?.bytes))
                 }
                 </Box>                

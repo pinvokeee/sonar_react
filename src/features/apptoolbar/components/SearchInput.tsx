@@ -6,7 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 const SearchInputBase = styled("div")(({ theme }) => (
     {
         position: "relative",
-        padding: 6,
+        padding: 3,
         backgroundColor: alpha(theme.palette.common.white, 0.15),
         borderRadius: theme.shape.borderRadius,
         width: "600px",

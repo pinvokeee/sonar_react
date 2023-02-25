@@ -1,9 +1,8 @@
 import { useCallback, useState } from "react";
 import { useRecoilState } from "recoil";
 import { FileSystemNode } from "../class/fileSystem/types";
-import { getEntriesCountFromDirectoryHandle, loadFromDirectoryHandle } from "../loader";
+import { selectedTemplateNodes, templateLibrary } from "../define/recoil/atoms";
 import { createTemplateTree, reloadTemplateData, TemplateNode } from "../loader/templateLoader";
-import { selectedTemplateNodes, templateLibrary } from "../recoil/atomCurrentDirectory";
 import { LoadingState, SelectedTemplates } from "../types";
 
 type UseLoader = 
@@ -15,20 +14,20 @@ type UseLoader =
 
 export const useLoader = () : UseLoader =>
 {
-    const currentDirectory = useCurrentDirectory();
+    // const currentDirectory = useCurrentDirectory();
     const templates = useTemplates2();
 
     const pickTargetFolder = async () =>
     {
-        const dir = await currentDirectory.asyncPickDirectory();
-        const temp = await createTemplateTree(dir);
+        // const dir = await currentDirectory.asyncPickDirectory();
+        // const temp = await createTemplateTree(dir);
 
-        templates.setTemplates(temp);
-        console.log(dir, temp);
+        // templates.setTemplates(temp);
+        // console.log(dir, temp);
     }
 
     return {
-        loadingState: currentDirectory.state,
+        loadingState: { current: 0, file: "", isProgress: false, maximum: 0 },
         templates: templates.templates,
         pickTargetFolder,
     }
@@ -76,57 +75,57 @@ type UseCurrentDirectory =
 }
 
 
-/**
- * ディレクトリ選択・読み込み関連のカスタムフック
- */
-export const useCurrentDirectory = () : UseCurrentDirectory => 
-{
-    const [isProgress, setIsProgress] = useState<boolean>(false);
-    const [maximum, setMaximum] = useState<number>(0);
-    const [current, setCurrent] = useState<number>(0);
-    const [file, setFile] = useState<string>("");
+// /**
+//  * ディレクトリ選択・読み込み関連のカスタムフック
+//  */
+// export const useCurrentDirectory = () : UseCurrentDirectory => 
+// {
+//     const [isProgress, setIsProgress] = useState<boolean>(false);
+//     const [maximum, setMaximum] = useState<number>(0);
+//     const [current, setCurrent] = useState<number>(0);
+//     const [file, setFile] = useState<string>("");
 
-    const [directory, setDirectory] = useState<FileSystemNode[]>([]);
+//     const [directory, setDirectory] = useState<FileSystemNode[]>([]);
 
-    const asyncPickDirectory = useCallback(async () =>
-    {
-        const handle = await window.showDirectoryPicker();
-        return await asyncLoadDirectory(handle);
+//     const asyncPickDirectory = useCallback(async () =>
+//     {
+//         const handle = await window.showDirectoryPicker();
+//         return await asyncLoadDirectory(handle);
 
-    }, []);
+//     }, []);
 
-    const asyncLoadDirectory = useCallback(async (handle: FileSystemDirectoryHandle) =>
-    {
-        const max = await getEntriesCountFromDirectoryHandle(handle);
+//     const asyncLoadDirectory = useCallback(async (handle: FileSystemDirectoryHandle) =>
+//     {
+//         const max = await getEntriesCountFromDirectoryHandle(handle);
 
-        setMaximum(max);
-        setIsProgress(true);
+//         setMaximum(max);
+//         setIsProgress(true);
 
-        const files = await loadFromDirectoryHandle(handle, (e) =>
-        {
-            setCurrent((count) => count++);
-            setFile(e);
-        });
+//         const files = await loadFromDirectoryHandle(handle, (e) =>
+//         {
+//             setCurrent((count) => count++);
+//             setFile(e);
+//         });
 
-        setDirectory(files);
-        setIsProgress(false);
+//         setDirectory(files);
+//         setIsProgress(false);
         
-        return files;
+//         return files;
 
-    }, []);
+//     }, []);
 
-    return {
-        asyncPickDirectory,
-        asyncLoadDirectory,
-        directory,
-        state: {
-            isProgress,
-            maximum,
-            current,
-            file
-        }
-    }
-}
+//     return {
+//         asyncPickDirectory,
+//         asyncLoadDirectory,
+//         directory,
+//         state: {
+//             isProgress,
+//             maximum,
+//             current,
+//             file
+//         }
+//     }
+// }
 
 type UseSelectedTemplates =
 {

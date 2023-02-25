@@ -68,8 +68,13 @@ export class Directory
 
                 if (isTarget) 
                 {
+                    if (entry.kind == "file" && node.file != undefined)
+                    {
+                        node.file.binary = await (await entry.getFile()).arrayBuffer();
+                    }
+
                     nodes.push(node);
-                    onProgress?.call(this, node);                 
+                    onProgress?.call(this, node);
                 }
             }
        

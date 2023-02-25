@@ -2,7 +2,7 @@
 
 
 import './App.css'
-import { Tabs, Tab, styled, Box, Container } from '@mui/material';
+import { Tabs, Tab, styled, Box, Container, Button, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import TabPanel from '@mui/lab/TabPanel';
 import { TabContext, TabList } from '@mui/lab';
 import { useMemo, useState } from 'react';
@@ -11,13 +11,11 @@ import { TemplatesViewer } from './features/viewer/templates/templatesViewer';
 import { AppHeader } from './features/apptoolbar/AppToolBar';
 
 import { useTemplates } from './hooks/contextTemplates';
-import { SearchKeywordDialog } from './features/dialog/SearchKeywordDialog';
+import { SearchKeywordDialog } from './features/dialog/searchKeyword/SearchKeywordDialog';
 import { useSearchState } from './hooks/useSeachState';
-import { atom, RecoilRoot, useRecoilValue } from 'recoil';
-import { currentDirectoryState } from './recoil/atomCurrentDirectory';
-import { FlowView } from './features/viewer/flow/main';
-import React from 'react';
-import { DialogSelectRepository } from './features/dialog/DialogSelectRepository';
+import { atom, RecoilRoot, useRecoilState, useRecoilValue } from 'recoil';
+import { DialogSelectRepository } from './features/dialog/selectRepository/DialogSelectRepository';
+import { DialogLoadingRepository } from './features/dialog/loadingRepository/DialogLoadingDirectory';
 
 export const MainContainer = styled("div")(({ theme }) => 
 (
@@ -36,31 +34,32 @@ export const TabPanelEx = styled(TabPanel)(({ theme }) =>
   }
 ));
 
-class a
-{
-  test : string = "TEST";
 
-  constructor()
-  {
-    // console.log("AAAA");
-  }
+export const App = () => {
+    
+  const theme = createTheme({
+    palette: {
+      // mode: 'dark'
+    }
+  });
 
-
-}
-
-export const App = () => 
-{  
   return (
     <div className="App">
         <RecoilRoot>
+        <ThemeProvider theme={theme}>
+        <CssBaseline />
+        
+            <DialogSelectRepository></DialogSelectRepository>
+            <DialogLoadingRepository></DialogLoadingRepository>
 
-        <DialogSelectRepository></DialogSelectRepository>
+            <MainContainer>
+                <AppHeader></AppHeader>
+                <TemplatesViewer />
+            </MainContainer>
+          </ThemeProvider>
 
-        <MainContainer>
-            <AppHeader></AppHeader>
-            <TemplatesViewer />
-        </MainContainer>
         </RecoilRoot>
+
     </div>
   )
 }

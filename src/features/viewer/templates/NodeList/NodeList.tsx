@@ -33,13 +33,10 @@ export const NodeListBox = (prop : INodeLIstBoxProp) =>
     const filter = prop.filter;
     const filteredNodes = filter ? nodes.filter(n => filter?.call(this, n.kind)) : nodes;
     
-    console.log(ns);
-
     const act = (n: FileSystemNode) =>
     {
         actions.loadFile(n).then((r) => 
         {
-
             console.log(r);
         });
     }
@@ -56,7 +53,7 @@ export const NodeListBox = (prop : INodeLIstBoxProp) =>
                         disableRipple={true} 
                         >
                         { n.name }
-                        <Button onClick={ () => act(n) }>aaa</Button>
+                        <Button sx={{ marginLeft: "auto" }} onClick={ () => act(n) }>aaa</Button>
                         </ListItemButton>
                     })
                 }

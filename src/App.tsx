@@ -5,7 +5,7 @@ import './App.css'
 import { Tabs, Tab, styled, Box, Container, Button, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import TabPanel from '@mui/lab/TabPanel';
 import { TabContext, TabList } from '@mui/lab';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { TemplatesViewer } from './features/viewer/templates/templatesViewer';
 import { AppHeader } from './features/apptoolbar/AppToolBar';
@@ -43,20 +43,47 @@ export const App = () => {
     }
   });
 
+  const [s, ss] = useState<Map<string, string>>(new Map());
+  const [refresh, setr] = useState(false);  
+
+  console.log(refresh);
+
+  useEffect(() =>
+  {
+    s.set("chinko", "testa");
+    setr((r) => !r);
+    ss(new Map(s));
+  }, [])
+
+  const a = () =>
+  {
+    s.set("aiueo", "kakikukeko");
+    s.set("aiueo", "kakikukeko");
+    setr((r) => !r);
+    // ss(new Map(s));
+  }
+
   return (
     <div className="App">
         <RecoilRoot>
         <ThemeProvider theme={theme}>
-        <CssBaseline />
+          <CssBaseline />
         
-            <DialogSelectRepository></DialogSelectRepository>
-            <DialogLoadingRepository></DialogLoadingRepository>
+            {
+              Array.from(s).map(([key, value]) => <div>{value}</div>)
+            }
 
-            <MainContainer>
+            <Button onClick={()=>a()}>AIEUO</Button>
+
+            {/* <DialogSelectRepository></DialogSelectRepository> */}
+            {/* <DialogLoadingRepository></DialogLoadingRepository> */}
+
+            {/* <MainContainer>
                 <AppHeader></AppHeader>
                 <TemplatesViewer />
-            </MainContainer>
-          </ThemeProvider>
+            </MainContainer> */}
+
+        </ThemeProvider>
 
         </RecoilRoot>
 

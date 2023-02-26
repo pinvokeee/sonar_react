@@ -1,6 +1,8 @@
 import { styled } from "@mui/material";
 import Split from 'react-split'
+import { FileSystemNode } from "../../../class/fileSystem/types";
 import { handleNodes } from "../../../controller/handleNodes";
+import { selectedHandleNodes } from "../../../controller/selectedNodes";
 import { NodeListBox } from "./NodeList/NodeList";
 
 const HSplitBox = styled(Split)(({ theme }) => 
@@ -30,7 +32,12 @@ export const ThdimensionList = (props: Prop) =>
 {
     // const h = useSelectedTemplates();
 
-    const nodes = handleNodes.selectors.useFileNodesSelector();
+    const selectionNodes = selectedHandleNodes.selectors.useSelectedObject();
+    const targetSelectedNode = selectionNodes.find(n => n != undefined && n.kind == "directory");
+    const nodes: FileSystemNode[] = [];
+    // const nodes = targetSelectedNode != undefined ? targetSelectedNode.children as FileSystemNode[] : [];
+
+    // const nodes = handleNodes.selectors.useFileNodesSelector();
 
 
     return <>

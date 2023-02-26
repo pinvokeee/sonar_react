@@ -59,7 +59,7 @@ const readFileHandle = async (n: FileSystemNode) =>
             path: n.path,
         }
 
-        if (n.children != undefined) node.children?.push(...await callCreateTemplateTree(n.children, node));
+        // if (n.children != undefined) node.children?.push(...await callCreateTemplateTree(n.children, node));
         
         return node;
     }

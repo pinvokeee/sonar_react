@@ -20,7 +20,7 @@ export class Directory
 
         for await (const [name, entry] of handle.entries())
         {
-            const isTarget = onFilter ? onFilter.call(this, { name, kind: entry.kind }) : true;
+            const isTarget = onFilter ? onFilter.call(this, { name, kind: entry.kind, path: "" }) : true;
 
             if (isTarget)
             {
@@ -42,9 +42,9 @@ export class Directory
         onProgress?: (e: FileSystemNode) => void, 
         onFilter?: (node: FileSystemNode) => boolean) =>
     {
-        return new Promise(async (resolve: (e: FileSystemNode[]) => void, reject) =>
+        return new Promise(async (resolve: (e: Map<string, FileSystemNode>) => void, reject) =>
         {
-            const nodes: FileSystemNode[] = [];
+            const nodes: Map<string, FileSystemNode> = new Map();
             const parentPath = parentNode ? parentNode.path : "";
 
             for await (const [name, entry] of targetHandle.entries())
@@ -74,7 +74,7 @@ export class Directory
                         node.file.binary = await (await entry.getFile()).arrayBuffer();
                     }
 
-                    nodes.push(node);
+                    nodes.set(node.path, node);
                     onProgress?.call(this, node);
                 }
             }

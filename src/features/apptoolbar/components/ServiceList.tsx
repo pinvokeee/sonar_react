@@ -1,94 +1,66 @@
-import { Box, Button, ButtonGroup, IconButton, Menu, MenuItem, MenuList, Paper, Popper, styled, SxProps, Theme, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import * as material from "@mui/material";
+import React, { useState } from "react";
 import { handleNodes } from "../../../controller/handleNodes";
-import { selectedFileNode } from "../../../controller/selectedNodes";
+import SplitButton from "../../../components/elements/toolbar/SplitButton";
+import { FileSystemNode } from "../../../class/fileSystem/types";
+import { selectedHandleNodes } from "../../../controller/selectedNodes";
+import { MapExt } from "../../../util/util";
 
-type SplitButtonProps =
+type Props =
 {
-    sx?: SxProps<Theme>,     
-    children?: React.ReactNode,
+    sx?: material.SxProps<material.Theme>, 
 }
 
-const Flex = styled("div")(({theme}) => 
+const Flex = material.styled("div")(({theme}) => 
 (
     {
         display: "flex",
     }
 ));
 
-
-export const ServiceList = (props : SplitButtonProps) =>
+const getText = (item: FileSystemNode) =>
 {
-    const [anchorRef, setAnchorRef] = React.useState<HTMLElement | null>(null);
-    const [selectedIndex, setSelectedIndex] = useState<number>(0);
-
-    const nodes = handleNodes.selectors.useTemplatesDirectoryNode();
-    // const selectionNodes = selectedFileNode.selectors.useSelectionNodes();
-
-    const topNodes = nodes != null && nodes.children != null ? nodes.children.filter(n => n.kind == "directory") : [];
-
-
-
-    const handleClose = () => 
-    {
-        setAnchorRef(null);
-    }
-
-
-    const handleMenu = (event: React.MouseEvent<HTMLElement>) =>
-    {
-        setAnchorRef(event.currentTarget)
-    }
-
-    const selectionMenu = (newIndex : number) =>
-    {
-        setSelectedIndex(newIndex);
-        handleClose();
-
-        // props.onChangeSelectedIndex?.call(this, newIndex);
-    }
-
-
-
-    // const width = props.width != undefined ? props.width : "";
-    const maxWidth = "100%";
-
-    return (
-        <Flex sx={props.sx}>
-            {/* <ButtonGroup color="inherit">
-                <Button color="inherit" sx={{ width: 250, textTransform : "none" }}>{props.options[selectedIndex]}</Button>
-                <Button size="small" onClick={handleMenu}>
-                    <ArrowDropDownIcon color="inherit" />
-                </Button>
-            </ButtonGroup> */}
-            
-            <Typography onClick={handleMenu} 
-            overflow={"hidden"} 
-            textOverflow={"ellipsis"} 
-            whiteSpace={"nowrap"} 
-            color="inherit" 
-            sx={{ userSelect: "none", textAlign: "left", padding:"6px", cursor: "pointer" }}>{"test"}</Typography>    
-            <IconButton onClick={handleMenu} color="inherit">                
-                <ArrowDropDownIcon color="inherit" />
-            </IconButton>
-
-            <Menu
-                id="menu-appbar"
-                anchorEl={anchorRef}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                open={Boolean(anchorRef)}                 
-                onClose={handleClose} >
-                    {
-                        topNodes.map((n, i) =>(
-                        <MenuItem 
-
-                        >{n.name}</MenuItem>))
-                    }
-            </Menu>
-        </Flex>
-    )
+    if (item == undefined) return "";
+    return item.name;
 }
 
-export default ServiceList;
+const getKey = (item: FileSystemNode) =>
+{
+    if (item == undefined || item.path == undefined) return "";
+    return item.path;
+}
+
+export const ServiceSelecter = (props : Props) =>
+{
+    const actions = handleNodes.useActions();
+
+    const sel = selectedHandleNodes.selectors.useSelectedObject();
+    const selectedAction = selectedHandleNodes.useActions();
+
+    const [selectionItem, setSelectionItem] = useState<FileSystemNode | undefined>(undefined);
+
+    const nodes = handleNodes.selectors.useFileNodesSelector();
+    const topNodes = MapExt.filter(nodes, (v) => v.kind == "directory");
+
+    // nodes.filter(n => n.kind == "directory");
+
+    const changeItem = (item: FileSystemNode) =>
+    {
+        selectedAction.setSelectedObject([item, undefined, undefined, undefined]);
+        setSelectionItem(item);
+        console.log(sel);
+    }
+
+    return (
+        <SplitButton 
+        sx={{ flex: "1" }}
+        // sx={{ width: "30%", }}
+        // items={topNodes}
+        items={[]} 
+        selectedItem={selectionItem} 
+        onGetKey={getKey} 
+        onChange={changeItem} 
+        onGetText={getText}>    
+        </SplitButton>
+    )
+}

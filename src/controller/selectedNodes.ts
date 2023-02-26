@@ -1,38 +1,19 @@
 import { useCallback } from "react";
 import { selector, useRecoilState, useRecoilValue } from "recoil";
 import { FileSystemNode } from "../class/fileSystem/types";
-import { selectedFileNodes } from "../define/recoil/atoms";
+import { AtomSelectedFileNodes } from "../define/recoil/atoms";
 import { selectorKeys } from "../define/recoil/keys";
 
-export type SelectedNodes = 
-{
-    nodes: (FileSystemNode | undefined)[],
-}
+export type SelectedHandleNode = (FileSystemNode | undefined);
 
-
-// const [nodes, setNodes] = useRecoilState(selectedFileNodes);
-
-// const a = useCallback((n: SelectedNodes) =>
-// {
-//     setNodes(n);
-// }, []);
-
-// return { a }
-
-export const selectedFileNode = 
+export const selectedHandleNodes = 
 {
     useActions: () =>
     {
-        const [nodes, setNodes] = useRecoilState(selectedFileNodes);
+        const [nodes, setNodes] = useRecoilState(AtomSelectedFileNodes);
 
         return {
-
-            setSelectedObject: useCallback((n: SelectedNodes) =>
-            {
-                setNodes(n);
-            }, []),
-
-            
+            setSelectedObject: (n: SelectedHandleNode[]) => setNodes(n)
         }
     },
 
@@ -44,8 +25,8 @@ export const selectedFileNode =
 
 const Selector = 
 {    
-    getSelectionNodes: selector<SelectedNodes>({
+    getSelectionNodes: selector<SelectedHandleNode[]>({
         key: selectorKeys.SEL_SELECTION_FILE_NODES,
-        get: ({get}) => get(selectedFileNodes)
+        get: ({get}) => get(AtomSelectedFileNodes)
     }),
 }

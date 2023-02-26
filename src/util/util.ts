@@ -15,3 +15,24 @@ export const generateUuid = () =>
     }
     return chars.join("");
 }
+
+export const MapExt = 
+{
+    find: <KT, OT>(mapObject: Map<KT, OT>, matched: (item: OT) => boolean) =>
+    {
+        const item = Array.from(mapObject).find(([key, value]) => matched(value));
+        return item ? item[1] : undefined;
+    },
+
+    filter: <KT, OT>(mapObject: Map<KT, OT>, matched: (item: OT) => boolean) =>
+    {
+        const temp = new Map<KT, OT>();
+
+        mapObject.forEach((value, key) => 
+        {
+            if (matched(value)) temp.set(key, value);
+        });
+
+        return temp;
+    }
+}

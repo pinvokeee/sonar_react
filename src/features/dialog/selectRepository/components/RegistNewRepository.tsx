@@ -1,16 +1,11 @@
 import { Button } from "@mui/material"
-import { FileSystemNode } from "../../../../class/fileSystem/types"
-import { repositoryActions } from "../../../../controller/repository"
-
-type Props =
-{
-
-}
+import { repository } from "../../../../controller/repository"
 
 export const RegistNewRepository = () =>
-{    
+{
+    const actions = repository.useActions();
 
     return <>
-        <Button variant="contained" onClick={repositoryActions.useRegistRepository()} disableElevation>フォルダを追加</Button>
+        <Button variant="contained" onClick={ () => actions.registRepository() } disableElevation>フォルダを追加</Button>
     </>
 }

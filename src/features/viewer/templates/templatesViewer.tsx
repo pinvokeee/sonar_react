@@ -7,9 +7,7 @@ import { NodeListBox } from "./NodeList/NodeList";
 
 import { TextViewer } from "../../../components/viewer/TextContent";
 import { MarkdownView } from "../../../components/viewer/Markdown";
-import { ThreeSelecter } from "./threeSelecter";
-import { useSelectedTemplates } from "../../../hooks/useLoader";
-import { repositorySelector } from "../../../controller/repository";
+import { ThdimensionList } from "./threeSelecter";
 
 export const HSplitBox = styled(Split)(({ theme }) => 
 (
@@ -59,13 +57,12 @@ export const TemplatesViewer = (props: Prop) =>
 {
     // const h = useSelectedTemplates();
 
-    const files = repositorySelector.useFileNodesSelector();
+    // const files = fileNodeSelector.useTemplatesDirectoryNode();
 
-    console.log(files);
+    // console.log(files);
 
     const a = (node: TemplateNode | undefined) =>
     {
-        console.log(node);
 
         if (node == null) return <></>;
         if (node.type == "text") return <TextViewer text={utf8_decoder.decode(node.bytes)}></TextViewer>;
@@ -85,7 +82,7 @@ export const TemplatesViewer = (props: Prop) =>
     return (
         <>
             <VSplitBox direction="horizontal" minSize={100} sizes={[20, 20, 60]} gutterAlign="center" gutterSize={6} gutterStyle={GutterStyle}>
-                <ThreeSelecter></ThreeSelecter>
+                <ThdimensionList></ThdimensionList>
                 <Box>
                 {
                     // a(h.selectedNodes.contentNode)

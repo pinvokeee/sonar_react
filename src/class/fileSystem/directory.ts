@@ -32,12 +32,13 @@ export class Directory
         return count;
     }
 
-    static loadFromHandle = (handle: FileSystemDirectoryHandle, onProgress?: (e: FileSystemNode) => void) =>
+    static readFromHandle = (handle: FileSystemDirectoryHandle, isReading?: boolean, onProgress?: (e: FileSystemNode) => void) =>
     {
-        return this.loadEntries(handle, undefined, onProgress);
+        return this.readEntries(handle, undefined, isReading, onProgress);
     }
 
-    private static loadEntries = async (targetHandle: FileSystemDirectoryHandle, parentNode? : FileSystemNode, 
+    private static readEntries = async (targetHandle: FileSystemDirectoryHandle, parentNode? : FileSystemNode, 
+        isReading?: boolean,
         onProgress?: (e: FileSystemNode) => void, 
         onFilter?: (node: FileSystemNode) => boolean) =>
     {
@@ -56,19 +57,19 @@ export class Directory
                     path: `${parentPath}/${name}`,
                 }
 
-                if (entry.kind == "directory") node.children = await this.loadEntries(entry, node, onProgress);
+                if (entry.kind == "directory") node.children = await this.readEntries(entry, node, isReading, onProgress);
 
                 if (entry.kind == "file")
                 {
                     const [name, extension] = File.getNameSection(entry.name);
-                    node.file = { name, extension }
+                    node.file = { name, extension, binary: undefined }
                 }
 
                 const isTarget = onFilter ? onFilter.call(this, node) : true;
 
                 if (isTarget) 
                 {
-                    if (entry.kind == "file" && node.file != undefined)
+                    if (isReading && entry.kind == "file" && node.file != undefined)
                     {
                         node.file.binary = await (await entry.getFile()).arrayBuffer();
                     }

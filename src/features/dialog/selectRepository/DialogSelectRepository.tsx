@@ -3,23 +3,24 @@ import { useMemo, useState } from "react";
 import { Directory } from "../../../class/fileSystem/directory"
 import { FileSystemNode } from "../../../class/fileSystem/types";
 import { dialogStates, dialogStateSelector } from "../../../controller/dialogState";
-import { repositoryActions } from "../../../controller/repository";
 import { DialogNames } from "../../../define/dialogNames";
 import { useLoadRepository as useLoadRepository } from "../../../hooks/useLoadRepository";
 import { DialogLoadingRepository } from "../loadingRepository/DialogLoadingDirectory";
+import { CloseSelectRegistoryDialog } from "./components/CloseSelectRegistoryDialog";
 import { RegistNewRepository } from "./components/RegistNewRepository";
 import { RepositoryList } from "./components/RepositoryList";
 
 export const DialogSelectRepository = () =>
 {
    const state = dialogStates.useCurrentState();
+   const isShown = state.name == DialogNames.SelectRepository || state.name == DialogNames.ReSelectRepository;
 
     return <>
-        <Backdrop sx={{ zIndex: 1 }} open={state.name == DialogNames.SelectRepository}>
+        <Backdrop sx={{ zIndex: 1 }} open={isShown}>
 
             {/* <DialogLoadingRepository isOpen={loadRepository.state.isProgress}></DialogLoadingRepository> */}
 
-            <Dialog open={state.name == DialogNames.SelectRepository}>
+            <Dialog open={isShown}>
                 
                 <DialogTitle sx={{ textAlign: "left" }}>リポジトリ選択</DialogTitle>
                 <DialogContent>
@@ -33,6 +34,7 @@ export const DialogSelectRepository = () =>
 
                 <DialogActions>
                     <RegistNewRepository></RegistNewRepository>
+                    <CloseSelectRegistoryDialog></CloseSelectRegistoryDialog>
                 </DialogActions>
 
             </Dialog>

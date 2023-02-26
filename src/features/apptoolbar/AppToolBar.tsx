@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, IconButton, Typography, Button, TextField, Input, OutlinedInput, Tooltip, Box, styled, InputBase } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Typography, Button, TextField, Input, OutlinedInput, Tooltip, Box, styled, InputBase, MenuItem } from "@mui/material";
 
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 import { SearchInput } from "./components/SearchInput";
@@ -6,8 +6,9 @@ import { DialogLoadingRepository } from "../dialog/loadingRepository/DialogLoadi
 import SearchIcon from '@mui/icons-material/Search';
 
 import { useLoader, useSelectedTemplates } from "../../hooks/useLoader";
-import { repositoryActions } from "../../controller/repository";
-import SplitButton from "./components/SplitButton";
+import ServiceList from "./components/ServiceList";
+import { repository } from "../../controller/repository";
+import { handleNodes } from "../../controller/handleNodes";
 
 const Flex = styled("div")(({theme}) =>
 (
@@ -50,48 +51,67 @@ export const AppHeader = (props: Prop) =>
 {    
   const loader = useLoader();
 
-    // const hookLoadDialog = useLoadDialog();
     const h = useSelectedTemplates();
 
-    const topNodes = loader.templates.filter(node => node.type == "directory");
-    const topNodeTiles = topNodes.map(node => node.name);
+    const reposActions = repository.useActions();
 
-    const onChangeTopNodeIndex = (index : number) =>
+    // const options = topNodes.map(n => n.name);
+
+    // const onChangeTopNodeIndex = (index : number) =>
+    // {
+    //   fileNodeAction.useSelectTopNode(topNodes[index]);
+    // }
+    const actions = handleNodes.useActions()
+    const us = handleNodes.selectors.useFileNodesSelector();
+
+    const handleSelectRepos = async () =>
     {
-      h.setNode1(topNodes[index]);
+      // console.log(us);
+      // const f = actions.loadFile(us.nodes[17]);
 
-      console.log(topNodes[index]);
+      // reposActions.selectionRepository();
 
-      // props.templatesHook.setNode1(topNodes[index]);
-    }
-    
-    const clickSelectFolder = () =>
-    {
-      // hookLoadDialog.showDirectoryPicker().then(directories => 
+      // const a = us[0];
+
+      // if (a.children != null)
       // {
+      //   // const h = (a.children[0].handle as FileSystemFileHandle);
         
+      //   // a.children[0].file.binary = await (await h.getFile()).arrayBuffer();
 
-      //   // setDirectory(directories);
+      //   // actions.loadFile(a.children[0]).then(r =>
+      //   //   {
+      //   //     console.log(r, a);            
+      //   //   })
 
 
-      //   // props.dirHook.setDirectories(directories);
-
-      //   // createTemplateTree(directories).then(templates =>
-      //   // {
-      //   //   props.templatesHook.setTemplates(templates);
-      //   // })
-        
-      // });
+      // }
+      
+      // const f = fileNode.useActions().loadFile(us[4]);
     }
-
-
 
     return (
         <AppBar elevation={0} sx={{ width: "100vw" }} position="static" enableColorOnDark>          
             <Toolbar variant="dense" sx={{ justifyContent: "space-between" }}>
+{/* 
+            <SplitButton sx={{ width: 0, flex: 1 }} 
+                onChangeSelectedIndex={ (index) => fileNodeAction.useSelectTopNode(topNodes[index]) } /> */}
 
-            <SplitButton sx={{ width: 0, flex: 1 }} options={topNodeTiles} onChangeSelectedIndex={onChangeTopNodeIndex}></SplitButton>
+
+                {/* <Button onClick={(e) => fileNodeAction.useSelectTopNode()}>TEST</Button> */}
+{/* 
+            <SplitButton sx={{ width: 0, flex: 1 }} isOpen={o} selectedText="">
+            {
+              topNodes.map(node => 
+              {
+                return <MenuItem key={node.name} onClick={a}>{node.name}</MenuItem>
+              })
+            }
+            </SplitButton> */}
+
             {/* sx={{ flex: "1 1 auto" }} */}
+
+            <ServiceList></ServiceList>
 
             <SearchInput sx={{ flex: 2 }}>
               <SearchIconEx></SearchIconEx>
@@ -100,7 +120,7 @@ export const AppHeader = (props: Prop) =>
 
             <ButtonCase sx={{ flex: 1 }}>
               <Tooltip title="リポジトリを再選択">
-                <IconButton color="inherit" onClick={ repositoryActions.useSelectionRepository() }>
+                <IconButton color="inherit" onClick={ () => handleSelectRepos() }>
                   <DriveFolderUploadIcon></DriveFolderUploadIcon>
                 </IconButton>
               </Tooltip>

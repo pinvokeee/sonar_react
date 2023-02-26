@@ -1,12 +1,13 @@
 import { Box, Button, ButtonGroup, IconButton, Menu, MenuItem, MenuList, Paper, Popper, styled, SxProps, Theme, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { handleNodes } from "../../../controller/handleNodes";
+import { selectedFileNode } from "../../../controller/selectedNodes";
 
 type SplitButtonProps =
 {
-    sx?: SxProps<Theme>, 
-    options : string[],
-    onChangeSelectedIndex? : (selectedIndex : number) => void,
+    sx?: SxProps<Theme>,     
+    children?: React.ReactNode,
 }
 
 const Flex = styled("div")(({theme}) => 
@@ -17,21 +18,38 @@ const Flex = styled("div")(({theme}) =>
 ));
 
 
-export const SplitButton = (props : SplitButtonProps) =>
+export const ServiceList = (props : SplitButtonProps) =>
 {
     const [anchorRef, setAnchorRef] = React.useState<HTMLElement | null>(null);
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
-    const handleMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorRef(event.currentTarget)
-    const handleClose = () => setAnchorRef(null);
+    const nodes = handleNodes.selectors.useTemplatesDirectoryNode();
+    // const selectionNodes = selectedFileNode.selectors.useSelectionNodes();
+
+    const topNodes = nodes != null && nodes.children != null ? nodes.children.filter(n => n.kind == "directory") : [];
+
+
+
+    const handleClose = () => 
+    {
+        setAnchorRef(null);
+    }
+
+
+    const handleMenu = (event: React.MouseEvent<HTMLElement>) =>
+    {
+        setAnchorRef(event.currentTarget)
+    }
 
     const selectionMenu = (newIndex : number) =>
     {
         setSelectedIndex(newIndex);
         handleClose();
 
-        props.onChangeSelectedIndex?.call(this, newIndex);
+        // props.onChangeSelectedIndex?.call(this, newIndex);
     }
+
+
 
     // const width = props.width != undefined ? props.width : "";
     const maxWidth = "100%";
@@ -50,7 +68,7 @@ export const SplitButton = (props : SplitButtonProps) =>
             textOverflow={"ellipsis"} 
             whiteSpace={"nowrap"} 
             color="inherit" 
-            sx={{ userSelect: "none", textAlign: "left", padding:"6px", cursor: "pointer" }}>{props.options[selectedIndex]}</Typography>    
+            sx={{ userSelect: "none", textAlign: "left", padding:"6px", cursor: "pointer" }}>{"test"}</Typography>    
             <IconButton onClick={handleMenu} color="inherit">                
                 <ArrowDropDownIcon color="inherit" />
             </IconButton>
@@ -63,15 +81,14 @@ export const SplitButton = (props : SplitButtonProps) =>
                 open={Boolean(anchorRef)}                 
                 onClose={handleClose} >
                     {
-                        props.options.map((name, index) =>(
+                        topNodes.map((n, i) =>(
                         <MenuItem 
-                        key={name} 
-                        selected={index == selectedIndex} 
-                        onClick={(event) => selectionMenu(index) }>{name}</MenuItem>))
+
+                        >{n.name}</MenuItem>))
                     }
             </Menu>
         </Flex>
     )
 }
 
-export default SplitButton;
+export default ServiceList;

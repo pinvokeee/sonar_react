@@ -33,7 +33,7 @@ export const DialogLoadingRepository = (props : Props) =>
                                 </Box>
                             : <LinearProgress variant="determinate" value={ getProgeres() } />
                     }
-                    <Typography noWrap={true}>{ loadingState.currentNode?.name }</Typography>
+                    <Typography noWrap={true}>{ loadingState.currentNode }</Typography>
                 </Box>
             </DialogContent>
         </Dialog>

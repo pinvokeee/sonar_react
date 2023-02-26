@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useCallback } from "react";
-import { selector, useRecoilState, useRecoilValue } from "recoil";
+import { selector, selectorFamily, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Directory } from "../class/fileSystem/directory";
 import { FileSystemNode } from "../class/fileSystem/types";
 import { IndexedDBUtil } from "../class/indexeddb/indexeddb";
 import { DialogNames } from "../define/dialogNames";
-import { dialogState, fileNodes, repositoryHandleList, repositoryLoadingState } from "../define/recoil/atoms";
+import { AtomDialogState, AtomHandleNodes, AtomRepositoryHandleList, AtomRepositoryLoadingState } from "../define/recoil/atoms";
 import { selectorKeys } from "../define/recoil/keys";
 import { generateUuid } from "../util/util";
 
@@ -20,7 +20,7 @@ export type RepositoryLoadingState =
 {
     progress: number,
     maximum: number,
-    currentNode: FileSystemNode | undefined,
+    currentNode: string,
 }
 
 enum StoreName
@@ -28,162 +28,121 @@ enum StoreName
     Repository = "repos",
 }
 
-/**
- * リポジトリへのアクションををまとめたカスタムフック郡
- */
-export const repositoryActions = {
-
-    /**
-     * リポジトリ選択ダイアログを表示する
-     * @returns 
-     */
-    useSelectionRepository: () => {
-        const [dialog, setDialogState] = useRecoilState(dialogState);
-
-        return useCallback(() =>
-        {
-            setDialogState( { name: DialogNames.SelectRepository } );
-        }, []);
-    },
-
-    /**
-     * フォルダ選択ダイアログを表示し、選択したフォルダをリポジトリに登録する
-     * (IndexedDBへ追加)
-     * @returns 
-     */
-    useRegistRepository: () => {
-        const [items, setItems] = useRecoilState(repositoryHandleList);
-
-        return useCallback(() =>
-        {
-            Directory.asyncShowPickDialog().then(handle => 
-            {
-                IndexedDB.addItem<RepositoryHandleItem>(StoreName.Repository, { key: generateUuid(), modified: new Date(), handle }).then(item =>
-                {
-                    setItems((items) => [...items, item]);
-                });
-            })
-
-        }, []);
-    },    
-
-    /**
-     * 引数に与えられたハンドル取得済みアイテムを登録リポジトリから削除
-     * @param item 
-     * @returns 
-     */
-    useDeleteRepository: (item: RepositoryHandleItem) => {
-        const [items, setItems] = useRecoilState(repositoryHandleList);
-
-        return useCallback(() =>　{
-            IndexedDB.removeItem(StoreName.Repository, item.key).then(r =>
-            {
-                setItems((list) => list.filter((i) => i.key != item.key));
-            });
-
-        }, []);
-    },
-
-    /**
-     * 選択したディレクトリハンドルからリポジトリとして読み込む
-     * @param item 
-     * @returns 
-     */
-    useLoadRepository: (item: RepositoryHandleItem) =>
-    {
-        const [files, setFileNodes] = useRecoilState(fileNodes);
-        const [dialog, setDialogState] = useRecoilState(dialogState);
-        const [state, setState] = useRecoilState<RepositoryLoadingState>(repositoryLoadingState);
-
-        return useCallback(()=>
-        {
-            let count = 0;
-
-            const load = (handle: FileSystemDirectoryHandle) =>
-            {
-                setDialogState( { name: DialogNames.LoadingRepository });
-
-                Directory.getAllFileEntriesAmount(handle).then(maximum => setState({ ...state, maximum }));
-                
-                Directory.loadFromHandle(handle, (e) => 
-                {
-                    if (e.kind == "file") setState((st) => ({ ...st, progress: count++, currentNode: st.currentNode }));
-                })
-                .then(e => 
-                {
-                    setFileNodes(e);
-                    setDialogState( { name: DialogNames.Empty });
-                });
-            }
-
-            setState({ currentNode: undefined, maximum: 0, progress: 0 });
-
-            item.handle.queryPermission({ mode: "readwrite" }).then(result =>
-            {
-                if (result != "granted") 
-                {
-                    item.handle.requestPermission({ mode: "readwrite" }).then(result =>
-                    {
-                        if (result == "granted") load(item.handle);
-                    })
-                }
-                else if (result == "granted") load(item.handle);
-            })
-
-        }, []);
-    },
-}
-
-export const repositorySelector = 
+export const repository =
 {
-    useRegistedHandleItems: () => 
+    useActions: () =>
     {
-        const [items, setItems] = useRecoilState(repositoryHandleList); 
+        const setDialogState = useSetRecoilState(AtomDialogState);
+        const setItems = useSetRecoilState(AtomRepositoryHandleList);
+        const setFileNodes = useSetRecoilState(AtomHandleNodes);
+        const setLoadingState = useSetRecoilState(AtomRepositoryLoadingState);
 
-        useEffect(() => {
-            (async ()=> 
+        return {
+            selectionRepository: useCallback(() =>
             {
-                const gitems = (await IndexedDB.getAllItems<RepositoryHandleItem>(StoreName.Repository))
-                .sort((a: RepositoryHandleItem, b: RepositoryHandleItem) => 
+                setDialogState( { name: DialogNames.ReSelectRepository } );
+            }, []),
+
+            closeSelectionRepository: useCallback(() =>
+            {
+                setDialogState( { name: DialogNames.Empty } );
+            }, []),
+
+            registRepository: useCallback(() =>
+            {
+                Directory.asyncShowPickDialog().then(handle => 
                 {
-                    if (a.modified.getTime() < b.modified.getTime()) return -1;
-                    if (a.modified.getTime() > b.modified.getTime()) return 1;
-                    return 0;
+                    IndexedDB.addItem<RepositoryHandleItem>(StoreName.Repository, { key: generateUuid(), modified: new Date(), handle })
+                    .then(item =>
+                    {
+                        setItems((items) => [...items, item]);
+                    });
+                })
+    
+            }, []),
+           
+            deleteRepository: useCallback((item: RepositoryHandleItem) =>
+            {
+                IndexedDB.removeItem(StoreName.Repository, item.key).then(r =>
+                {
+                    setItems((list) => list.filter((i) => i.key != item.key));
                 });
+    
+            }, []),
 
-                setItems(gitems)
+            loadRepository: useCallback((item: RepositoryHandleItem) =>
+            {
+                let count = 0;
 
-            })()
-        }, []);
+                const load = (handle: FileSystemDirectoryHandle) =>
+                {
+                    setDialogState( { name: DialogNames.LoadingRepository });
 
-        return items;
+                    Directory.getAllFileEntriesAmount(handle).then(maximum => setLoadingState((st) => ({ ...st, maximum })));
+                    
+                    Directory.readFromHandle(handle, false, (e) => 
+                    {
+                        // console.log(e);
+                        if (e.kind == "file") setLoadingState((st) => ({ ...st, progress: count++, currentNode: `${e.path}` }));
+                    })
+                    .then(e => 
+                    {
+                        setFileNodes(e);
+                        setDialogState( { name: DialogNames.Empty });
+                    });
+                }
+
+                setLoadingState({ currentNode: "", maximum: 0, progress: 0 });
+
+                item.handle.queryPermission({ mode: "readwrite" }).then(result =>
+                {
+                    if (result != "granted") 
+                    {
+                        item.handle.requestPermission({ mode: "readwrite" }).then(result =>
+                        {
+                            if (result == "granted") load(item.handle);
+                        })
+                    }
+                    else if (result == "granted") load(item.handle);
+                })
+
+            }, [])
+        }
     },
 
-    useFileNodesSelector: () =>
+    selector:
     {
-        return useRecoilValue(fileNodeSelector.getNodes); 
+        useGetRegistedHandleItems: () =>
+        {
+            const [items, setItems] = useRecoilState(AtomRepositoryHandleList); 
+
+            useEffect(() => {
+                (async ()=> 
+                {
+                    const gitems = (await IndexedDB.getAllItems<RepositoryHandleItem>(StoreName.Repository))
+                    .sort((a: RepositoryHandleItem, b: RepositoryHandleItem) => 
+                    {
+                        if (a.modified.getTime() < b.modified.getTime()) return -1;
+                        if (a.modified.getTime() > b.modified.getTime()) return 1;
+                        return 0;
+                    });
+    
+                    setItems(gitems);
+                })()
+            }, []);
+    
+            return items;
+        }
     }
 }
-
-// export const 
 
 export const repositoryLoadingStateSelector = 
 {
     useCurrentState: () => 
     {
-        const state = useRecoilValue(repositoryLoadingState); 
+        const state = useRecoilValue(AtomRepositoryLoadingState); 
         return state;
     },
-}
-
-export const fileNodeSelector = 
-{
-    getNodes: selector<FileSystemNode[]>({
-        key: selectorKeys.SEL_FILENODES,
-        get: ({get}) => get(fileNodes)
-    }),
-
-    // getNodeItem: selector(
 }
 
 /**

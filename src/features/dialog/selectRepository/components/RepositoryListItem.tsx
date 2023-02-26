@@ -1,5 +1,5 @@
 import { ListItem, Button, ListItemText } from "@mui/material"
-import { repositoryActions, RepositoryHandleItem } from "../../../../controller/repository"
+import { repository, RepositoryHandleItem } from "../../../../controller/repository"
 
 type Props =
 {
@@ -8,10 +8,15 @@ type Props =
 
 export const RepositoryListItem = (props: Props) =>
 {
+    const actions = repository.useActions();
+
+    const load = () => actions.loadRepository(props.item);
+    const del = () => actions.deleteRepository(props.item);
+
     return <>
         <ListItem>
-            <Button sx={{ width: "100%", justifyContent: "left" }} onClick={repositoryActions.useLoadRepository(props.item)}>{props.item.handle.name}</Button>
-            <Button sx={{ marginLeft: "auto" }} color="error" onClick={ repositoryActions.useDeleteRepository(props.item) }>除去</Button>
+            <Button sx={{ width: "100%", justifyContent: "left" }} onClick={load}>{props.item.handle.name}</Button>
+            <Button sx={{ marginLeft: "auto" }} color="error" onClick={del}>除去</Button>
         </ListItem>
     </>
     

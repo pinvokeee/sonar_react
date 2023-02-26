@@ -3,13 +3,16 @@ import { Box, Button, List, ListItemButton, ListItemText, Paper, styled } from "
 import { reloadTemplateData, TemplateNode } from '../../../../loader/templateLoader';
 import { useTemplates } from '../../../../hooks/contextTemplates';
 import { useTemplates2 } from '../../../../hooks/useLoader';
+import { FileSystemNode } from '../../../../class/fileSystem/types';
+import { handleNodes } from '../../../../controller/handleNodes';
 
 export interface INodeLIstBoxProp
 {
-    targetNode? : TemplateNode | undefined,
-    selectedNode: TemplateNode | undefined,
+    // targetNode? : TemplateNode | undefined,
+    // selectedNode: TemplateNode | undefined,
     filter?: (type: string) => boolean,
-    onChange? : (newValue : TemplateNode) => void,
+    handleNodes: FileSystemNode[],
+    // onChange? : (newValue : TemplateNode) => void,
 }
 
 export const ScrollPanel = styled("div")(({ theme }) => 
@@ -21,35 +24,39 @@ export const ScrollPanel = styled("div")(({ theme }) =>
 
 export const NodeListBox = (prop : INodeLIstBoxProp) =>
 {
-    const templatesHook = useTemplates2();
+    // const templatesHook = useTemplates2();
 
+    const ns = handleNodes.selectors.useFileNodesSelector();
+    const actions = handleNodes.useActions();
+
+    const nodes = prop.handleNodes;
     const filter = prop.filter;
-    const node = prop.targetNode;
-    const children = node?.children;
+    const filteredNodes = filter ? nodes.filter(n => filter?.call(this, n.kind)) : nodes;
+    
+    console.log(ns);
 
-    const nodes = filter ? children?.filter(n => filter?.call(this, n.type)) : children;
-
-    const onChange = useCallback((event : any, targetNode : TemplateNode) => 
+    const act = (n: FileSystemNode) =>
     {
-        prop.onChange?.call(this, targetNode);
-        
-    }, []);
+        actions.loadFile(n).then((r) => 
+        {
+
+            console.log(r);
+        });
+    }
 
     return (
         <div style={{ height: "100%", overflowWrap: 'anywhere', overflow: "auto", boxSizing: "border-box" }} >
             <List aria-label="secondary mailbox folder">
                 {
-                    nodes?.map(n => 
+                    filteredNodes.map(n => 
                     {
                         return <ListItemButton 
-                        key={n.fullName}
+                        key={n.path}
                         sx={{ boxSizing: "border-box" }} 
                         disableRipple={true} 
-                        onClick={(e) => onChange(e, n)}
-                        selected={ n == prop.selectedNode }
                         >
                         { n.name }
-                        <Button onClick={ () => templatesHook.reload(n) }>aaa</Button>
+                        <Button onClick={ () => act(n) }>aaa</Button>
                         </ListItemButton>
                     })
                 }

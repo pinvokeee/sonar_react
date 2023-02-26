@@ -86,19 +86,4 @@ export class IndexedDBUtil
             });
         });
     }
-
-    // removeItem<T>(storeName: string, onFilter: (item: T) => boolean)
-    // {
-    //     return new Promise<T>((resolve, reject) =>
-    //     {
-    //         this.transaction(storeName, "readwrite").then(store =>
-    //         {
-    //             this.getAll<T>(store).then(items => resolve(items));
-
-    //             if (onFilter())
-
-    //            store.add(item);
-    //         });
-    //     });
-    // }
 }

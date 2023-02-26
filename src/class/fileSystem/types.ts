@@ -1,3 +1,8 @@
+// export type DirectoryObject = 
+// {
+//     nodes: FileSystemNode[],   
+// }
+
 export type FileSystemNode =
 {
     name: string,
@@ -13,5 +18,5 @@ export type FileInfo =
 {
     name: string,
     extension: string,
-    binary?: ArrayBuffer,
+    binary: ArrayBuffer | undefined,
 }

@@ -6,7 +6,7 @@ import { DialogLoadingRepository } from "../dialog/loadingRepository/DialogLoadi
 import SearchIcon from '@mui/icons-material/Search';
 
 import { useLoader, useSelectedTemplates } from "../../hooks/useLoader";
-import ServiceList from "./components/ServiceList";
+import { ServiceSelecter } from "./components/ServiceSelecter";
 import { repository } from "../../controller/repository";
 import { handleNodes } from "../../controller/handleNodes";
 
@@ -66,6 +66,8 @@ export const AppHeader = (props: Prop) =>
 
     const handleSelectRepos = async () =>
     {
+      console.log(us);
+
       // console.log(us);
       // const f = actions.loadFile(us.nodes[17]);
 
@@ -111,7 +113,7 @@ export const AppHeader = (props: Prop) =>
 
             {/* sx={{ flex: "1 1 auto" }} */}
 
-            <ServiceList></ServiceList>
+            <ServiceSelecter></ServiceSelecter>
 
             <SearchInput sx={{ flex: 2 }}>
               <SearchIconEx></SearchIconEx>

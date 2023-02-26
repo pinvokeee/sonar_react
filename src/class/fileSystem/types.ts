@@ -7,11 +7,11 @@ export type FileSystemNode =
 {
     name: string,
     kind: "file" | "directory",
+    path: string,
     children?: FileSystemNode[],
     parent?: FileSystemNode,
     handle?: FileSystemFileHandle | FileSystemDirectoryHandle,
     file? : FileInfo,
-    path?: string,
 }
 
 export type FileInfo =

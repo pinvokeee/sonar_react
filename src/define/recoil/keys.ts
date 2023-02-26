@@ -26,7 +26,7 @@ export enum selectorKeys
     SEL_DIALOG_STATE = "selector_dialog_state",
     SEL_FILENODES = "selector_file_nodes",
 
-    SEL_SELECTION_FILE_NODES = "selector_file_nodes",
+    SEL_SELECTION_FILE_NODES = "selector_select_file_nodes",
 
     SEL_FILENODE_ITEM = "selector_file_node_item",
 }

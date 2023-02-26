@@ -43,9 +43,9 @@ export const AtomHandleNodes = atom<FileSystemNode[]>({
 /**
  * 選択中のノード管理
  */
-export const selectedFileNodes = atom<SelectedNodes>({
+export const AtomSelectedHandleNodes = atom<SelectedNodes>({
     key: atomKeys.SELECTION_NODES.toString(),    
-    default: { nodes: [undefined, undefined, undefined, undefined] },
+    default: [undefined, undefined, undefined, undefined],
 });
 
 

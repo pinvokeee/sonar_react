@@ -20,7 +20,7 @@ export class Directory
 
         for await (const [name, entry] of handle.entries())
         {
-            const isTarget = onFilter ? onFilter.call(this, { name, kind: entry.kind }) : true;
+            const isTarget = onFilter ? onFilter.call(this, { name, kind: entry.kind, path: "" }) : true;
 
             if (isTarget)
             {

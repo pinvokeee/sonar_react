@@ -51,7 +51,7 @@ export const handleNodes =
 
 const Selector = 
 {
-    getDirectoryObject: selector<HandleNode[]>({
+    getDirectoryObject: selector<Map<string, HandleNode>>({
         key: selectorKeys.SEL_FILENODES,
         get: ({get}) => get(AtomHandleNodes)
     }),
@@ -60,7 +60,7 @@ const Selector =
         key: selectorKeys.SEL_FILENODE_ITEM,
         get: (name) => ({get}) => 
         {
-            return get(AtomHandleNodes).find((n) => n.kind == "directory" && n.name == name);
+            return Array.from(get(AtomHandleNodes)).map(([k, n]) => n).find((n) => n.kind == "directory" && n.name == name);
         }
     }),
 }

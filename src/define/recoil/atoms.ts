@@ -35,9 +35,9 @@ export const AtomRepositoryLoadingState = atom<RepositoryLoadingState>({
 /**
  * リポジトリ中のファイルノード一覧
  */
-export const AtomHandleNodes = atom<HandleNode[]>({
+export const AtomHandleNodes = atom<Map<string, HandleNode>>({
     key: atomKeys.FILENODES.toString(),    
-    default: [],
+    default: new Map(),
 });
 
 /**

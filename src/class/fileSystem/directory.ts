@@ -14,6 +14,22 @@ export class Directory
 {
     static asyncShowPickDialog = async () => await window.showDirectoryPicker();
 
+    static getSubDirectories = (target: Map<string, HandleNode>, source: HandleNode) =>
+    {
+        // const m = new Map<string, HandleNode>();
+        const m: HandleNode[] = [];
+
+        target.forEach((current, k) => 
+        {
+            const aPath = `${current.path.join("/")}/`;
+            const bPath = `${source.path.join("/")}/`;
+
+            if ((current.path.length == (source.path.length + 1)) && aPath.startsWith(bPath)) m.push(current);
+        });
+
+        return m;
+    }
+
     static getAllFileEntriesAmount = async (handle: FileSystemDirectoryHandle, onFilter?: (node: HandleNode) => boolean, current?: number) =>
     {
         let count = 0;
@@ -34,47 +50,54 @@ export class Directory
 
     static readFromHandle = (handle: FileSystemDirectoryHandle, isReading?: boolean, onProgress?: (e: HandleNode) => void) =>
     {
-        return this.readEntries(handle, [], isReading, onProgress);
+        return this.readEntries(handle, [], new Map(), isReading, onProgress);
     }
 
-    private static readEntries = async (targetHandle: FileSystemDirectoryHandle, currentPath: string[], isReading?: boolean, onProgress?: (e: HandleNode) => void, onFilter?: (node: HandleNode) => boolean) =>
+    private static readEntries = async (targetHandle: FileSystemDirectoryHandle, currentPath: string[], outMap: Map<string, HandleNode>, isReading?: boolean, onProgress?: (e: HandleNode) => void, onFilter?: (node: HandleNode) => boolean) =>
     {
-        return new Promise(async (resolve: (e: HandleNode[]) => void, reject) =>
+        for await (const [name, entry] of targetHandle.entries())
         {
-            const nodes: HandleNode[] = [];
-
-            for await (const [name, entry] of targetHandle.entries())
-            {
-                const node : HandleNode = {
-                    name: name,
-                    kind: entry.kind,
-                    path: [...currentPath, name],
-                    handle: entry,
-                }
-
-                if (entry.kind == "directory") nodes.push(...(await this.readEntries(entry, node.path, isReading, onProgress)));
-
-                if (entry.kind == "file")
-                {
-                    const [name, extension] = File.getNameSection(entry.name);
-                    node.file = { name, extension, binary: undefined }
-                }
-
-                const isTarget = onFilter ? onFilter.call(this, node) : true;
-
-                if (isTarget) 
-                {
-                    if (isReading && entry.kind == "file" && node.file != undefined)
-                    {
-                        node.file.binary = await (await entry.getFile()).arrayBuffer();
-                    }
-
-                    nodes.push(node);
-                    onProgress?.call(this, node);
-                }
+            const node : HandleNode = {
+                name: name,
+                kind: entry.kind,
+                path: [...currentPath, name],
+                handle: entry,
             }
-       
-            resolve(nodes);
-        })
+
+            if (entry.kind == "directory") (await this.readEntries(entry, node.path, outMap, isReading, onProgress));
+            // if (entry.kind == "directory") nodes.push(...(await this.readEntries(entry, node.path, isReading, onProgress)));
+
+            if (entry.kind == "file")
+            {
+                const [name, extension] = File.getNameSection(entry.name);
+                node.file = { name, extension, binary: undefined }
+            }
+
+            const isTarget = onFilter ? onFilter.call(this, node) : true;
+
+            if (isTarget) 
+            {
+                if (isReading && entry.kind == "file" && node.file != undefined)
+                {
+                    node.file.binary = await (await entry.getFile()).arrayBuffer();
+                }
+
+                if (outMap.has(node.path.join("/")))
+                {
+                    console.error("キーの重複発生", node);
+                }
+
+                outMap.set(node.path.join("/"), node);
+
+                // if (node.kind == "directory")
+                // {
+                //     console.log("OUTTEST", node, Directory.getSubDirectories(outMap, node));
+                // }
+
+                onProgress?.call(this, node);
+            }
+        }
+
+        return outMap;
     }
 }

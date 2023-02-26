@@ -39,7 +39,7 @@ export const ServiceSelecter = (props : Props) =>
     const [selectionItem, setSelectionItem] = useState<FileSystemNode | undefined>(undefined);
 
     const nodes = handleNodes.selectors.useFileNodesSelector();
-    const topNodes = nodes.filter((v) => v.kind == "directory");
+    const topNodes = Array.from(nodes).map(([k, v]) => v).filter((v) => v.path.length == 1 && v.kind == "directory");
     
     const changeItem = (item: FileSystemNode) =>
     {

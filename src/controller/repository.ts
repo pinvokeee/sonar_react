@@ -78,7 +78,11 @@ export const repository =
                 {
                     setDialogState( { name: DialogNames.LoadingRepository });
 
-                    Directory.getAllFileEntriesAmount(handle).then(maximum => setLoadingState((st) => ({ ...st, maximum })));
+                    Directory.getAllFileEntriesAmount(handle).then(maximum => 
+                        {
+                            console.log(maximum);
+                            setLoadingState((st) => ({ ...st, maximum }))
+                        });
                     
                     Directory.readFromHandle(handle, false, (e) => 
                     {

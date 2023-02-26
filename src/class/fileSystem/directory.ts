@@ -1,4 +1,4 @@
-import { FileSystemNode } from "./types";
+import { HandleNode } from "./types";
 
 export class File
 {
@@ -14,13 +14,13 @@ export class Directory
 {
     static asyncShowPickDialog = async () => await window.showDirectoryPicker();
 
-    static getAllFileEntriesAmount = async (handle: FileSystemDirectoryHandle, onFilter?: (node: FileSystemNode) => boolean, current?: number) =>
+    static getAllFileEntriesAmount = async (handle: FileSystemDirectoryHandle, onFilter?: (node: HandleNode) => boolean, current?: number) =>
     {
         let count = 0;
 
         for await (const [name, entry] of handle.entries())
         {
-            const isTarget = onFilter ? onFilter.call(this, { name, kind: entry.kind, path: "" }) : true;
+            const isTarget = onFilter ? onFilter.call(this, { name, kind: entry.kind, path: [] }) : true;
 
             if (isTarget)
             {
@@ -32,32 +32,27 @@ export class Directory
         return count;
     }
 
-    static readFromHandle = (handle: FileSystemDirectoryHandle, isReading?: boolean, onProgress?: (e: FileSystemNode) => void) =>
+    static readFromHandle = (handle: FileSystemDirectoryHandle, isReading?: boolean, onProgress?: (e: HandleNode) => void) =>
     {
-        return this.readEntries(handle, undefined, isReading, onProgress);
+        return this.readEntries(handle, [], isReading, onProgress);
     }
 
-    private static readEntries = async (targetHandle: FileSystemDirectoryHandle, parentNode? : FileSystemNode, 
-        isReading?: boolean,
-        onProgress?: (e: FileSystemNode) => void, 
-        onFilter?: (node: FileSystemNode) => boolean) =>
+    private static readEntries = async (targetHandle: FileSystemDirectoryHandle, currentPath: string[], isReading?: boolean, onProgress?: (e: HandleNode) => void, onFilter?: (node: HandleNode) => boolean) =>
     {
-        return new Promise(async (resolve: (e: FileSystemNode[]) => void, reject) =>
+        return new Promise(async (resolve: (e: HandleNode[]) => void, reject) =>
         {
-            const nodes: FileSystemNode[] = [];
-            const parentPath = parentNode ? parentNode.path : "";
+            const nodes: HandleNode[] = [];
 
             for await (const [name, entry] of targetHandle.entries())
             {
-                const node : FileSystemNode = {
+                const node : HandleNode = {
                     name: name,
                     kind: entry.kind,
-                    parent: parentNode,
+                    path: [...currentPath, name],
                     handle: entry,
-                    path: `${parentPath}/${name}`,
                 }
 
-                if (entry.kind == "directory") node.children = await this.readEntries(entry, node, isReading, onProgress);
+                if (entry.kind == "directory") nodes.push(...(await this.readEntries(entry, node.path, isReading, onProgress)));
 
                 if (entry.kind == "file")
                 {

@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { FileSystemNode } from "../../class/fileSystem/types";
+import { FileSystemNode, HandleNode } from "../../class/fileSystem/types";
 import { RepositoryHandleItem, RepositoryLoadingState } from "../../controller/repository";
 import { SelectedNodes } from "../../controller/selectedNodes";
 import { DialogState } from "../../features/dialog/types";
@@ -35,7 +35,7 @@ export const AtomRepositoryLoadingState = atom<RepositoryLoadingState>({
 /**
  * リポジトリ中のファイルノード一覧
  */
-export const AtomHandleNodes = atom<FileSystemNode[]>({
+export const AtomHandleNodes = atom<HandleNode[]>({
     key: atomKeys.FILENODES.toString(),    
     default: [],
 });
@@ -48,6 +48,8 @@ export const AtomSelectedHandleNodes = atom<SelectedNodes>({
     default: [undefined, undefined, undefined, undefined],
 });
 
+
+/*未使用*/
 
 export const currentDirectoryState = atom<FileSystemNode[]>({
     key: atomKeys.CURRENT_DIRECTORY.toString(),    

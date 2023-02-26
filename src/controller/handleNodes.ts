@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { selector, selectorFamily, useRecoilCallback, useRecoilState, useRecoilValue } from "recoil";
-import { FileSystemNode } from "../class/fileSystem/types";
+import { FileSystemNode, HandleNode } from "../class/fileSystem/types";
 import { AtomHandleNodes, AtomSelectedHandleNodes } from "../define/recoil/atoms";
 import { selectorKeys } from "../define/recoil/keys";
 
@@ -26,13 +26,13 @@ export const handleNodes =
                         const handle: FileSystemFileHandle = node.handle as FileSystemFileHandle;
                         node = { ...node, file: { ...node.file, binary: await (await handle.getFile()).arrayBuffer()} }
 
-                        const p = helper.updateParentNode(node);
+                        // const p = helper.updateParentNode(node);
 
-                        setNodes((nodes) => 
-                        {
-                            const n = nodes.map(n => n.path == p.path ? p : n);
-                            return [...n];
-                        });
+                        // setNodes((nodes) => 
+                        // {
+                        //     const n = nodes.map(n => n.path == p.path ? p : n);
+                        //     return [...n];
+                        // });
 
                         resolve(node);
                     }
@@ -51,12 +51,12 @@ export const handleNodes =
 
 const Selector = 
 {
-    getDirectoryObject: selector<FileSystemNode[]>({
+    getDirectoryObject: selector<HandleNode[]>({
         key: selectorKeys.SEL_FILENODES,
         get: ({get}) => get(AtomHandleNodes)
     }),
 
-    getDirectoryNode: selectorFamily<FileSystemNode | undefined, string>({
+    getDirectoryNode: selectorFamily<HandleNode | undefined, string>({
         key: selectorKeys.SEL_FILENODE_ITEM,
         get: (name) => ({get}) => 
         {

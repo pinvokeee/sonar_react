@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, LinearProgress, Typography } from "@mui/material"
-import { dialogStates } from "../../../controller/dialogState";
+import { dialogStates } from "../../../controller/dialog";
 import { repositoryLoadingStateSelector } from "../../../controller/repository";
-import { DialogNames } from "../../../define/dialogNames";
+import { DialogNames } from "../../../define/names/dialogNames";
 
 interface Props 
 {

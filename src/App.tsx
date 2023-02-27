@@ -10,9 +10,6 @@ import { useMemo, useState } from 'react';
 import { TemplatesViewer } from './features/viewer/templates/templatesViewer';
 import { AppHeader } from './features/apptoolbar/AppToolBar';
 
-import { useTemplates } from './hooks/contextTemplates';
-import { SearchKeywordDialog } from './features/dialog/searchKeyword/SearchKeywordDialog';
-import { useSearchState } from './hooks/useSeachState';
 import { atom, RecoilRoot, useRecoilState, useRecoilValue } from 'recoil';
 import { DialogSelectRepository } from './features/dialog/selectRepository/DialogSelectRepository';
 import { DialogLoadingRepository } from './features/dialog/loadingRepository/DialogLoadingDirectory';

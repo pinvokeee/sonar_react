@@ -1,4 +1,4 @@
-import { HandleNode } from "./types";
+import { FileSystemHandleData } from "./types";
 
 export class File
 {
@@ -14,23 +14,38 @@ export class Directory
 {
     static asyncShowPickDialog = async () => await window.showDirectoryPicker();
 
-    static getSubDirectories = (target: Map<string, HandleNode>, source: HandleNode) =>
+    static getSubDirectories = (target: [string, FileSystemHandleData][], source: FileSystemHandleData) =>
     {
         // const m = new Map<string, HandleNode>();
-        const m: HandleNode[] = [];
+        const m: [string, FileSystemHandleData][] = [];
 
-        target.forEach((current, k) => 
+        target.forEach(([key, current]) => 
         {
             const aPath = `${current.path.join("/")}/`;
             const bPath = `${source.path.join("/")}/`;
 
-            if ((current.path.length == (source.path.length + 1)) && aPath.startsWith(bPath)) m.push(current);
+            if ((current.path.length == (source.path.length + 1)) && aPath.startsWith(bPath)) m.push([key, current]);
         });
 
         return m;
     }
 
-    static getAllFileEntriesAmount = async (handle: FileSystemDirectoryHandle, onFilter?: (node: HandleNode) => boolean, current?: number) =>
+    static getSubDirectoriesForMap = (target: Map<string, FileSystemHandleData>, source: FileSystemHandleData) =>
+    {
+        const m = new Map<string, FileSystemHandleData>();
+
+        target.forEach((current, key) => 
+        {
+            const aPath = `${current.path.join("/")}/`;
+            const bPath = `${source.path.join("/")}/`;
+
+            if ((current.path.length == (source.path.length + 1)) && aPath.startsWith(bPath)) m.set(key, current);
+        });
+
+        return m;
+    }
+
+    static getAllFileEntriesAmount = async (handle: FileSystemDirectoryHandle, onFilter?: (node: FileSystemHandleData) => boolean, current?: number) =>
     {
         let count = 0;
 
@@ -48,16 +63,16 @@ export class Directory
         return count;
     }
 
-    static readFromHandle = (handle: FileSystemDirectoryHandle, isReading?: boolean, onProgress?: (e: HandleNode) => void) =>
+    static readFromHandle = (handle: FileSystemDirectoryHandle, isReading?: boolean, onProgress?: (e: FileSystemHandleData) => void) =>
     {
         return this.readEntries(handle, [], new Map(), isReading, onProgress);
     }
 
-    private static readEntries = async (targetHandle: FileSystemDirectoryHandle, currentPath: string[], outMap: Map<string, HandleNode>, isReading?: boolean, onProgress?: (e: HandleNode) => void, onFilter?: (node: HandleNode) => boolean) =>
+    private static readEntries = async (targetHandle: FileSystemDirectoryHandle, currentPath: string[], outMap: Map<string, FileSystemHandleData>, isReading?: boolean, onProgress?: (e: FileSystemHandleData) => void, onFilter?: (node: FileSystemHandleData) => boolean) =>
     {
         for await (const [name, entry] of targetHandle.entries())
         {
-            const node : HandleNode = {
+            const node : FileSystemHandleData = {
                 name: name,
                 kind: entry.kind,
                 path: [...currentPath, name],

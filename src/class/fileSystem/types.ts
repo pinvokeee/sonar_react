@@ -3,7 +3,7 @@
 //     nodes: FileSystemNode[],   
 // }
 
-export type HandleNode =
+export type FileSystemHandleData =
 {
     name: string,
     path: string[],
@@ -15,12 +15,9 @@ export type HandleNode =
 export type FileSystemNode =
 {
     name: string,
-    kind: "file" | "directory",
     path: string,
     children?: FileSystemNode[],
     parent?: FileSystemNode,
-    handle?: FileSystemFileHandle | FileSystemDirectoryHandle,
-    file? : FileInfo,
 }
 
 export type FileInfo =

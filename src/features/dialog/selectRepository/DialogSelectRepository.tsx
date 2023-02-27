@@ -2,9 +2,8 @@ import { Backdrop, Button, Dialog, DialogActions, DialogContent, DialogContentTe
 import { useMemo, useState } from "react";
 import { Directory } from "../../../class/fileSystem/directory"
 import { FileSystemNode } from "../../../class/fileSystem/types";
-import { dialogStates, dialogStateSelector } from "../../../controller/dialogState";
-import { DialogNames } from "../../../define/dialogNames";
-import { useLoadRepository as useLoadRepository } from "../../../hooks/useLoadRepository";
+import { dialogStates, dialogStateSelector } from "../../../controller/dialog";
+import { DialogNames } from "../../../define/names/dialogNames";
 import { DialogLoadingRepository } from "../loadingRepository/DialogLoadingDirectory";
 import { CloseSelectRegistoryDialog } from "./components/CloseSelectRegistoryDialog";
 import { RegistNewRepository } from "./components/RegistNewRepository";

@@ -1,11 +1,9 @@
 import { atom } from "recoil";
-import { FileSystemNode, HandleNode } from "../../class/fileSystem/types";
+import { FileSystemNode, FileSystemHandleData } from "../../class/fileSystem/types";
 import { RepositoryHandleItem, RepositoryLoadingState } from "../../controller/repository";
 import { SelectedNodes } from "../../controller/selectedNodes";
 import { DialogState } from "../../features/dialog/types";
-import { TemplateNode } from "../../loader/templateLoader";
-import { SelectedTemplates } from "../../types";
-import { DialogNames } from "../dialogNames";
+import { DialogNames } from "../names/dialogNames";
 import { atomKeys } from "./keys";
 
 /**
@@ -35,33 +33,41 @@ export const AtomRepositoryLoadingState = atom<RepositoryLoadingState>({
 /**
  * リポジトリ中のファイルノード一覧
  */
-export const AtomHandleNodes = atom<Map<string, HandleNode>>({
+export const AtomHandleNodes = atom<Map<string, FileSystemHandleData>>({
     key: atomKeys.FILENODES.toString(),    
     default: new Map(),
 });
 
 /**
+ * 木構造で保持するファイルノード配列
+ */
+export const AtomFileSystemNodes = atom<FileSystemNode[]>({
+    key: atomKeys.FS_NODE_ARRAY.toString(),    
+    default: [],
+});
+
+/**
  * 選択中のノード管理
  */
-export const AtomSelectedHandleNodes = atom<SelectedNodes>({
+export const AtomSelectedHandleNodes = atom<(string | undefined)[]>({
     key: atomKeys.SELECTION_NODES.toString(),    
     default: [undefined, undefined, undefined, undefined],
 });
 
 
-/*未使用*/
+// /*未使用*/
 
-export const currentDirectoryState = atom<FileSystemNode[]>({
-    key: atomKeys.CURRENT_DIRECTORY.toString(),    
-    default: [],
-});
+// export const currentDirectoryState = atom<FileSystemNode[]>({
+//     key: atomKeys.CURRENT_DIRECTORY.toString(),    
+//     default: [],
+// });
 
-export const templateLibrary = atom<TemplateNode[]>({
-    key: atomKeys.TEMPLATE_LIBRARY.toString(),    
-    default: [],
-});
+// export const templateLibrary = atom<TemplateNode[]>({
+//     key: atomKeys.TEMPLATE_LIBRARY.toString(),    
+//     default: [],
+// });
 
-export const selectedTemplateNodes = atom<SelectedTemplates>({
-    key: atomKeys.SELECTED_TEMPLATE.toString(),    
-    default: { node1: undefined, node2: undefined, node3: undefined, contentNode: undefined, },
-});
+// export const selectedTemplateNodes = atom<SelectedTemplates>({
+//     key: atomKeys.SELECTED_TEMPLATE.toString(),    
+//     default: { node1: undefined, node2: undefined, node3: undefined, contentNode: undefined, },
+// });

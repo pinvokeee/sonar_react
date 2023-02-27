@@ -1,8 +1,6 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, List, ListItemButton, ListItemText, styled } from "@mui/material";
 import { useCallback, useContext, useMemo, useState } from "react";
 import Split from 'react-split'
-import { HookTemplates } from "../../../hooks/contextTemplates";
-import { TemplateNode } from "../../../loader/templateLoader";
 import { NodeListBox } from "./NodeList/NodeList";
 
 import { TextViewer } from "../../../components/viewer/TextContent";
@@ -61,22 +59,22 @@ export const TemplatesViewer = (props: Prop) =>
 
     // console.log(files);
 
-    const a = (node: TemplateNode | undefined) =>
-    {
+    // const a = (node: TemplateNode | undefined) =>
+    // {
 
-        if (node == null) return <></>;
-        if (node.type == "text") return <TextViewer text={utf8_decoder.decode(node.bytes)}></TextViewer>;
-        if (node.type == "markdown") return <MarkdownView source={utf8_decoder.decode(node.bytes)}></MarkdownView>;
+    //     if (node == null) return <></>;
+    //     if (node.type == "text") return <TextViewer text={utf8_decoder.decode(node.bytes)}></TextViewer>;
+    //     if (node.type == "markdown") return <MarkdownView source={utf8_decoder.decode(node.bytes)}></MarkdownView>;
 
-        // if (bytes == undefined) return <></>
+    //     // if (bytes == undefined) return <></>
 
-        // console.log(bytes);/
-        // aaaa(bytes);        
+    //     // console.log(bytes);/
+    //     // aaaa(bytes);        
 
 
-        return <>
-        </>
-    }
+    //     return <>
+    //     </>
+    // }
 
 
     return (

@@ -23,7 +23,7 @@ export const selectedHandleNodes =
 
         return {
 
-            setSelectedObject: useCallback((n: SelectedNodes) =>
+            setSelectedObject: useCallback((n: (string | undefined)[]) =>
             {
                 setNodes(n);
             }, []),
@@ -40,7 +40,7 @@ export const selectedHandleNodes =
 
 const Selector = 
 {    
-    getSelectionNodes: selector<SelectedNodes>({
+    getSelectionNodes: selector<(string | undefined)[]>({
         key: selectorKeys.SEL_SELECTION_FILE_NODES,
         get: ({get}) => get(AtomSelectedHandleNodes)
     }),

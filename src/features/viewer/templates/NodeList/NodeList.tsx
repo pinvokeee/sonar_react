@@ -1,10 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Box, Button, List, ListItemButton, ListItemText, Paper, styled } from "@mui/material";
-import { reloadTemplateData, TemplateNode } from '../../../../loader/templateLoader';
-import { useTemplates } from '../../../../hooks/contextTemplates';
-import { useTemplates2 } from '../../../../hooks/useLoader';
 import { FileSystemNode } from '../../../../class/fileSystem/types';
-import { handleNodes } from '../../../../controller/handleNodes';
+import { NodeHook } from '../../../../controller/node';
 
 export interface INodeLIstBoxProp
 {
@@ -26,19 +23,20 @@ export const NodeListBox = (prop : INodeLIstBoxProp) =>
 {
     // const templatesHook = useTemplates2();
 
-    const ns = handleNodes.selectors.useFileNodesSelector();
-    const actions = handleNodes.useActions();
+    const ns = NodeHook.selectors.useFileNodesSelector();
+    const actions = NodeHook.useActions();
 
     const nodes = prop.handleNodes;
     const filter = prop.filter;
-    const filteredNodes = filter ? nodes.filter(n => filter?.call(this, n.kind)) : nodes;
+    // const filteredNodes = filter ? nodes.filter(n => filter?.call(this, n.kind)) : nodes;
+    const filteredNodes : FileSystemNode[] = [];
 
     const act = (n: FileSystemNode) =>
     {
-        actions.loadFile(n).then((r) => 
-        {
-            // console.log(r);
-        });
+        // actions.loadFile(n).then((r) => 
+        // {
+        //     // console.log(r);
+        // });
     }
 
     return (
@@ -52,7 +50,7 @@ export const NodeListBox = (prop : INodeLIstBoxProp) =>
                         sx={{ boxSizing: "border-box" }} 
                         disableRipple={true} 
                         >
-                        { n.name }
+                        { "" }
                         <Button onClick={ () => act(n) }>aaa</Button>
                         </ListItemButton>
                     })

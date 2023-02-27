@@ -5,10 +5,9 @@ import { SearchInput } from "./components/SearchInput";
 import { DialogLoadingRepository } from "../dialog/loadingRepository/DialogLoadingDirectory";
 import SearchIcon from '@mui/icons-material/Search';
 
-import { useLoader, useSelectedTemplates } from "../../hooks/useLoader";
 import { ServiceSelecter } from "./components/ServiceSelecter";
 import { repository } from "../../controller/repository";
-import { handleNodes } from "../../controller/handleNodes";
+import { NodeHook } from "../../controller/node";
 
 const Flex = styled("div")(({theme}) =>
 (
@@ -49,10 +48,6 @@ type Prop =
 
 export const AppHeader = (props: Prop) =>
 {    
-  const loader = useLoader();
-
-    const h = useSelectedTemplates();
-
     const reposActions = repository.useActions();
 
     // const options = topNodes.map(n => n.name);
@@ -61,12 +56,18 @@ export const AppHeader = (props: Prop) =>
     // {
     //   fileNodeAction.useSelectTopNode(topNodes[index]);
     // }
-    const actions = handleNodes.useActions()
-    const us = handleNodes.selectors.useFileNodesSelector();
+    const actions = NodeHook.useActions()
 
+    const a = NodeHook.selectors.useFileHandles();
+    const b = NodeHook.selectors.useFileNodes();
+
+    
     const handleSelectRepos = async () =>
     {
-      console.log(us);
+      console.log(a, b);
+
+      // console.log(us);
+      // actions.a();
 
       // console.log(us);
       // const f = actions.loadFile(us.nodes[17]);

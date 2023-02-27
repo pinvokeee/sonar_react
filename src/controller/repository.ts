@@ -4,10 +4,11 @@ import { selector, selectorFamily, useRecoilState, useRecoilValue, useSetRecoilS
 import { Directory } from "../class/fileSystem/directory";
 import { FileSystemNode } from "../class/fileSystem/types";
 import { IndexedDBUtil } from "../class/indexeddb/indexeddb";
-import { DialogNames } from "../define/dialogNames";
+import { DialogNames } from "../define/names/dialogNames";
 import { AtomDialogState, AtomHandleNodes, AtomRepositoryHandleList, AtomRepositoryLoadingState } from "../define/recoil/atoms";
 import { selectorKeys } from "../define/recoil/keys";
 import { generateUuid } from "../util/util";
+import { NodeHook } from "./node";
 
 export type RepositoryHandleItem =
 {
@@ -34,10 +35,13 @@ export const repository =
     {
         const setDialogState = useSetRecoilState(AtomDialogState);
         const setItems = useSetRecoilState(AtomRepositoryHandleList);
-        const setFileNodes = useSetRecoilState(AtomHandleNodes);
+        // const setFileNodes = useSetRecoilState(AtomHandleNodes);
         const setLoadingState = useSetRecoilState(AtomRepositoryLoadingState);
 
+        const nodeActions = NodeHook.useActions();
+
         return {
+
             selectionRepository: useCallback(() =>
             {
                 setDialogState( { name: DialogNames.ReSelectRepository } );
@@ -79,10 +83,10 @@ export const repository =
                     setDialogState( { name: DialogNames.LoadingRepository });
 
                     Directory.getAllFileEntriesAmount(handle).then(maximum => 
-                        {
-                            console.log(maximum);
-                            setLoadingState((st) => ({ ...st, maximum }))
-                        });
+                    {
+                        console.log(maximum);
+                        setLoadingState((st) => ({ ...st, maximum }))
+                    });
                     
                     Directory.readFromHandle(handle, false, (e) => 
                     {
@@ -91,7 +95,9 @@ export const repository =
                     })
                     .then(e => 
                     {
-                        setFileNodes(e);
+                        nodeActions.assignFileHandles(e);
+
+                        // setFileNodes(e);
                         setDialogState( { name: DialogNames.Empty });
                     });
                 }

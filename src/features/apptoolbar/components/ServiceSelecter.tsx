@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { NodeHook } from "../../../controller/node";
 import SplitButton from "../../../components/elements/toolbar/SplitButton";
 import { FileSystemNode } from "../../../class/fileSystem/types";
-import { selectedHandleNodes } from "../../../controller/selectedNodes";
+import { selection } from "../../../controller/selectedNodes";
 
 type Props =
 {
@@ -33,31 +33,26 @@ export const ServiceSelecter = (props : Props) =>
 {
     const actions = NodeHook.useActions();
 
-    const sel = selectedHandleNodes.selectors.useSelectedObject();
-    const selectedAction = selectedHandleNodes.useActions();
-
-    const [selectionItem, setSelectionItem] = useState<FileSystemNode | undefined>(undefined);
+    const selectionPaths = selection.selectors.useGetSelectionPaths();
+    const selectedAction = selection.useActions();
 
     const nodes = NodeHook.selectors.useFileNodesSelector();
-    // const topNodes = Array.from(nodes).map(([k, v]) => v).filter((v) => v.path.length == 1 && v.kind == "directory");
-    
 
     const fsnodes = NodeHook.selectors.useFileNodes();
     const topNodes = fsnodes.filter(node => nodes.get(node.path)?.kind == "directory");
 
+    const item = selectionPaths[0] ? nodes.get(selectionPaths[0]) : undefined;
+
     const changeItem = (item: FileSystemNode) =>
     {
-        selectedAction.setSelectedObject([item.path, undefined, undefined, undefined]);
-        setSelectionItem(item);
-        console.log(sel);
+        selectedAction.setSelection([item.path, undefined, undefined, undefined]);
     }
 
     return (
         <SplitButton 
         sx={{ flex: "1" }}
-        // sx={{ width: "30%", }}
         items={topNodes} 
-        selectedItem={selectionItem} 
+        selectedItem={item} 
         onGetKey={getKey} 
         onChange={changeItem} 
         onGetText={getText}>    

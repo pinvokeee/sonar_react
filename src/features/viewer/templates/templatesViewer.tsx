@@ -1,11 +1,14 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, List, ListItemButton, ListItemText, styled } from "@mui/material";
 import { useCallback, useContext, useMemo, useState } from "react";
 import Split from 'react-split'
-import { NodeListBox } from "./NodeList/NodeList";
+import { NodeListBox } from "./NodeList";
 
 import { TextViewer } from "../../../components/viewer/TextContent";
 import { MarkdownView } from "../../../components/viewer/Markdown";
 import { ThdimensionList } from "./threeSelecter";
+import { selection } from "../../../controller/selectedNodes";
+import { NodeHook } from "../../../controller/node";
+import { FileSystemHandleData } from "../../../class/fileSystem/types";
 
 export const HSplitBox = styled(Split)(({ theme }) => 
 (
@@ -53,29 +56,15 @@ const sjis_decoder = new TextDecoder("shift-jis");
 
 export const TemplatesViewer = (props: Prop) =>
 {
-    // const h = useSelectedTemplates();
+    const actions = NodeHook.useActions();
+    
+    const selectedNodes = selection.selectors.useGetSelectionTreeNode();
+    const handle = selectedNodes[3] ? actions.toFileSystemHandleData(selectedNodes[3]) : undefined;
 
-    // const files = fileNodeSelector.useTemplatesDirectoryNode();
-
-    // console.log(files);
-
-    // const a = (node: TemplateNode | undefined) =>
-    // {
-
-    //     if (node == null) return <></>;
-    //     if (node.type == "text") return <TextViewer text={utf8_decoder.decode(node.bytes)}></TextViewer>;
-    //     if (node.type == "markdown") return <MarkdownView source={utf8_decoder.decode(node.bytes)}></MarkdownView>;
-
-    //     // if (bytes == undefined) return <></>
-
-    //     // console.log(bytes);/
-    //     // aaaa(bytes);        
-
-
-    //     return <>
-    //     </>
-    // }
-
+    if (handle != undefined && handle.kind == "file")
+    {
+        if (handle.file?.binary == undefined) actions.loadFile(handle);
+    }
 
     return (
         <>
@@ -83,6 +72,7 @@ export const TemplatesViewer = (props: Prop) =>
                 <ThdimensionList></ThdimensionList>
                 <Box>
                 {
+                    handle ? helper.viewComponent(handle) : <></>
                     // a(h.selectedNodes.contentNode)
                     // createTemplateTextView(utf8_decoder.decode(props.templatesHook.selectedTemplate?.bytes))
                 }
@@ -92,3 +82,19 @@ export const TemplatesViewer = (props: Prop) =>
     );
 }
 
+const helper = 
+{
+    viewComponent: (handle: FileSystemHandleData) =>
+    {
+        return helper.viewText(handle);
+    },
+
+    viewText: (handle: FileSystemHandleData) =>
+    {
+        const text = utf8_decoder.decode(handle.file?.binary);
+
+        return <>
+            <TextViewer text={text}></TextViewer>
+        </>
+    }
+}

@@ -1,40 +1,57 @@
 import { useCallback } from "react";
 import { selector, useRecoilState, useRecoilValue } from "recoil";
 import { FileSystemNode } from "../class/fileSystem/types";
-import { AtomSelectedHandleNodes } from "../define/recoil/atoms";
+import { AtomFileSystemNodes, AtomHandleNodes, AtomSelectedHandleNodes } from "../define/recoil/atoms";
 import { selectorKeys } from "../define/recoil/keys";
 
-export type SelectedNodes = (FileSystemNode | undefined)[];
-
-// const [nodes, setNodes] = useRecoilState(selectedFileNodes);
-
-// const a = useCallback((n: SelectedNodes) =>
-// {
-//     setNodes(n);
-// }, []);
-
-// return { a }
-
-export const selectedHandleNodes = 
+export const selection = 
 {
     useActions: () =>
     {
         const [nodes, setNodes] = useRecoilState(AtomSelectedHandleNodes);
 
         return {
-
-            setSelectedObject: useCallback((n: (string | undefined)[]) =>
+            setSelection: useCallback((n: (string | undefined)[]) =>
             {
                 setNodes(n);
             }, []),
 
-            
+            setSelectionIndex: useCallback((index: number, path: string | undefined) => 
+            {
+                setNodes((ns) => 
+                {
+                    const new_nodes = [...ns];
+                    new_nodes[index] = path;
+                    return new_nodes;
+                });
+
+            }, []),
         }
     },
 
     selectors:
     {
-        useSelectedObject: () => useRecoilValue(Selector.getSelectionNodes),
+        useGetSelectionPaths: () => useRecoilValue(Selector.getSelectionNodes),
+
+        useGetSelectionTreeNode: () =>
+        {
+            const selectPath = useRecoilValue(Selector.getSelectionNodes);
+            const nodes = useRecoilValue(AtomFileSystemNodes);
+
+            let lastNodes = selectPath[0] ? nodes : [];
+
+            const sel = selectPath.map((path): FileSystemNode | undefined => 
+            {
+                if (path == undefined || lastNodes == undefined) return undefined;
+                const node = helper.getNode(path, lastNodes);
+                lastNodes = node?.children ? node?.children : [];
+                return node;
+            });
+
+            return sel;
+        },
+
+ 
     }
 }
 
@@ -44,4 +61,11 @@ const Selector =
         key: selectorKeys.SEL_SELECTION_FILE_NODES,
         get: ({get}) => get(AtomSelectedHandleNodes)
     }),
+}
+
+const helper = 
+{
+    getNode: (targetPath: string, parentNodes: FileSystemNode[]) => parentNodes.find(n => n.path == targetPath),
+
+
 }

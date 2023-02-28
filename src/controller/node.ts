@@ -18,29 +18,35 @@ export const NodeHook =
             {
                 setNodes(nodes);
                 setFileNodes(helper.a(nodes));
-                // setNodes((dirObj) => ({ ...dirObj, nodes: [] }));
             },
 
-            loadFile: (node: FileSystemNode) =>
+            toFileSystemHandleData: (node: FileSystemNode) =>
             {
-                // return new Promise(async (resolve, reject) =>
-                // {
-                //     if (node.file != undefined)
-                //     {
-                //         const handle: FileSystemFileHandle = node.handle as FileSystemFileHandle;
-                //         node = { ...node, file: { ...node.file, binary: await (await handle.getFile()).arrayBuffer()} }
+                return fsnodes.get(node.path);
+            },
 
-                //         // const p = helper.updateParentNode(node);
+            loadFile: (node: FileSystemHandleData) =>
+            {
+                return new Promise(async (resolve, reject) =>
+                {
+                    if (node.file != undefined)
+                    {
+                        const handle: FileSystemFileHandle = node.handle as FileSystemFileHandle;
+                        node = { ...node, file: { ...node.file, binary: await (await handle.getFile()).arrayBuffer()} }
 
-                //         // setNodes((nodes) => 
-                //         // {
-                //         //     const n = nodes.map(n => n.path == p.path ? p : n);
-                //         //     return [...n];
-                //         // });
+                        setNodes((nodes) => 
+                        {
+                            const newMap = new Map(nodes);
+                            newMap.set(node.path.join("/"), node);
 
-                //         resolve(node);
-                //     }
-                // });
+                            console.log(node);
+
+                            return newMap;
+                        });
+    
+                        resolve(node);
+                    }
+                });
     
             }
         }

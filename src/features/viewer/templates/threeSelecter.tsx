@@ -2,8 +2,8 @@ import { styled } from "@mui/material";
 import Split from 'react-split'
 import { FileSystemNode } from "../../../class/fileSystem/types";
 import { NodeHook } from "../../../controller/node";
-import { selectedHandleNodes } from "../../../controller/selectedNodes";
-import { NodeListBox } from "./NodeList/NodeList";
+import { selection } from "../../../controller/selectedNodes";
+import { NodeListBox } from "./NodeList";
 
 const HSplitBox = styled(Split)(({ theme }) => 
 (
@@ -29,44 +29,35 @@ const isDirectory = (s: string) => s == "directory";
 const isFile = (s: string) => s != "directory";
 
 export const ThdimensionList = (props: Prop) =>
-{
-    // const h = useSelectedTemplates();
+{   
+    const handles = NodeHook.selectors.useFileNodesSelector();
 
-    const selectedNodePathes = selectedHandleNodes.selectors.useSelectedObject();
-    const deepestNodePath = selectedNodePathes.find((v) => v != undefined);
-
-    // const fileNodes = fileTargetNode?.children ? fileTargetNode.children : [];
-
-    // console.log(fileNodes);
-    const nodes = NodeHook.selectors.useFileNodesSelector();
-
-    // console.log("RENDER", nodes, fileNodes);
+    const selectAction = selection.useActions();
+    const selectedNodes = selection.selectors.useGetSelectionTreeNode();
+    const filerNode = [...selectedNodes].splice(0, selectedNodes.length - 1).reverse().find((v, index) => v != undefined);
 
     return <>
         <HSplitBox direction="vertical" sizes={[50, 50]} gutterSize={6} gutterStyle={GutterStyle}>
-            {/* <div>
-                <NodeListBox filter={isDirectory} 
-                targetNode={h.selectedNodes.node1} 
-                selectedNode={h.selectedNodes.node2} 
-                onChange={ (node) => h.setNode2(node) }></NodeListBox>
-            </div>
-            <div>
-                <NodeListBox filter={isDirectory} 
-                    targetNode={h.selectedNodes.node2} 
-                    selectedNode={h.selectedNodes.node3} 
-                    onChange={ (node) => h.setNode3(node) }></NodeListBox>
-            </div> */}
-            <div></div>
-            <div></div>
+            <NodeListBox 
+                filter={isDirectory} 
+                handles={handles}
+                nodes={ selectedNodes[0]?.children ? selectedNodes[0]?.children : [] }
+                onChange={ (node) => selectAction.setSelectionIndex(1, node.path) }/>
+
+            <NodeListBox 
+                filter={isDirectory} 
+                handles={handles}
+                nodes={ selectedNodes[1]?.children ? selectedNodes[1]?.children : [] }
+                onChange={ (node) => selectAction.setSelectionIndex(2, node.path) } />
+
         </HSplitBox>
         <HSplitBox direction="vertical"  gutterSize={6} gutterStyle={GutterStyle}>
             <div>
-                {/* <NodeListBox handleNodes={fileNodes} filter={isFile} ></NodeListBox> */}
-
-                {/* <NodeListBox filter={isFile} 
-                    targetNode={h.n()} 
-                    selectedNode={h.selectedNodes.contentNode} 
-                    onChange={ (node) => h.setContentNode(node) }></NodeListBox> */}
+                <NodeListBox 
+                handles={handles} 
+                nodes={ filerNode?.children ? filerNode?.children : [] } 
+                filter={isFile}
+                onChange={ (node) => selectAction.setSelectionIndex(3, node.path) }  ></NodeListBox>
             </div>
         </HSplitBox>
     </>

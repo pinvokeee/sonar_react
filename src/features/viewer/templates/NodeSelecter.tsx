@@ -18,10 +18,8 @@ export const ScrollPanel = styled("div")(({ theme }) =>
     }
 ));
 
-export const NodeListBox = (props : INodeLIstBoxProp) =>
+export const NodeSelecter = (props : INodeLIstBoxProp) =>
 {
-    // const templatesHook = useTemplates2();
-
     const ns = NodeHook.selectors.useFileNodesSelector();
     const actions = NodeHook.useActions();
 
@@ -33,10 +31,14 @@ export const NodeListBox = (props : INodeLIstBoxProp) =>
     
     const act = (n: string) =>
     {
-        // actions.loadFile(n).then((r) => 
-        // {
-        //     // console.log(r);
-        // });
+        const handle = ns.get(n);
+
+        if (handle == undefined) return;
+
+        actions.loadFile(handle).then((r) => 
+        {
+            console.log(r);
+        });
     }
 
     return (

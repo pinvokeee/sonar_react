@@ -13,6 +13,7 @@ import { AppHeader } from './features/apptoolbar/AppToolBar';
 import { atom, RecoilRoot, useRecoilState, useRecoilValue } from 'recoil';
 import { DialogSelectRepository } from './features/dialog/selectRepository/DialogSelectRepository';
 import { DialogLoadingRepository } from './features/dialog/loadingRepository/DialogLoadingDirectory';
+import { DialogSearchFromKeyword } from './features/dialog/searchKeyword/SearchKeywordDialog';
 
 export const MainContainer = styled("div")(({ theme }) => 
 (
@@ -48,6 +49,7 @@ export const App = () => {
         
             <DialogSelectRepository></DialogSelectRepository>
             <DialogLoadingRepository></DialogLoadingRepository>
+            <DialogSearchFromKeyword></DialogSearchFromKeyword>
 
             <MainContainer>
                 <AppHeader></AppHeader>

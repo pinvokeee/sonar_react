@@ -8,6 +8,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { ServiceSelecter } from "./components/ServiceSelecter";
 import { repository } from "../../controller/repository";
 import { NodeHook } from "../../controller/node";
+import { search } from "../../controller/search";
 
 const Flex = styled("div")(({theme}) =>
 (
@@ -93,6 +94,8 @@ export const AppHeader = (props: Prop) =>
       // const f = fileNode.useActions().loadFile(us[4]);
     }
 
+    const searchActions = search.useActions();
+
     return (
         <AppBar elevation={0} sx={{ width: "100vw" }} position="static" enableColorOnDark>          
             <Toolbar variant="dense" sx={{ justifyContent: "space-between" }}>
@@ -118,7 +121,7 @@ export const AppHeader = (props: Prop) =>
 
             <SearchInput sx={{ flex: 2 }}>
               <SearchIconEx></SearchIconEx>
-              <InputBox placeholder="キーワード検索 (Ctrl+K) / 全体検索（Ctrl+Q）"></InputBox>
+              <InputBox onFocus={() => searchActions.showDialog()} placeholder="キーワード検索 (Ctrl+K) / 全体検索（Ctrl+Q）" ></InputBox>
             </SearchInput>
 
             <ButtonCase sx={{ flex: 1 }}>

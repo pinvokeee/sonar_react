@@ -1,7 +1,7 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, List, ListItemButton, ListItemText, styled } from "@mui/material";
 import { useCallback, useContext, useMemo, useState } from "react";
 import Split from 'react-split'
-import { NodeListBox } from "./NodeList";
+import { NodeSelecter } from "./NodeSelecter";
 
 import { TextViewer } from "../../../components/viewer/TextContent";
 import { MarkdownView } from "../../../components/viewer/Markdown";
@@ -9,6 +9,8 @@ import { ThdimensionList } from "./threeSelecter";
 import { selection } from "../../../controller/selectedNodes";
 import { NodeHook } from "../../../controller/node";
 import { FileSystemHandleData } from "../../../class/fileSystem/types";
+import { Frame } from "../../../components/viewer/Frame";
+import { ImageView } from "../../../components/viewer/ImageView";
 
 export const HSplitBox = styled(Split)(({ theme }) => 
 (
@@ -86,7 +88,18 @@ const helper =
 {
     viewComponent: (handle: FileSystemHandleData) =>
     {
-        return helper.viewText(handle);
+        if (handle.kind == "file" && handle.file?.binary != undefined)
+        {
+            if (handle.file.extension == "txt") return helper.viewText(handle);
+            if (handle.file.extension == "md") return helper.viewMarkdown(handle);
+            if (handle.file.extension == "html" || handle.file.extension == "htm" || handle.file.extension == "mht") return helper.viewHtmlView(handle);
+            if (handle.file.extension == "png" 
+            || handle.file.extension == "jpg" 
+            || handle.file.extension == "gif"
+            || handle.file.extension == "jpeg") return helper.viewImg(handle);
+        }
+
+        return <></>
     },
 
     viewText: (handle: FileSystemHandleData) =>
@@ -96,5 +109,29 @@ const helper =
         return <>
             <TextViewer text={text}></TextViewer>
         </>
+    },
+
+    viewMarkdown: (handle: FileSystemHandleData) =>
+    {
+        const text = utf8_decoder.decode(handle.file?.binary);
+
+        return <>
+            <MarkdownView source={text}></MarkdownView>
+        </>
+    },
+
+    viewHtmlView: (handle: FileSystemHandleData) =>
+    {
+        const text = utf8_decoder.decode(handle.file?.binary);
+        return  <Frame source={text}></Frame>;
+    },
+
+    
+    viewImg: (handle: FileSystemHandleData) =>
+    {
+        if (handle.file == undefined) return <></>
+
+        const bin = handle.file?.binary as ArrayBuffer;
+        return <ImageView binary={bin}></ImageView>
     }
 }

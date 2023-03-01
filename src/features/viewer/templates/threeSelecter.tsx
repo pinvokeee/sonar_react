@@ -1,9 +1,8 @@
 import { styled } from "@mui/material";
 import Split from 'react-split'
-import { FileSystemNode } from "../../../class/fileSystem/types";
 import { NodeHook } from "../../../controller/node";
 import { selection } from "../../../controller/selectedNodes";
-import { NodeListBox } from "./NodeList";
+import { NodeSelecter } from "./NodeSelecter";
 
 const HSplitBox = styled(Split)(({ theme }) => 
 (
@@ -38,13 +37,13 @@ export const ThdimensionList = (props: Prop) =>
 
     return <>
         <HSplitBox direction="vertical" sizes={[50, 50]} gutterSize={6} gutterStyle={GutterStyle}>
-            <NodeListBox 
+            <NodeSelecter 
                 filter={isDirectory} 
                 handles={handles}
                 nodes={ selectedNodes[0]?.children ? selectedNodes[0]?.children : [] }
                 onChange={ (node) => selectAction.setSelectionIndex(1, node.path) }/>
 
-            <NodeListBox 
+            <NodeSelecter 
                 filter={isDirectory} 
                 handles={handles}
                 nodes={ selectedNodes[1]?.children ? selectedNodes[1]?.children : [] }
@@ -53,11 +52,11 @@ export const ThdimensionList = (props: Prop) =>
         </HSplitBox>
         <HSplitBox direction="vertical"  gutterSize={6} gutterStyle={GutterStyle}>
             <div>
-                <NodeListBox 
+                <NodeSelecter 
                 handles={handles} 
                 nodes={ filerNode?.children ? filerNode?.children : [] } 
                 filter={isFile}
-                onChange={ (node) => selectAction.setSelectionIndex(3, node.path) }  ></NodeListBox>
+                onChange={ (node) => selectAction.setSelectionIndex(3, node.path) }  ></NodeSelecter>
             </div>
         </HSplitBox>
     </>

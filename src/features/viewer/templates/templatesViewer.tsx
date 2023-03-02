@@ -11,6 +11,7 @@ import { NodeHook } from "../../../controller/node";
 import { FileSystemHandleData } from "../../../class/fileSystem/types";
 import { Frame } from "../../../components/viewer/Frame";
 import { ImageView } from "../../../components/viewer/ImageView";
+import { PDFView } from "../../../components/viewer/PDFView";
 
 export const HSplitBox = styled(Split)(({ theme }) => 
 (
@@ -97,6 +98,8 @@ const helper =
             || handle.file.extension == "jpg" 
             || handle.file.extension == "gif"
             || handle.file.extension == "jpeg") return helper.viewImg(handle);
+
+            if (handle.file.extension == "pdf") return helper.viewPDF(handle);
         }
 
         return <></>
@@ -133,5 +136,26 @@ const helper =
 
         const bin = handle.file?.binary as ArrayBuffer;
         return <ImageView binary={bin}></ImageView>
+    },
+
+    viewPDF: (handle: FileSystemHandleData) =>
+    {
+        if (handle.file == undefined) return <></>
+        if (handle.file?.binary == undefined) return <></>
+
+        const arr = handle.file?.binary as ArrayBuffer;
+
+        return <PDFView binary={arr}></PDFView>
+
+        // const bytes = new Uint8Array(arr);
+        // const bin = new Array(bytes.length);
+        
+        // bytes.forEach((b, index) => bin[index] = String.fromCharCode(b));
+        
+        // // URL.createObjectURL(blob)
+
+        // return <embed type={"application/pdf"} src={`data:application/pdf;base64,${window.btoa(bin.join(""))}`}></embed>
+
+        // // return <iframe src={`data:application/pdf;base64, ${window.btoa(bin.join(""))}`}></iframe>
     }
 }

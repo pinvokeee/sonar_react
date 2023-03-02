@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Box, Button, List, ListItemButton, ListItemText, Paper, styled } from "@mui/material";
+import { Accordion, AccordionSummary, Box, Button, List, ListItemButton, ListItemText, Paper, Stack, styled } from "@mui/material";
 import { FileSystemHandleData, FileSystemNode } from '../../../class/fileSystem/types';
 import { NodeHook } from '../../../controller/node';
 
@@ -53,8 +53,18 @@ export const NodeSelecter = (props : INodeLIstBoxProp) =>
                         disableRipple={true} 
                         onClick={() => props.onChange?.call(this, value)}
                         >
+
                         { helper.getText(handles, value.path) }
-                        <Button sx={{ marginLeft: "auto", }} onClick={ () => act(value.path) }>R</Button>
+                        <Button sx={{ marginLeft: "auto", }} onClick={ () => act(value.path) }>{helper.getFileType(handles, value.path)}</Button>
+{/* 
+                        <Stack>
+                            <Box>
+                                { helper.getText(handles, value.path) }
+                               <Button sx={{ marginLeft: "auto", }} onClick={ () => act(value.path) }>R</Button>
+                            </Box>
+                            <Button >{ helper.getFileType(handles, value.path) } </Button>
+                        </Stack> */}
+
                         </ListItemButton>
                     })
                 }
@@ -71,5 +81,13 @@ const helper =
         if (item == undefined) return "";
         if (item.kind == 'directory') return item.name;
         if (item.kind == 'file') return item.file?.name;
+    },
+
+    getFileType: (handles: Map<string, FileSystemHandleData>, path: string) => 
+    {
+        const item = handles.get(path);
+
+        if (item?.kind == 'directory') return "フォルダ";
+        if (item?.kind == "file") return `${item.file?.extension.toUpperCase()}`;
     }
 }

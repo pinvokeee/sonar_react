@@ -20,14 +20,20 @@ const StyledFrame = styled("div")(({theme}) =>
 
 export const ImageView = (props: Props) =>
 {
+    // const bytes = new Uint8Array(props.binary);
+    // const bin = new Array(bytes.length);
+    // bytes.forEach((b, index) => bin[index] = String.fromCharCode(b));
+
     const bytes = new Uint8Array(props.binary);
-    const bin = new Array(bytes.length);
+    const blob = new Blob([bytes.buffer], { type: "image/png" });
+    const url = window.URL.createObjectURL(blob);
     
-    bytes.forEach((b, index) => bin[index] = String.fromCharCode(b));
+    const onload = () => window.URL.revokeObjectURL(url); 
     
     return <>
     <StyledFrame>
-        <img src={`data:image/png;base64, ${window.btoa(bin.join(""))}`}></img>
+        <img src={url} onLoad={onload} onError={onload}></img>
+        {/* <img src={`data:image/png;base64, ${window.btoa(bin.join(""))}`}></img> */}
     </StyledFrame>
     </>
 }

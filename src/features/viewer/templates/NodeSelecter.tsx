@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Accordion, AccordionSummary, Box, Button, List, ListItemButton, ListItemText, Paper, Stack, styled } from "@mui/material";
 import { FileSystemHandleData, FileSystemNode } from '../../../class/fileSystem/types';
 import { NodeHook } from '../../../controller/node';
+import { NodeSelecterItem } from './NodeSelecterItem';
 
 export interface INodeLIstBoxProp
 {
@@ -45,17 +46,23 @@ export const NodeSelecter = (props : INodeLIstBoxProp) =>
         <div style={{ height: "100%", overflowWrap: 'anywhere', overflow: "auto", boxSizing: "border-box" }} >
             <List aria-label="secondary mailbox folder">
                 {
-                    filteredNodes.map((value) => 
+                    filteredNodes.map((node) => 
                     {
-                        return <ListItemButton 
-                        key={value.path}
-                        sx={{ boxSizing: "border-box" }} 
-                        disableRipple={true} 
-                        onClick={() => props.onChange?.call(this, value)}
-                        >
+                        return <NodeSelecterItem objects={handles} targetNode={node}></NodeSelecterItem>
 
-                        { helper.getText(handles, value.path) }
-                        <Button sx={{ marginLeft: "auto", }} onClick={ () => act(value.path) }>{helper.getFileType(handles, value.path)}</Button>
+                        {
+                        // return <ListItemButton 
+                        // key={value.path}
+                        // sx={{ boxSizing: "border-box" }} 
+                        // disableRipple={true} 
+                        // onClick={() => props.onChange?.call(this, value)}
+                        // >
+
+                        // { helper.getText(handles, value.path) }
+                        // <Button sx={{ marginLeft: "auto", }} onClick={ () => act(value.path) }>{helper.getFileType(handles, value.path)}</Button>
+                        }
+
+
 {/* 
                         <Stack>
                             <Box>
@@ -63,31 +70,15 @@ export const NodeSelecter = (props : INodeLIstBoxProp) =>
                                <Button sx={{ marginLeft: "auto", }} onClick={ () => act(value.path) }>R</Button>
                             </Box>
                             <Button >{ helper.getFileType(handles, value.path) } </Button>
-                        </Stack> */}
+                        </Stack> 
+                    
+                    
+                    </ListItemButton>*/}
 
-                        </ListItemButton>
+                        
                     })
                 }
             </List>
         </div>
     )
-}
-
-const helper = 
-{
-    getText: (handles: Map<string, FileSystemHandleData>, path: string) => 
-    {
-        const item = handles.get(path);
-        if (item == undefined) return "";
-        if (item.kind == 'directory') return item.name;
-        if (item.kind == 'file') return item.file?.name;
-    },
-
-    getFileType: (handles: Map<string, FileSystemHandleData>, path: string) => 
-    {
-        const item = handles.get(path);
-
-        if (item?.kind == 'directory') return "フォルダ";
-        if (item?.kind == "file") return `${item.file?.extension.toUpperCase()}`;
-    }
 }

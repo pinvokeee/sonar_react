@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { selector, selectorFamily, useRecoilCallback, useRecoilState, useRecoilValue } from "recoil";
-import { Directory } from "../class/fileSystem/directory";
+import { Directory, FileInfo } from "../class/fileSystem/directory";
 import { FileSystemNode, FileSystemHandleData } from "../class/fileSystem/types";
 import { AtomFileSystemNodes, AtomHandleNodes, AtomSelectedHandleNodes } from "../define/recoil/atoms";
 import { selectorKeys } from "../define/recoil/keys";
@@ -32,7 +32,36 @@ export const NodeHook =
                     if (node.file != undefined)
                     {
                         const handle: FileSystemFileHandle = node.handle as FileSystemFileHandle;
-                        node = { ...node, file: { ...node.file, binary: await (await handle.getFile()).arrayBuffer()} }
+                        const contentType = FileInfo.getContentType(node.file.extension);
+                        let url = "";
+
+                        console.log("NEW LOADED");
+
+                        const buffer = await (await handle.getFile()).arrayBuffer();
+                        
+                        if (contentType?.hasBlobUrl && node.file.content.objectURL.length > 0) 
+                        {
+                            window.URL.revokeObjectURL(node.file.content.objectURL);
+                            node.file.content.objectURL = "";
+                        }
+
+                        if (contentType?.hasBlobUrl && node.file.content.objectURL.length == 0)
+                        {                            
+                            url = window.URL.createObjectURL(
+                                new Blob([new Uint8Array(buffer)], { type: contentType.type } ));
+                        }
+
+                        node = { ...node, 
+                                file: 
+                                    { 
+                                        ...node.file, 
+                                        content: 
+                                        {       
+                                            objectURL: url,
+                                            binary: buffer,
+                                        } 
+                                    }
+                                }
 
                         setNodes((nodes) => 
                         {

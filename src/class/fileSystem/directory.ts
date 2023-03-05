@@ -1,13 +1,40 @@
 import { FileSystemHandleData } from "./types";
 
-export class File
+type ContentInfo =
+{
+    name: string,
+    type: string,
+    hasBlobUrl: boolean,
+}
+
+export class FileInfo
 {
     static getNameSection = (fileName : string) =>
     {
         const index = fileName.lastIndexOf(".");    
         if (index == -1) return [fileName, ""]    
         return [fileName.slice(0, index), fileName.slice(index + 1, fileName.length)];
-    }   
+    }
+
+    static getContentType = (extension: string) =>
+    {
+        if (!this.fileTypes.has(extension)) return this.fileTypes.get("unknown");
+
+        return this.fileTypes.get(extension);
+    }
+
+    private static fileTypes = new Map<string, ContentInfo>([
+        ["txt", { name: "TEXT", type: "text/plain", hasBlobUrl: false },],
+        ["csv", { name: "CSV", type: "text/csv", hasBlobUrl: false }],
+        ["html", { name: "HTML", type: "text/html", hasBlobUrl: false },],
+        ["pdf", { name: "PDF", type: "application/pdf", hasBlobUrl: true}, ],
+        ["jpg", { name: "IMG", type: "image/jpeg" , hasBlobUrl: true},],
+        ["jpeg", { name: "IMG", type: "image/jpeg" , hasBlobUrl: true},],
+        ["png", { name: "IMG", type: "image/png" , hasBlobUrl: true},],
+        ["gif", { name: "IMG", type: "image/gif" , hasBlobUrl: true},],
+        ["bmp", { name: "IMG", type: "image/bmp" , hasBlobUrl: true},],
+        ["unknown", { name: "UNKNOWN", type: "", hasBlobUrl: false } ],
+    ]);
 }
 
 export class Directory
@@ -84,8 +111,8 @@ export class Directory
 
             if (entry.kind == "file")
             {
-                const [name, extension] = File.getNameSection(entry.name);
-                node.file = { name, extension, binary: undefined }
+                const [name, extension] = FileInfo.getNameSection(entry.name);
+                node.file = { name, extension, content: { binary: undefined, objectURL: "", }  }
             }
 
             const isTarget = onFilter ? onFilter.call(this, node) : true;
@@ -94,7 +121,7 @@ export class Directory
             {
                 if (isReading && entry.kind == "file" && node.file != undefined)
                 {
-                    node.file.binary = await (await entry.getFile()).arrayBuffer();
+                    node.file.content.binary = await (await entry.getFile()).arrayBuffer();
                 }
 
                 if (outMap.has(node.path.join("/")))
@@ -115,4 +142,6 @@ export class Directory
 
         return outMap;
     }
+
+
 }

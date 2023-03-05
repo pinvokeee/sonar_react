@@ -28,7 +28,8 @@ export const ImageView = (props: Props) =>
     const blob = new Blob([bytes.buffer], { type: "image/png" });
     const url = window.URL.createObjectURL(blob);
     
-    const onload = () => window.URL.revokeObjectURL(url); 
+    const onload = () => {}
+    // const onload = () => window.URL.revokeObjectURL(url); 
     
     return <>
     <StyledFrame>

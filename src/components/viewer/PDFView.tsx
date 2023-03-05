@@ -1,11 +1,15 @@
 import { styled } from "@mui/material";
 import { useRef } from "react";
-// import PDFJS from "pdf.js"
+// import "../../build/pdf.worker";
+// import "../../build/pdf.sandbox";
+// import "../../build/pdf";
 import * as pdfjs from 'pdfjs-dist/legacy/build/pdf';
+// import
+
 
 type Props = 
 {
-    binary: ArrayBuffer,
+    objectUrl: string,
 }
 
 const Frame = styled("iframe")(({theme}) =>
@@ -26,18 +30,24 @@ export const PDFView = (props: Props) =>
 {
     // @ts-ignore
     const pdf = pdfjsLib;
+    const url = props.objectUrl;
+    
 
-    const bytes = new Uint8Array(props.binary);
-    const blob = new Blob([bytes.buffer], { type: "application/pdf" });
-    const url = window.URL.createObjectURL(blob);
+    // const blob = new Blob([bytes.buffer], { type: "application/pdf" });
+    // const bytes = new Uint8Array(props.binary);
+    // const blob = new Blob([bytes.buffer], { type: "application/pdf" });
+    // const url = window.URL.createObjectURL(blob);
 
-    const onload = () => window.URL.revokeObjectURL(url); 
+    console.log(pdf);
 
-    pdf.getDocument(url).promise.then(async (doc: any) =>
-    {
-        const firstPage = await doc.getPage(1);
-        console.log(await firstPage.getTextContent());
-    });
+    const onload = () => {}
+    // const onload = () => window.URL.revokeObjectURL(url); 
+
+    // pdf.getDocument(url).promise.then(async (doc: any) =>
+    // {
+    //     // const firstPage = await doc.getPage(1);
+    //     // console.log(await firstPage.getTextContent());
+    // });
 
     return <Frame src={url} onLoad={onload} onError={onload}></Frame>
 }

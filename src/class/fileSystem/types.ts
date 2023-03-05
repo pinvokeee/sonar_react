@@ -24,5 +24,12 @@ export type FileInfo =
 {
     name: string,
     extension: string,
+    content: Content,
+}
+
+export type Content = 
+{
     binary: ArrayBuffer | undefined,
+    // blob: Blob | undefined,
+    objectURL: string,    
 }

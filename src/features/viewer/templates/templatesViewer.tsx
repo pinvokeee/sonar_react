@@ -66,7 +66,10 @@ export const TemplatesViewer = (props: Prop) =>
 
     if (handle != undefined && handle.kind == "file")
     {
-        if (handle.file?.binary == undefined) actions.loadFile(handle);
+        if (handle.file?.content.binary == undefined)
+        {
+            actions.loadFile(handle);
+        }
     }
 
     return (
@@ -89,7 +92,7 @@ const helper =
 {
     viewComponent: (handle: FileSystemHandleData) =>
     {
-        if (handle.kind == "file" && handle.file?.binary != undefined)
+        if (handle.kind == "file" && handle.file?.content.binary != undefined)
         {
             if (handle.file.extension == "txt") return helper.viewText(handle);
             if (handle.file.extension == "md") return helper.viewMarkdown(handle);
@@ -107,7 +110,7 @@ const helper =
 
     viewText: (handle: FileSystemHandleData) =>
     {
-        const text = utf8_decoder.decode(handle.file?.binary);
+        const text = utf8_decoder.decode(handle.file?.content.binary);
 
         return <>
             <TextViewer text={text}></TextViewer>
@@ -116,7 +119,7 @@ const helper =
 
     viewMarkdown: (handle: FileSystemHandleData) =>
     {
-        const text = utf8_decoder.decode(handle.file?.binary);
+        const text = utf8_decoder.decode(handle.file?.content.binary);
 
         return <>
             <MarkdownView source={text}></MarkdownView>
@@ -125,7 +128,7 @@ const helper =
 
     viewHtmlView: (handle: FileSystemHandleData) =>
     {
-        const text = utf8_decoder.decode(handle.file?.binary);
+        const text = utf8_decoder.decode(handle.file?.content.binary);
         return  <Frame source={text}></Frame>;
     },
 
@@ -134,18 +137,18 @@ const helper =
     {
         if (handle.file == undefined) return <></>
 
-        const bin = handle.file?.binary as ArrayBuffer;
+        const bin = handle.file?.content.binary as ArrayBuffer;
         return <ImageView binary={bin}></ImageView>
     },
 
     viewPDF: (handle: FileSystemHandleData) =>
     {
         if (handle.file == undefined) return <></>
-        if (handle.file?.binary == undefined) return <></>
+        if (handle.file?.content.binary == undefined) return <></>
 
-        const arr = handle.file?.binary as ArrayBuffer;
+        const arr = handle.file?.content.binary as ArrayBuffer;
 
-        return <PDFView binary={arr}></PDFView>
+        return <PDFView objectUrl={handle.file.content.objectURL}></PDFView>
 
         // const bytes = new Uint8Array(arr);
         // const bin = new Array(bytes.length);

@@ -108,9 +108,9 @@ export const DialogSearchFromKeyword = (props: Props) =>
                             if (handle.kind == "directory" || handle.file == undefined) return undefined; 
                             if (handle.file.extension != "txt") return undefined;
 
-                            if (handle.file.binary == undefined) acitons.loadFile(handle);
+                            if (handle.file.content.binary == undefined) acitons.loadFile(handle);
                             
-                            if (utf8_decoder.decode(handle.file.binary).indexOf(keyword) > -1)
+                            if (utf8_decoder.decode(handle.file.content.binary).indexOf(keyword) > -1)
                             {
                                 return <div>{ handle.file.name }</div>
                             }

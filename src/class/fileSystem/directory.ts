@@ -1,4 +1,4 @@
-import { FileSystemHandleData } from "./types";
+import { FileSystemObject } from "./FileSystemObject";
 
 type ContentInfo =
 {
@@ -41,10 +41,10 @@ export class Directory
 {
     static asyncShowPickDialog = async () => await window.showDirectoryPicker();
 
-    static getSubDirectories = (target: [string, FileSystemHandleData][], source: FileSystemHandleData) =>
+    static getSubDirectories = (target: [string, FileSystemObject][], source: FileSystemObject) =>
     {
         // const m = new Map<string, HandleNode>();
-        const m: [string, FileSystemHandleData][] = [];
+        const m: [string, FileSystemObject][] = [];
 
         target.forEach(([key, current]) => 
         {
@@ -57,9 +57,9 @@ export class Directory
         return m;
     }
 
-    static getSubDirectoriesForMap = (target: Map<string, FileSystemHandleData>, source: FileSystemHandleData) =>
+    static getSubDirectoriesForMap = (target: Map<string, FileSystemObject>, source: FileSystemObject) =>
     {
-        const m = new Map<string, FileSystemHandleData>();
+        const m = new Map<string, FileSystemObject>();
 
         target.forEach((current, key) => 
         {
@@ -72,13 +72,30 @@ export class Directory
         return m;
     }
 
-    static getAllFileEntriesAmount = async (handle: FileSystemDirectoryHandle, onFilter?: (node: FileSystemHandleData) => boolean, current?: number) =>
+    static getAllFileEntriesAmount = async (handle: FileSystemDirectoryHandle, onFilter?: (node: FileSystemObject) => boolean, current?: number) =>
     {
         let count = 0;
 
         for await (const [name, entry] of handle.entries())
         {
-            const isTarget = onFilter ? onFilter.call(this, { name, kind: entry.kind, path: [] }) : true;
+            // const isTarget = onFilter ? onFilter.call(this, 
+            //     {
+            //          name, 
+            //          kind: entry.kind, 
+            //          path: [], 
+            //          file: 
+            //          { 
+            //             extension: "",
+            //             name: "",
+            //             content: 
+            //             { 
+            //                 objectURL: "", 
+            //                 binary: undefined 
+            //             } 
+            //         } 
+            //     }) : true;
+
+            const isTarget = onFilter ? onFilter.call(this, new FileSystemObject(name, entry.kind, [])): true;
 
             if (isTarget)
             {
@@ -90,20 +107,20 @@ export class Directory
         return count;
     }
 
-    static readFromHandle = (handle: FileSystemDirectoryHandle, isReading?: boolean, onProgress?: (e: FileSystemHandleData) => void) =>
+    static readFromHandle = (handle: FileSystemDirectoryHandle, isReading?: boolean, onProgress?: (e: FileSystemObject) => void) =>
     {
         return this.readEntries(handle, [], new Map(), isReading, onProgress);
     }
 
-    private static readEntries = async (targetHandle: FileSystemDirectoryHandle, currentPath: string[], outMap: Map<string, FileSystemHandleData>, isReading?: boolean, onProgress?: (e: FileSystemHandleData) => void, onFilter?: (node: FileSystemHandleData) => boolean) =>
+    private static readEntries = async (targetHandle: FileSystemDirectoryHandle, currentPath: string[], outMap: Map<string, FileSystemObject>, isReading?: boolean, onProgress?: (e: FileSystemObject) => void, onFilter?: (node: FileSystemObject) => boolean) =>
     {
         for await (const [name, entry] of targetHandle.entries())
         {
-            const node : FileSystemHandleData = {
+            const node : FileSystemObject = {
                 name: name,
                 kind: entry.kind,
                 path: [...currentPath, name],
-                handle: entry,
+                handle: entry
             }
 
             if (entry.kind == "directory") (await this.readEntries(entry, node.path, outMap, isReading, onProgress));

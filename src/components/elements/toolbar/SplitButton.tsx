@@ -1,7 +1,8 @@
 import { Box, Button, ButtonGroup, IconButton, Menu, MenuItem, MenuList, Paper, Popper, styled, SxProps, Theme, Typography } from "@mui/material";
 import React, { useState } from "react";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { NodeHook } from "../../../controller/node";
+import { FileObject } from "../../../controller/fileObject";
+import { AnyAaaaRecord } from "dns";
 
 type Props =
 {
@@ -12,7 +13,7 @@ type Props =
     selectedItem: any,
     onGetText: (item: any) => string,
     onGetKey: (item: any) => string,
-    onChange: (newValue: any) => void,
+    onChange: (event: React.MouseEvent<HTMLLIElement, MouseEvent>, newValue: any) => void,
 }
 
 const Flex = styled("div")(({theme}) => 
@@ -46,13 +47,22 @@ export const SplitButton = (props : Props) =>
 {
     const [anchorRef, setAnchorRef] = React.useState<HTMLElement | null>(null);
 
-    const handleMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorRef(event.currentTarget)
-    const handleClose = () => setAnchorRef(null);
-
-    const selectionMenu = (newItem : any) =>
+    const handleMenu = (event: React.MouseEvent<HTMLElement>) => 
     {
-        handleClose();
-        props.onChange(newItem);
+        // event.stopPropagation();
+        setAnchorRef(event.currentTarget);
+    }
+
+    const handleClose = (e: any) => 
+    {
+        // e.stopPropagation();
+        setAnchorRef(null);
+    }
+
+    const selectionMenu = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, newItem : any) =>
+    {
+        handleClose({});
+        props.onChange(event, newItem);
     }
 
     return (
@@ -72,7 +82,7 @@ export const SplitButton = (props : Props) =>
                 onClose={handleClose} >
                     {
                         props.items.map((item, index) =>(
-                        <MenuItem key={props.onGetKey(item)} onClick={(event) => selectionMenu(item) }>{props.onGetText(item)}</MenuItem>))
+                        <MenuItem key={props.onGetKey(item)} onClick={(event) => selectionMenu(event, item) }>{props.onGetText(item)}</MenuItem>))
                     }
             </Menu>
         </Flex>

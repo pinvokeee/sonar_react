@@ -30,4 +30,6 @@ export enum selectorKeys
     SEL_SELECTION_FILE_NODES = "selector_select_file_nodes",
 
     SEL_FILENODE_ITEM = "selector_file_node_item",
+
+    SEL_SUB_NODE = "selector_sub_node",
 }

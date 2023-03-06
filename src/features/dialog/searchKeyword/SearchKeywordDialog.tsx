@@ -1,12 +1,16 @@
 import { Backdrop, Box, Button, Card, CardContent, CardHeader, styled, TextField, Typography } from "@mui/material";
 import { ChangeEvent, useState } from "react";
 import { dialogStates } from "../../../controller/dialog";
-import { NodeHook } from "../../../controller/node";
+import { FileObject } from "../../../controller/fileObject";
 import { DialogNames } from "../../../define/names/dialogNames";
 import { NodeSelecter } from "../../viewer/templates/NodeSelecter";
 import Split from 'react-split'
 import { searchDialog } from "../../../controller/searchDialog";
 import { TemplatesViewer } from "../../viewer/templates/templatesViewer";
+import { ObjectViewer } from "../../viewer/templates/ObjectViewer";
+import { MatchObjectsList } from "./components/MatchObjectsList";
+import { selection } from "../../../controller/selectedNodes";
+import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
 
 const GrassBackdrop = styled(Backdrop)(({theme})=>
 (
@@ -66,69 +70,59 @@ const utf8_decoder: TextDecoder = new TextDecoder();
 
 export const DialogSearchFromKeyword = (props: Props) =>
 {
-    const [keyword, setKeyword] = useState("");
-
-    const actions = searchDialog.useActions();
-
     const dialogState = dialogStates.useCurrentState();
     const isOpen = dialogState.name == DialogNames.SearchFromKeywords;
 
-    const handles = NodeHook.selectors.useFileNodesSelector();
-    const acitons = NodeHook.useActions();
+    const [keyword, setKeyword] = useState("");
+    const actions = searchDialog.useActions();
+
+    const handles = FileObject.selectors.useFileNodesSelector();
 
     const handleChange = (value: string) =>
     {
-        // const [name, value] = e.target;
         setKeyword(value);
     }
 
+    // if (selectedNodes[0]?.path != undefined)
+    // {
+    //     const n = handles.get(selectedNodes[0].path) as FileSystemObject;
+    //     console.log(FileObject.selectors.useGetSubNodes(n));
+    // }
+
+ 
     return <>
-    <GrassBackdrop open={isOpen}>
-    <Card sx={{ textAlign: "left", width: "90%", height: "90%", }}>
-        <CardContent sx={{ height: "100%" }}>
-        <GridContainer>
-                <Typography color="text.secondary" gutterBottom>
-                    検索
-                </Typography>
+    { !isOpen ? <></> :  
+        <GrassBackdrop open={isOpen}>
+        <Card sx={{ textAlign: "left", width: "90%", height: "90%", }}>
+            <CardContent sx={{ height: "100%" }}>
+            <GridContainer>
+                    <Typography color="text.secondary" gutterBottom>
+                        検索
+                    </Typography>
 
-                <Box sx={{ display: "flex", }}>
-                    <TextField id="outlined-basic" fullWidth value={keyword} onInput={(e: ChangeEvent<HTMLInputElement>) => handleChange(e.target.value)} label="検索" />
+                    <Box sx={{ display: "flex", }}>
+                        <TextField id="outlined-basic" fullWidth value={keyword} onInput={(e: ChangeEvent<HTMLInputElement>) => handleChange(e.target.value)} label="検索" />
 
-                    <Button sx={{ marginLeft: "auto" }} onClick={(e) => actions.closeDialog()}>閉じる</Button>
-                </Box>
+                        <Button sx={{ marginLeft: "auto" }} onClick={(e) => actions.closeDialog()}>閉じる</Button>
+                    </Box>
 
-                <MainContainer>
-                    <VSplitBox direction="horizontal" sizes={[40, 60]} gutterAlign="center" gutterStyle={GutterStyle}>
-                        <Box>
-                        {
-                        isOpen ? Array.from(handles).map(h =>
-                        {
-                            const [path, handle] = h;
+                    <MainContainer>
+                        <VSplitBox direction="horizontal" sizes={[40, 60]} gutterAlign="center" gutterStyle={GutterStyle}>
+                            <Box>
+                                <MatchObjectsList objects={handles}></MatchObjectsList>
+                            </Box>
 
-                            if (handle.kind == "directory" || handle.file == undefined) return undefined; 
-                            if (handle.file.extension != "txt") return undefined;
+                            <ObjectViewer object={undefined}></ObjectViewer>
 
-                            if (handle.file.content.binary == undefined) acitons.loadFile(handle);
-                            
-                            if (utf8_decoder.decode(handle.file.content.binary).indexOf(keyword) > -1)
-                            {
-                                return <div>{ handle.file.name }</div>
-                            }
-
-                        }).filter(h => h != undefined) : <></>
-                    }
-                        </Box>
-
-                        <TemplatesViewer></TemplatesViewer>
-
-                    </VSplitBox>
+                        </VSplitBox>
 
 
-                </MainContainer>
-                </GridContainer>
+                    </MainContainer>
+                    </GridContainer>
 
-        </CardContent>
-    </Card>
-    </GrassBackdrop>
+            </CardContent>
+        </Card>
+        </GrassBackdrop>
+    }
     </>
 }

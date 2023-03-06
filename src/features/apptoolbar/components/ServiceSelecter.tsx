@@ -1,8 +1,8 @@
 import * as material from "@mui/material";
 import React, { useState } from "react";
-import { NodeHook } from "../../../controller/node";
+import { FileObject } from "../../../controller/fileObject";
 import SplitButton from "../../../components/elements/toolbar/SplitButton";
-import { FileSystemNode } from "../../../class/fileSystem/types";
+import { FileSystemTreeNode } from "../../../class/fileSystem/types";
 import { selection } from "../../../controller/selectedNodes";
 
 type Props =
@@ -17,13 +17,13 @@ const Flex = material.styled("div")(({theme}) =>
     }
 ));
 
-const getText = (item: FileSystemNode) =>
+const getText = (item: FileSystemTreeNode) =>
 {
     if (item == undefined) return "";
     return item.name;
 }
 
-const getKey = (item: FileSystemNode) =>
+const getKey = (item: FileSystemTreeNode) =>
 {
     if (item == undefined || item.path == undefined) return "";
     return item.path;
@@ -31,19 +31,19 @@ const getKey = (item: FileSystemNode) =>
 
 export const ServiceSelecter = (props : Props) =>
 {
-    const actions = NodeHook.useActions();
+    const actions = FileObject.useActions();
 
     const selectionPaths = selection.selectors.useGetSelectionPaths();
     const selectedAction = selection.useActions();
 
-    const nodes = NodeHook.selectors.useFileNodesSelector();
+    const nodes = FileObject.selectors.useFileNodesSelector();
 
-    const fsnodes = NodeHook.selectors.useFileNodes();
+    const fsnodes = FileObject.selectors.useFileNodes();
     const topNodes = fsnodes.filter(node => nodes.get(node.path)?.kind == "directory");
 
     const item = selectionPaths[0] ? nodes.get(selectionPaths[0]) : undefined;
 
-    const changeItem = (item: FileSystemNode) =>
+    const changeItem = (e: React.MouseEvent<HTMLLIElement, MouseEvent>, item: FileSystemTreeNode) =>
     {
         selectedAction.setSelection([item.path, undefined, undefined, undefined]);
     }

@@ -1,4 +1,4 @@
-import { FileSystemNode } from "../../class/fileSystem/types"
+import { FileSystemTreeNode } from "../../class/fileSystem/types"
 
 export type DialogState = 
 { 
@@ -10,5 +10,5 @@ export type LoadingState =
     isProgress: boolean,
     currentProgress: number,
     maximumProgress: number,
-    currentNode: FileSystemNode | undefined,
+    currentNode: FileSystemTreeNode | undefined,
 }

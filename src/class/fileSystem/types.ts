@@ -1,23 +1,9 @@
-// export type DirectoryObject = 
-// {
-//     nodes: FileSystemNode[],   
-// }
-
-export type FileSystemHandleData =
-{
-    name: string,
-    path: string[],
-    kind: "file" | "directory",
-    handle?: FileSystemFileHandle | FileSystemDirectoryHandle,
-    file? : FileInfo,
-}
-
-export type FileSystemNode =
+export type FileSystemTreeNode =
 {
     name: string,
     path: string,
-    children?: FileSystemNode[],
-    parent?: FileSystemNode,
+    children?: FileSystemTreeNode[],
+    parent?: FileSystemTreeNode,
 }
 
 export type FileInfo =

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { selector, useRecoilState, useRecoilValue } from "recoil";
-import { FileSystemNode } from "../class/fileSystem/types";
-import { AtomFileSystemNodes, AtomHandleNodes, AtomSelectedHandleNodes } from "../define/recoil/atoms";
+import { FileSystemTreeNode } from "../class/fileSystem/types";
+import { AtomFileSystemTreeNodes, AtomFileObjects, AtomSelectedHandleNodes } from "../define/recoil/atoms";
 import { selectorKeys } from "../define/recoil/keys";
 
 export const selection = 
@@ -36,11 +36,11 @@ export const selection =
         useGetSelectionTreeNode: () =>
         {
             const selectPath = useRecoilValue(Selector.getSelectionNodes);
-            const nodes = useRecoilValue(AtomFileSystemNodes);
+            const nodes = useRecoilValue(AtomFileSystemTreeNodes);
 
             let lastNodes = selectPath[0] ? nodes : [];
 
-            const sel = selectPath.map((path): FileSystemNode | undefined => 
+            const sel = selectPath.map((path): FileSystemTreeNode | undefined => 
             {
                 if (path == undefined || lastNodes == undefined) return undefined;
                 const node = helper.getNode(path, lastNodes);
@@ -65,7 +65,7 @@ const Selector =
 
 const helper = 
 {
-    getNode: (targetPath: string, parentNodes: FileSystemNode[]) => parentNodes.find(n => n.path == targetPath),
+    getNode: (targetPath: string, parentNodes: FileSystemTreeNode[]) => parentNodes.find(n => n.path == targetPath),
 
 
 }

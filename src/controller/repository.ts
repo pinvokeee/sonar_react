@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { useCallback } from "react";
 import { selector, selectorFamily, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Directory } from "../class/fileSystem/directory";
-import { FileSystemNode } from "../class/fileSystem/types";
+import { FileSystemTreeNode } from "../class/fileSystem/types";
 import { IndexedDBUtil } from "../class/indexeddb/indexeddb";
 import { DialogNames } from "../define/names/dialogNames";
-import { AtomDialogState, AtomHandleNodes, AtomRepositoryHandleList, AtomRepositoryLoadingState } from "../define/recoil/atoms";
+import { AtomDialogState, AtomFileObjects, AtomRepositoryHandleList, AtomRepositoryLoadingState } from "../define/recoil/atoms";
 import { selectorKeys } from "../define/recoil/keys";
 import { generateUuid } from "../util/util";
-import { NodeHook } from "./node";
+import { FileObject } from "./fileObject";
 
 export type RepositoryHandleItem =
 {
@@ -38,7 +38,7 @@ export const repository =
         // const setFileNodes = useSetRecoilState(AtomHandleNodes);
         const setLoadingState = useSetRecoilState(AtomRepositoryLoadingState);
 
-        const nodeActions = NodeHook.useActions();
+        const nodeActions = FileObject.useActions();
 
         return {
 
@@ -88,14 +88,14 @@ export const repository =
                         setLoadingState((st) => ({ ...st, maximum }))
                     });
                     
-                    Directory.readFromHandle(handle, false, (e) => 
+                    Directory.readFromHandle(handle, true, (e) => 
                     {
                         // console.log(e);
                         if (e.kind == "file") setLoadingState((st) => ({ ...st, progress: count++, currentNode: `${e.path}` }));
                     })
                     .then(e => 
                     {
-                        nodeActions.assignFileHandles(e);
+                        nodeActions.assignFromMap(e);
 
                         // setFileNodes(e);
                         setDialogState( { name: DialogNames.Empty });

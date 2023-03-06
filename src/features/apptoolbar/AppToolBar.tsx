@@ -7,7 +7,7 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import { ServiceSelecter } from "./components/ServiceSelecter";
 import { repository } from "../../controller/repository";
-import { NodeHook } from "../../controller/node";
+import { FileObject } from "../../controller/fileObject";
 import { search } from "../../controller/search";
 
 const Flex = styled("div")(({theme}) =>
@@ -57,10 +57,10 @@ export const AppHeader = (props: Prop) =>
     // {
     //   fileNodeAction.useSelectTopNode(topNodes[index]);
     // }
-    const actions = NodeHook.useActions()
+    const actions = FileObject.useActions()
 
-    const a = NodeHook.selectors.useFileHandles();
-    const b = NodeHook.selectors.useFileNodes();
+    const a = FileObject.selectors.useFileHandles();
+    const b = FileObject.selectors.useFileNodes();
 
     
     const handleSelectRepos = async () =>

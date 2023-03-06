@@ -1,5 +1,6 @@
 import { atom } from "recoil";
-import { FileSystemNode, FileSystemHandleData } from "../../class/fileSystem/types";
+import { FileSystemTreeNode } from "../../class/fileSystem/types";
+import { FileSystemObject } from "../../class/fileSystem/FileSystemObject";
 import { RepositoryHandleItem, RepositoryLoadingState } from "../../controller/repository";
 import { DialogState } from "../../features/dialog/types";
 import { DialogNames } from "../names/dialogNames";
@@ -32,7 +33,7 @@ export const AtomRepositoryLoadingState = atom<RepositoryLoadingState>({
 /**
  * リポジトリ中のファイルノード一覧
  */
-export const AtomHandleNodes = atom<Map<string, FileSystemHandleData>>({
+export const AtomFileObjects = atom<Map<string, FileSystemObject>>({
     key: atomKeys.FILENODES.toString(),    
     default: new Map(),
 });
@@ -40,7 +41,7 @@ export const AtomHandleNodes = atom<Map<string, FileSystemHandleData>>({
 /**
  * 木構造で保持するファイルノード配列
  */
-export const AtomFileSystemNodes = atom<FileSystemNode[]>({
+export const AtomFileSystemTreeNodes = atom<FileSystemTreeNode[]>({
     key: atomKeys.FS_NODE_ARRAY.toString(),    
     default: [],
 });

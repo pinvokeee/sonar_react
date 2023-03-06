@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 import Split from 'react-split'
-import { NodeHook } from "../../../controller/node";
+import { FileObject } from "../../../controller/fileObject";
 import { selection } from "../../../controller/selectedNodes";
 import { NodeSelecter } from "./NodeSelecter";
 
@@ -29,7 +29,7 @@ const isFile = (s: string) => s != "directory";
 
 export const ThdimensionList = (props: Prop) =>
 {   
-    const handles = NodeHook.selectors.useFileNodesSelector();
+    const handles = FileObject.selectors.useFileNodesSelector();
 
     const selectAction = selection.useActions();
     const selectedNodes = selection.selectors.useGetSelectionTreeNode();
@@ -41,12 +41,14 @@ export const ThdimensionList = (props: Prop) =>
                 filter={isDirectory} 
                 handles={handles}
                 nodes={ selectedNodes[0]?.children ? selectedNodes[0]?.children : [] }
+                placeHolder="第一階層" 
                 onChange={ (node) => selectAction.setSelectionIndex(1, node.path) }/>
 
             <NodeSelecter 
                 filter={isDirectory} 
                 handles={handles}
                 nodes={ selectedNodes[1]?.children ? selectedNodes[1]?.children : [] }
+                placeHolder="第二階層" 
                 onChange={ (node) => selectAction.setSelectionIndex(2, node.path) } />
 
         </HSplitBox>
@@ -56,6 +58,7 @@ export const ThdimensionList = (props: Prop) =>
                 handles={handles} 
                 nodes={ filerNode?.children ? filerNode?.children : [] } 
                 filter={isFile}
+                placeHolder="ドキュメント" 
                 onChange={ (node) => selectAction.setSelectionIndex(3, node.path) }  ></NodeSelecter>
             </div>
         </HSplitBox>

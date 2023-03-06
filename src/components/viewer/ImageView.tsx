@@ -5,7 +5,7 @@ type Props =
     binary: ArrayBuffer,
 }
 
-const StyledFrame = styled("div")(({theme}) =>
+const Frame = styled("iframe")(({theme}) =>
 (
     {
         // display: "flex",
@@ -32,9 +32,9 @@ export const ImageView = (props: Props) =>
     // const onload = () => window.URL.revokeObjectURL(url); 
     
     return <>
-    <StyledFrame>
-        <img src={url} onLoad={onload} onError={onload}></img>
+    <Frame src={url}>
+        {/* <img src={url} onLoad={onload} onError={onload}></img> */}
         {/* <img src={`data:image/png;base64, ${window.btoa(bin.join(""))}`}></img> */}
-    </StyledFrame>
+    </Frame>
     </>
 }

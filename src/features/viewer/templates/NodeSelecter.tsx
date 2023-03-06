@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Accordion, AccordionSummary, Box, Button, List, ListItemButton, ListItemText, Paper, Stack, styled } from "@mui/material";
 import { FileSystemTreeNode } from '../../../class/fileSystem/types';
-import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
+import { FileSystemObject } from "../../../class/fileSystem/fileSystemObject";
 import { FileObject } from '../../../controller/fileObject';
 import { NodeSelecterItem } from './NodeSelecterItem';
 

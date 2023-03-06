@@ -15,7 +15,7 @@ export type FileInfo =
 
 export type Content = 
 {
-    binary: ArrayBuffer | undefined,
+    bytes: ArrayBuffer | undefined,
     // blob: Blob | undefined,
     objectURL: string,    
 }

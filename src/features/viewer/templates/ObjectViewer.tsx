@@ -1,4 +1,4 @@
-import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
+import { FileSystemObject } from "../../../class/fileSystem/fileSystemObject";
 import { Frame } from "../../../components/viewer/Frame";
 import { ImageView } from "../../../components/viewer/ImageView";
 import { MarkdownView } from "../../../components/viewer/Markdown";
@@ -20,7 +20,7 @@ export const ObjectViewer = (props: Props) =>
     return <>
         {
             props.object ? helper.viewComponent(props.object) : <></>
-        // a(h.selectedNodes.contentNode)
+        // a(h.selectedNodesNode)
         // createTemplateTextView(utf8_decoder.decode(props.templatesHook.selectedTemplate?.bytes))
         }
     </>
@@ -31,17 +31,17 @@ const helper =
 {
     viewComponent: (handle: FileSystemObject) =>
     {
-        if (handle.kind == "file" && handle.file?.content.binary != undefined)
+        if (handle.kind == "file" && handle.fileInfo?.bytes != undefined)
         {
-            if (handle.file.extension == "txt") return helper.viewText(handle);
-            if (handle.file.extension == "md") return helper.viewMarkdown(handle);
-            if (handle.file.extension == "html" || handle.file.extension == "htm" || handle.file.extension == "mht") return helper.viewHtmlView(handle);
-            if (handle.file.extension == "png" 
-            || handle.file.extension == "jpg" 
-            || handle.file.extension == "gif"
-            || handle.file.extension == "jpeg") return helper.viewImg(handle);
+            if (handle.fileInfo.extension == "txt") return helper.viewText(handle);
+            if (handle.fileInfo.extension == "md") return helper.viewMarkdown(handle);
+            if (handle.fileInfo.extension == "html" || handle.fileInfo.extension == "htm" || handle.fileInfo.extension == "mht") return helper.viewHtmlView(handle);
+            if (handle.fileInfo.extension == "png" 
+            || handle.fileInfo.extension == "jpg" 
+            || handle.fileInfo.extension == "gif"
+            || handle.fileInfo.extension == "jpeg") return helper.viewImg(handle);
 
-            if (handle.file.extension == "pdf") return helper.viewPDF(handle);
+            if (handle.fileInfo.extension == "pdf") return helper.viewPDF(handle);
         }
 
         return <></>
@@ -49,7 +49,7 @@ const helper =
 
     viewText: (handle: FileSystemObject) =>
     {
-        const text = utf8_decoder.decode(handle.file?.content.binary);
+        const text = utf8_decoder.decode(handle.fileInfo?.bytes);
 
         return <>
             <TextViewer text={text}></TextViewer>
@@ -58,7 +58,7 @@ const helper =
 
     viewMarkdown: (handle: FileSystemObject) =>
     {
-        const text = utf8_decoder.decode(handle.file?.content.binary);
+        const text = utf8_decoder.decode(handle.fileInfo?.bytes);
 
         return <>
             <MarkdownView source={text}></MarkdownView>
@@ -67,27 +67,27 @@ const helper =
 
     viewHtmlView: (handle: FileSystemObject) =>
     {
-        const text = utf8_decoder.decode(handle.file?.content.binary);
+        const text = utf8_decoder.decode(handle.fileInfo?.bytes);
         return  <Frame source={text}></Frame>;
     },
 
     
     viewImg: (handle: FileSystemObject) =>
     {
-        if (handle.file == undefined) return <></>
+        if (handle.fileInfo == undefined) return <></>
 
-        const bin = handle.file?.content.binary as ArrayBuffer;
+        const bin = handle.fileInfo?.bytes as ArrayBuffer;
         return <ImageView binary={bin}></ImageView>
     },
 
     viewPDF: (handle: FileSystemObject) =>
     {
-        if (handle.file == undefined) return <></>
-        if (handle.file?.content.binary == undefined) return <></>
+        if (handle.fileInfo == undefined) return <></>
+        if (handle.fileInfo?.bytes == undefined) return <></>
 
-        const arr = handle.file?.content.binary as ArrayBuffer;
+        const arr = handle.fileInfo?.bytes as ArrayBuffer;
 
-        return <PDFView objectUrl={handle.file.content.objectURL}></PDFView>
+        return <PDFView objectUrl={handle.fileInfo.objectURL}></PDFView>
 
         // const bytes = new Uint8Array(arr);
         // const bin = new Array(bytes.length);

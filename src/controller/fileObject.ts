@@ -1,8 +1,9 @@
 import { useCallback } from "react";
 import { selector, selectorFamily, useRecoilCallback, useRecoilState, useRecoilValue } from "recoil";
-import { Directory, FileInfo } from "../class/fileSystem/directory";
+import { Directory } from "../class/fileSystem/directory";
+import { FileInfo } from "../class/fileSystem/fileInfo";
 import { FileSystemTreeNode } from "../class/fileSystem/types";
-import { FileSystemObject } from "../class/fileSystem/FileSystemObject";
+import { FileSystemObject } from "../class/fileSystem/fileSystemObject";
 import { AtomFileSystemTreeNodes, AtomFileObjects, AtomSelectedHandleNodes } from "../define/recoil/atoms";
 import { selectorKeys } from "../define/recoil/keys";
 
@@ -32,18 +33,17 @@ export const FileObject =
             getFileObject: async (path: string) =>
             {
                 const obj = objects.get(path);
+                
+                if (obj == undefined) return obj;
 
-                console.log(obj);
+                const fileinfo = obj.fileInfo as FileInfo;
 
-                if (obj?.file?.content.binary == undefined)
+                if (fileinfo.bytes == undefined)
                 {
-                    const new_obj = await helper.loadFile(obj as FileSystemObject);
+                    await obj.load();
 
-                    if (new_obj != undefined) 
-                    {
-                        setObjects((n) => new Map(n).set(new_obj.path.join("/"), new_obj));
-                        return new_obj;
-                    }
+                    setObjects((n) => new Map(n).set(obj.getStringPath(), obj));
+                    return obj;
                 }
             
                 return obj;    
@@ -112,48 +112,49 @@ const Selector =
 
 const helper =
 {
-
     loadFile: async (obj: FileSystemObject) =>
     {
-        const ifile = obj.file;
+        const ifile = obj.fileInfo;
 
         if (ifile == undefined) return undefined;
 
         const handle: FileSystemFileHandle = obj.handle as FileSystemFileHandle;
-        const contentType = FileInfo.getContentType(ifile.extension);
+        const contentType = ifile.getContentType();
         let url = "";
 
         console.log("NEW LOADED");
 
         const buffer = await (await handle.getFile()).arrayBuffer();
         
-        if (contentType?.hasBlobUrl && ifile.content.objectURL.length > 0) 
+        if (contentType?.hasBlobUrl && ifile.objectURL.length > 0) 
         {
-            window.URL.revokeObjectURL(ifile.content.objectURL);
-            ifile.content.objectURL = "";
+            window.URL.revokeObjectURL(ifile.objectURL);
+            ifile.objectURL = "";
         }
 
-        if (contentType?.hasBlobUrl && ifile.content.objectURL.length == 0)
+        if (contentType?.hasBlobUrl && ifile.objectURL.length == 0)
         {                            
             url = window.URL.createObjectURL(
                 new Blob([new Uint8Array(buffer)], { type: contentType.type } ));
         }
+        
+        
 
-        const new_obj: FileSystemObject = 
-        {
-             ...obj, 
-            file: 
-            { 
-                ...ifile, 
-                content: 
-                {       
-                    objectURL: url,
-                    binary: buffer,
-                } 
-            }
-        }
+        // const new_obj: FileSystemObject = 
+        // {
+        //      ...obj, 
+        //     fileInfo: 
+        //     { 
+        //         ...ifile, 
+        //         content: 
+        //         {       
+        //             objectURL: url,
+        //             bytes: buffer,
+        //         } 
+        //     }
+        // }
 
-        return new_obj;
+        // return new_obj;
     },
 
     a: (fileHandles: Map<string, FileSystemObject>) =>

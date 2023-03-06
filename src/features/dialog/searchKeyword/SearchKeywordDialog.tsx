@@ -10,7 +10,7 @@ import { TemplatesViewer } from "../../viewer/templates/templatesViewer";
 import { ObjectViewer } from "../../viewer/templates/ObjectViewer";
 import { MatchObjectsList } from "./components/MatchObjectsList";
 import { selection } from "../../../controller/selectedNodes";
-import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
+import { FileSystemObject } from "../../../class/fileSystem/fileSystemObject";
 
 const GrassBackdrop = styled(Backdrop)(({theme})=>
 (

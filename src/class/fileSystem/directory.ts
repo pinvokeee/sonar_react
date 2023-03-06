@@ -1,41 +1,5 @@
-import { FileSystemObject } from "./FileSystemObject";
-
-type ContentInfo =
-{
-    name: string,
-    type: string,
-    hasBlobUrl: boolean,
-}
-
-export class FileInfo
-{
-    static getNameSection = (fileName : string) =>
-    {
-        const index = fileName.lastIndexOf(".");    
-        if (index == -1) return [fileName, ""]    
-        return [fileName.slice(0, index), fileName.slice(index + 1, fileName.length)];
-    }
-
-    static getContentType = (extension: string) =>
-    {
-        if (!this.fileTypes.has(extension)) return this.fileTypes.get("unknown");
-
-        return this.fileTypes.get(extension);
-    }
-
-    private static fileTypes = new Map<string, ContentInfo>([
-        ["txt", { name: "TEXT", type: "text/plain", hasBlobUrl: false },],
-        ["csv", { name: "CSV", type: "text/csv", hasBlobUrl: false }],
-        ["html", { name: "HTML", type: "text/html", hasBlobUrl: false },],
-        ["pdf", { name: "PDF", type: "application/pdf", hasBlobUrl: true}, ],
-        ["jpg", { name: "IMG", type: "image/jpeg" , hasBlobUrl: true},],
-        ["jpeg", { name: "IMG", type: "image/jpeg" , hasBlobUrl: true},],
-        ["png", { name: "IMG", type: "image/png" , hasBlobUrl: true},],
-        ["gif", { name: "IMG", type: "image/gif" , hasBlobUrl: true},],
-        ["bmp", { name: "IMG", type: "image/bmp" , hasBlobUrl: true},],
-        ["unknown", { name: "UNKNOWN", type: "", hasBlobUrl: false } ],
-    ]);
-}
+import { FileInfo } from "./fileInfo";
+import { FileSystemObject } from "./fileSystemObject";
 
 export class Directory
 {
@@ -78,24 +42,7 @@ export class Directory
 
         for await (const [name, entry] of handle.entries())
         {
-            // const isTarget = onFilter ? onFilter.call(this, 
-            //     {
-            //          name, 
-            //          kind: entry.kind, 
-            //          path: [], 
-            //          file: 
-            //          { 
-            //             extension: "",
-            //             name: "",
-            //             content: 
-            //             { 
-            //                 objectURL: "", 
-            //                 binary: undefined 
-            //             } 
-            //         } 
-            //     }) : true;
-
-            const isTarget = onFilter ? onFilter.call(this, new FileSystemObject(name, entry.kind, [])): true;
+            const isTarget = onFilter ? onFilter.call(this, new FileSystemObject(name, [], entry.kind )): true;
 
             if (isTarget)
             {
@@ -116,42 +63,25 @@ export class Directory
     {
         for await (const [name, entry] of targetHandle.entries())
         {
-            const node : FileSystemObject = {
-                name: name,
-                kind: entry.kind,
-                path: [...currentPath, name],
-                handle: entry
-            }
+            const node = new FileSystemObject(name, [...currentPath, name], entry.kind, entry);
 
             if (entry.kind == "directory") (await this.readEntries(entry, node.path, outMap, isReading, onProgress));
-            // if (entry.kind == "directory") nodes.push(...(await this.readEntries(entry, node.path, isReading, onProgress)));
-
-            if (entry.kind == "file")
-            {
-                const [name, extension] = FileInfo.getNameSection(entry.name);
-                node.file = { name, extension, content: { binary: undefined, objectURL: "", }  }
-            }
 
             const isTarget = onFilter ? onFilter.call(this, node) : true;
 
             if (isTarget) 
             {
-                if (isReading && entry.kind == "file" && node.file != undefined)
+                if (isReading && entry.kind == "file" && node.fileInfo != undefined)
                 {
-                    node.file.content.binary = await (await entry.getFile()).arrayBuffer();
+                    await node.load();
                 }
 
-                if (outMap.has(node.path.join("/")))
+                if (outMap.has(node.getStringPath()))
                 {
                     console.error("キーの重複発生", node);
                 }
 
-                outMap.set(node.path.join("/"), node);
-
-                // if (node.kind == "directory")
-                // {
-                //     console.log("OUTTEST", node, Directory.getSubDirectories(outMap, node));
-                // }
+                outMap.set(node.getStringPath(), node);
 
                 onProgress?.call(this, node);
             }

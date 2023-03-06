@@ -1,7 +1,7 @@
 import { Accordion, AccordionDetails, AccordionSummary, Button, ListItemButton, Typography } from "@mui/material"
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { FileSystemTreeNode } from "../../../class/fileSystem/types"
-import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
+import { FileSystemObject } from "../../../class/fileSystem/fileSystemObject";
 import SplitButton from "../../../components/elements/toolbar/SplitButton";
 
 type Props = 
@@ -24,22 +24,36 @@ export const NodeSelecterItem = (props: Props) =>
         e.stopPropagation();
 
     }, [])
+
+    const [mouseState, setState] = useState<boolean>(false);
+
+    const mouseLeave = () =>
+    {
+        setState(false);
+    }
+
+    const mouseEnter = () =>
+    {
+        setState(true);
+    }
     
     return (
         <>
         <ListItemButton key={props.targetNode.path} sx={{ boxSizing: "border-box" }} disableRipple={true} 
+            onMouseLeave={mouseLeave}
+            onMouseEnter={mouseEnter}
             onClick={() => props.onChange?.call(this, props.targetNode)}>
             
             {helper.getText(props.objects, props.targetNode.path) }
 
-            {/* <SplitButton
+            {mouseState ? <SplitButton
                 items={menuItems}
                 sx={{ marginLeft: "auto", }} 
                 onGetText={ (e) => e }
                 onGetKey={ (e) => e }
                 selectedItem={undefined}
                 onChange={ (e, newItem) => reload(e, newItem) }>
-            </SplitButton> */}
+            </SplitButton> : <></>}
             
         </ListItemButton>
 
@@ -54,7 +68,7 @@ const helper =
         const item = handles.get(path);
         if (item == undefined) return "";
         if (item.kind == 'directory') return item.name;
-        if (item.kind == 'file') return item.file?.name;
+        if (item.kind == 'file') return item.fileInfo?.name;
     },
 
     getFileType: (handles: Map<string, FileSystemObject>, path: string) => 
@@ -62,6 +76,6 @@ const helper =
         const item = handles.get(path);
 
         if (item?.kind == 'directory') return "フォルダ";
-        if (item?.kind == "file") return `${item.file?.extension.toUpperCase()}`;
+        if (item?.kind == "file") return `${item.fileInfo?.extension.toUpperCase()}`;
     }
 }

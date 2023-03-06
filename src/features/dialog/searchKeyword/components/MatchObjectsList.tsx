@@ -1,4 +1,4 @@
-import { FileSystemObject } from "../../../../class/fileSystem/FileSystemObject";
+import { FileSystemObject } from "../../../../class/fileSystem/fileSystemObject";
 import { FileObject } from "../../../../controller/fileObject";
 import { MatchObjectListItem } from "./MatchObjectListItem";
 

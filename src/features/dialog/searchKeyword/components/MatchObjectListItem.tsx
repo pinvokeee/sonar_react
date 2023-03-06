@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FileSystemObject } from "../../../../class/fileSystem/FileSystemObject";
+import { FileSystemObject } from "../../../../class/fileSystem/fileSystemObject";
 import { FileObject } from "../../../../controller/fileObject";
 
 type Props =

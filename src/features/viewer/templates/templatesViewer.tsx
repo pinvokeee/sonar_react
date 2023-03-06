@@ -8,7 +8,7 @@ import { MarkdownView } from "../../../components/viewer/Markdown";
 import { ThdimensionList } from "./threeSelecter";
 import { selection } from "../../../controller/selectedNodes";
 import { FileObject } from "../../../controller/fileObject";
-import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
+import { FileSystemObject } from "../../../class/fileSystem/fileSystemObject";
 import { Frame } from "../../../components/viewer/Frame";
 import { ImageView } from "../../../components/viewer/ImageView";
 import { PDFView } from "../../../components/viewer/PDFView";

@@ -33,18 +33,21 @@ export const FileObject =
             getFileObject: async (path: string) =>
             {
                 const obj = objects.get(path);
+                // console.log(obj);
                 
-                if (obj == undefined) return obj;
+                // if (obj == undefined) return obj;
 
-                const fileinfo = obj.fileInfo as FileInfo;
+                // const fileinfo = obj.fileInfo as FileInfo;
 
-                if (fileinfo.bytes == undefined)
-                {
-                    await obj.load();
+                // if (fileinfo.bytes == undefined)
+                // {
+                //     await obj.load();
 
-                    setObjects((n) => new Map(n).set(obj.getStringPath(), obj));
-                    return obj;
-                }
+                //     setObjects((n) => new Map(n).set(obj.getStringPath(), obj));
+                //     return obj;
+                // }
+
+                
             
                 return obj;    
             },

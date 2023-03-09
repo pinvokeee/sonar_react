@@ -13,6 +13,7 @@ import { Frame } from "../../../components/viewer/Frame";
 import { ImageView } from "../../../components/viewer/ImageView";
 import { PDFView } from "../../../components/viewer/PDFView";
 import { ObjectViewer } from "./ObjectViewer";
+import { ObjectViewerWrap } from "./ObjectViewerWrap";
 
 export const HSplitBox = styled(Split)(({ theme }) => 
 (
@@ -58,28 +59,12 @@ export type Prop =
 
 export const TemplatesViewer = (props: Prop) =>
 {
-    const actions = FileObject.useActions();
-    const selectedNodes = selection.selectors.useGetSelectionTreeNode();
-
-    const [handle, setHandle] = useState<FileSystemObject | undefined>();
-
-    useEffect(() =>
-    {
-        if (selectedNodes[3] == undefined) return;
-
-        actions.getFileObject(selectedNodes[3].path).then(h =>            
-        {
-            setHandle(h);    
-        });
-
-    }, [selectedNodes[3]]);
-
     return (
         <>
             <VSplitBox direction="horizontal" minSize={100} sizes={[20, 20, 60]} gutterAlign="center" gutterSize={6} gutterStyle={GutterStyle}>
                 <ThdimensionList></ThdimensionList>
                 <Box>
-                    <ObjectViewer object={handle}></ObjectViewer>
+                    <ObjectViewerWrap></ObjectViewerWrap>
                 </Box>                
             </VSplitBox>
         </>

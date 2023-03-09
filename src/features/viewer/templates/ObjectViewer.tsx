@@ -75,9 +75,7 @@ const helper =
     viewImg: (handle: FileSystemObject) =>
     {
         if (handle.fileInfo == undefined) return <></>
-
-        const bin = handle.fileInfo?.bytes as ArrayBuffer;
-        return <ImageView binary={bin}></ImageView>
+        return <ImageView blobUrl={handle.fileInfo.objectURL}></ImageView>
     },
 
     viewPDF: (handle: FileSystemObject) =>

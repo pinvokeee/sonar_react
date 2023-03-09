@@ -54,20 +54,26 @@ export const NodeSelecter = (props : INodeLIstBoxProp) =>
 
         if (handle == undefined) return;
 
-        actions.load(handle).then((r) => 
-        {
-            console.log(r);
-        });
+        console.log(n);
+
+        // actions.load(handle).then((r) => 
+        // {
+        //     console.log(r);
+        // });
+
+        // console.log("AAA");
     }
 
     return (
         <div style={{ height: "100%", overflowWrap: 'anywhere', overflow: "auto", boxSizing: "border-box" }} >
         {
             filteredNodes.length > 0 ?
+            
             <List aria-label="secondary mailbox folder">
             {
                 filteredNodes.map((node) => <NodeSelecterItem objects={handles} targetNode={node} onChange={props.onChange} onClickAction={act}></NodeSelecterItem>)
             }
+
             </List> :
             <Placeholder>{props.placeHolder}</Placeholder>
         }

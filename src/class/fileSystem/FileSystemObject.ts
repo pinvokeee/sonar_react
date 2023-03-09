@@ -33,10 +33,12 @@ export class FileSystemObject
 
         this.fileInfo.bytes = buffer;
         this.fileInfo.objectURL = contentType?.hasBlobUrl ? URL.createObjectURL(new Blob([buffer], { type: contentType.type })) : "";        
+
+        console.log(this.fileInfo.objectURL);
     }
 
     getStringPath()
     {
-        return this.path.join("/") + "/";
+        return this.path.join("/");
     }
 }

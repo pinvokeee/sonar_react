@@ -16,15 +16,14 @@ const menuItems = [
     "再読み込み", 
 ]
 
+const reload = (e: React.MouseEvent<HTMLLIElement, MouseEvent>, selectedNode: FileSystemTreeNode, newItem: any, action?: (path: string) => void) =>
+{
+    action?.call(this, selectedNode.path);
+    e.stopPropagation();
+};
+
 export const NodeSelecterItem = (props: Props) =>
 {
-    const reload = useCallback((e: React.MouseEvent<HTMLLIElement, MouseEvent>, newItem: any) =>
-    {
-        props.onClickAction?.call(this, props.targetNode.path);
-        e.stopPropagation();
-
-    }, [])
-
     const [mouseState, setState] = useState<boolean>(false);
 
     const mouseLeave = () =>
@@ -38,26 +37,23 @@ export const NodeSelecterItem = (props: Props) =>
     }
     
     return (
-        <>
-        <ListItemButton key={props.targetNode.path} sx={{ boxSizing: "border-box" }} disableRipple={true} 
-            onMouseLeave={mouseLeave}
-            onMouseEnter={mouseEnter}
-            onClick={() => props.onChange?.call(this, props.targetNode)}>
-            
-            {helper.getText(props.objects, props.targetNode.path) }
+    <ListItemButton key={props.targetNode.path} sx={{ boxSizing: "border-box" }} disableRipple={true} 
+        onMouseLeave={mouseLeave}
+        onMouseEnter={mouseEnter}
+        onClick={() => props.onChange?.call(this, props.targetNode)}>
+        
+        {helper.getText(props.objects, props.targetNode.path) }
 
-            {mouseState ? <SplitButton
-                items={menuItems}
-                sx={{ marginLeft: "auto", }} 
-                onGetText={ (e) => e }
-                onGetKey={ (e) => e }
-                selectedItem={undefined}
-                onChange={ (e, newItem) => reload(e, newItem) }>
-            </SplitButton> : <></>}
-            
-        </ListItemButton>
-
-    </>
+        {<SplitButton
+            items={menuItems}
+            sx={{ marginLeft: "auto", visibility: mouseState ? "visible" : "hidden" }} 
+            onGetText={ (e) => e }
+            onGetKey={ (e) => e }
+            selectedItem={undefined}
+            onChange={ (e, newItem) => reload(e, props.targetNode, newItem, props.onClickAction) }>
+        </SplitButton>}
+        
+    </ListItemButton>
     );
 }
 

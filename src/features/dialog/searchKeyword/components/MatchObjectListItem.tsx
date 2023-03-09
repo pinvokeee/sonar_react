@@ -12,6 +12,8 @@ export const MatchObjectListItem = (props: Props) =>
     const actions = FileObject.useActions();
     const [handle, setHandle] = useState<FileSystemObject>();
 
+    return <div>{props.path}</div>
+
     // useEffect(() =>
     // {
     //     (async () =>

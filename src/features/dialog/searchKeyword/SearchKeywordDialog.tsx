@@ -109,7 +109,7 @@ export const DialogSearchFromKeyword = (props: Props) =>
                     <MainContainer>
                         <VSplitBox direction="horizontal" sizes={[40, 60]} gutterAlign="center" gutterStyle={GutterStyle}>
                             <Box>
-                                <MatchObjectsList objects={handles}></MatchObjectsList>
+                                <MatchObjectsList keyword={keyword} objects={handles}></MatchObjectsList>
                             </Box>
 
                             <ObjectViewer object={undefined}></ObjectViewer>

@@ -4,6 +4,8 @@ type ContentInfo = {
     hasBlobUrl: boolean;
 };
 
+const utf8_decoder: TextDecoder = new TextDecoder();
+
 export class FileInfo
 {
     fileName: string = "";
@@ -28,6 +30,11 @@ export class FileInfo
 
         return FileInfo.fileTypes.get(this.extension);
     };
+
+    getText(){
+        if (this.bytes == undefined) return "";
+        return utf8_decoder.decode(this.bytes);
+    }
 
     static getNameSection = (fileName: string) => {
         const index = fileName.lastIndexOf(".");

@@ -22,7 +22,7 @@ export const FileObject =
             assignFromMap: (nodes: Map<string, FileSystemObject>) =>
             {
                 setObjects(nodes);
-                setFileNodes(helper.a(nodes));
+                setFileNodes(selectorHepler.a(nodes));
             },
 
             toFileSystemHandleData: (node: FileSystemTreeNode) =>
@@ -33,22 +33,6 @@ export const FileObject =
             getFileObject: async (path: string) =>
             {
                 const obj = objects.get(path);
-                // console.log(obj);
-                
-                // if (obj == undefined) return obj;
-
-                // const fileinfo = obj.fileInfo as FileInfo;
-
-                // if (fileinfo.bytes == undefined)
-                // {
-                //     await obj.load();
-
-                //     setObjects((n) => new Map(n).set(obj.getStringPath(), obj));
-                //     return obj;
-                // }
-
-                
-            
                 return obj;    
             },
 
@@ -56,11 +40,11 @@ export const FileObject =
             {
                 return new Promise(async (resolve, reject) =>
                 {
-                    const newObj = helper.loadFile(node);
-
-                    if (newObj != undefined)
+                    if (node != undefined)
                     {
-                        setObjects((nodes) =>  new Map(nodes).set(node.path.join("/"), node));
+                        await node.load();
+
+                        setObjects((nodes) => new Map(nodes).set(node.getStringPath(), node));
                         resolve(node);
                     }
                 });
@@ -81,7 +65,9 @@ export const FileObject =
         {
             const path = parentNode.path.join("/");
             return useRecoilValue(Selector.getSubNodes(path));
-        }
+        },
+
+        useSearchFromKeyword: (keyword: string, subdir: string) => useRecoilValue(Selector.getFileObjectsFromKeyword({ keyword, subdir })),
     }
 }
 
@@ -106,15 +92,52 @@ const Selector =
 
         get: (path) => ({get}) => 
         {
-            return Array.from(get(AtomFileObjects)).map(([key, obj]) => obj).filter(obj => path.startsWith(obj.path.join("/") + "/"));
+            const objects = get(AtomFileObjects);
+            return selectorHepler.getSubDirectroy(objects, objects.get(path) as FileSystemObject)
         }
     }),
 
+    getFileObjectsFromKeyword: selectorFamily<FileSystemObject[], { keyword: string, subdir: string }>({
 
+        key: selectorKeys.SELECTOR_SEARCH_OBJECT,
+
+        get: (props) => ({get}) => 
+        {
+            // const a = Array.from(get(AtomFileObjects)).map(([key, obj]) => obj);            
+
+            const fileobjects = get(AtomFileObjects);
+            const a = props.subdir != undefined ? 
+                selectorHepler.getSubDirectroy(fileobjects, fileobjects.get(props.subdir) as FileSystemObject) : 
+                Array.from(fileobjects).map(([k, v]) => v);
+
+            const b = a.filter(obj => 
+            {
+                if (obj.kind == "directory") return false;
+
+                const file = obj.fileInfo as FileInfo;
+                const contentType = obj.fileInfo?.getContentType();
+                
+                if (contentType?.name == "TEXT" && file.getText().indexOf(props.keyword) > -1) return true;
+
+                return false;
+            });
+
+            console.log(b);
+
+            return b;
+
+            // return Array.from(get(AtomFileObjects)).map(([key, obj]) => obj).filter(obj => path.startsWith(obj.path.join("/") + "/"));
+        }
+    }),
 }
 
-const helper =
+const selectorHepler =
 {
+    getSubDirectroy: (fileobjects: Map<string, FileSystemObject>, parentNode: FileSystemObject) =>
+    {
+        return Array.from(fileobjects).map(([key, obj]) => obj).filter(obj => parentNode.getStringPath().startsWith(obj.path.join("/") + "/"));
+    },
+
     loadFile: async (obj: FileSystemObject) =>
     {
         const ifile = obj.fileInfo;

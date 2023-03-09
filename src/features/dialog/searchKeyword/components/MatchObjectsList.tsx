@@ -1,46 +1,31 @@
 import { FileSystemObject } from "../../../../class/fileSystem/fileSystemObject";
 import { FileObject } from "../../../../controller/fileObject";
+import { selection } from "../../../../controller/selectedNodes";
 import { MatchObjectListItem } from "./MatchObjectListItem";
 
 type Props =
 {
     objects: Map<string, FileSystemObject>,
+    keyword: string,
 }
 
 export const MatchObjectsList = (props: Props) =>
 {    
     const objects = Array.from(props.objects);
 
-    // console.log("AAA");
+    const select = selection.selectors.useGetSelectionPaths();
+    const h = FileObject.selectors.useSearchFromKeyword(props.keyword, select[1] as string);
+
+    console.log(h);
 
     return (
         <>
         {
-            objects.map(([key, obj]) =>
+            h.map((obj) =>
             {
-                return <MatchObjectListItem path={key}></MatchObjectListItem>
+                return <MatchObjectListItem path={obj.getStringPath()}></MatchObjectListItem>
             })
         }
         </>
     )
-
-    // return (
-    // { 
-    //     // Array.from(props.objects).map(([key, obj]) =>
-    //     //     {
-    //     //         const [path, handle] = h;
-
-    //     //         // if (handle.kind == "directory" || handle.file == undefined) return undefined; 
-    //     //         // if (handle.file.extension != "txt") return undefined;
-
-    //     //         // // if (handle.file.content.binary == undefined) acitons.loadFile(handle);
-                
-    //     //         // if (utf8_decoder.decode(handle.file.content.binary).indexOf(keyword) > -1)
-    //     //         // {
-    //     //         //     return <div>{ handle.file.name }</div>
-    //     //         // }
-    //     //         return <></>;
-
-    //     //     }).filter(h => h != undefined)
-    // });
 }

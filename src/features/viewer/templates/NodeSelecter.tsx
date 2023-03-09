@@ -51,17 +51,12 @@ export const NodeSelecter = (props : INodeLIstBoxProp) =>
     const act = (n: string) =>
     {
         const handle = ns.get(n);
-
         if (handle == undefined) return;
 
-        console.log(n);
-
-        // actions.load(handle).then((r) => 
-        // {
-        //     console.log(r);
-        // });
-
-        // console.log("AAA");
+        actions.load(handle).then(r => 
+        {
+            console.log(r);
+        });
     }
 
     return (

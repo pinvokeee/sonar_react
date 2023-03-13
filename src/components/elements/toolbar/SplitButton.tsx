@@ -1,7 +1,7 @@
 import { Box, Button, ButtonGroup, IconButton, Menu, MenuItem, MenuList, Paper, Popper, styled, SxProps, Theme, Typography } from "@mui/material";
 import React, { useState } from "react";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { FileObject } from "../../../controller/fileObject";
+import { fileObjectContoller } from "../../../controller/fileObjectContoller";
 import { AnyAaaaRecord } from "dns";
 
 type Props =

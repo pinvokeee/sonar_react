@@ -2,7 +2,7 @@ import { Backdrop, Button, Dialog, DialogActions, DialogContent, DialogContentTe
 import { useMemo, useState } from "react";
 import { Directory } from "../../../class/fileSystem/directory"
 import { FileSystemTreeNode } from "../../../class/fileSystem/types";
-import { dialogStates, dialogStateSelector } from "../../../controller/dialog";
+import { dialogController, dialogStateSelector } from "../../../controller/dialogController";
 import { DialogNames } from "../../../define/names/dialogNames";
 import { DialogLoadingRepository } from "../loadingRepository/DialogLoadingDirectory";
 import { CloseSelectRegistoryDialog } from "./components/CloseSelectRegistoryDialog";
@@ -11,7 +11,7 @@ import { RepositoryList } from "./components/RepositoryList";
 
 export const DialogSelectRepository = () =>
 {
-   const state = dialogStates.useCurrentState();
+   const state = dialogController.useCurrentState();
    const isShown = state.name == DialogNames.SelectRepository || state.name == DialogNames.ReSelectRepository;
 
     return <>

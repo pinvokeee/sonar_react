@@ -1,6 +1,6 @@
 import * as material from "@mui/material";
 import React, { useState } from "react";
-import { FileObject } from "../../../controller/fileObject";
+import { fileObjectContoller } from "../../../controller/fileObjectContoller";
 import SplitButton from "../../../components/elements/toolbar/SplitButton";
 import { FileSystemTreeNode } from "../../../class/fileSystem/types";
 import { selection } from "../../../controller/selectedNodes";
@@ -31,14 +31,14 @@ const getKey = (item: FileSystemTreeNode) =>
 
 export const ServiceSelecter = (props : Props) =>
 {
-    const actions = FileObject.useActions();
+    const actions = fileObjectContoller.useActions();
 
     const selectionPaths = selection.selectors.useGetSelectionPaths();
     const selectedAction = selection.useActions();
 
-    const nodes = FileObject.selectors.useFileNodesSelector();
+    const nodes = fileObjectContoller.selectors.useFileNodesSelector();
 
-    const fsnodes = FileObject.selectors.useFileNodes();
+    const fsnodes = fileObjectContoller.selectors.useFileNodes();
     const topNodes = fsnodes.filter(node => nodes.get(node.path)?.kind == "directory");
 
     const item = selectionPaths[0] ? nodes.get(selectionPaths[0]) : undefined;

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { FileSystemObject } from "../../../class/fileSystem/fileSystemObject";
-import { FileObject } from "../../../controller/fileObject";
+import { fileObjectContoller } from "../../../controller/fileObjectContoller";
 import { selection } from "../../../controller/selectedNodes";
 import { ObjectViewer } from "./ObjectViewer";
 
@@ -8,7 +8,7 @@ export const ObjectViewerWrap = () =>
 {
     const selectedNodes = selection.selectors.useGetSelectionTreeNode();
 
-    const actions = FileObject.useActions();
+    const actions = fileObjectContoller.useActions();
     const [handle, setHandle] = useState<FileSystemObject | undefined>();
 
     const h = useMemo(() => 

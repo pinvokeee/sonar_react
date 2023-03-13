@@ -18,6 +18,6 @@ const Frame = styled("iframe")(({theme}) =>
 
 export const ImageView = (props: Props) =>
 {
-    return <img src={props.blobUrl}></img>
-    // return <Frame src={props.bloUrl}></Frame>
+    // return <img src={props.blobUrl}></img>
+    return <Frame src={props.blobUrl}></Frame>
 }

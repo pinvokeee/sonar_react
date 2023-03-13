@@ -13,6 +13,7 @@ export class FileInfo
     extension: string = "";
     bytes: ArrayBuffer | undefined = undefined;
     objectURL: string = "";
+    cacheText: string = "";
 
     constructor(fileName: string)
     {
@@ -32,8 +33,15 @@ export class FileInfo
     };
 
     getText(){
-        if (this.bytes == undefined) return "";
-        return utf8_decoder.decode(this.bytes);
+
+        if (this.bytes == undefined) return "";    
+
+        const contentType = this.getContentType() as ContentInfo;
+
+        if (contentType.name == "TEXT") return utf8_decoder.decode(this.bytes);
+        if (contentType.name == "PDF") return this.cacheText;
+
+        return "";
     }
 
     static getNameSection = (fileName: string) => {
@@ -53,6 +61,12 @@ export class FileInfo
         ["png", { name: "IMG", type: "image/png", hasBlobUrl: true },],
         ["gif", { name: "IMG", type: "image/gif", hasBlobUrl: true },],
         ["bmp", { name: "IMG", type: "image/bmp", hasBlobUrl: true },],
+        ["md", { name: "MARKDOWN", type: "", hasBlobUrl: false }],
         ["", { name: "UNKNOWN", type: "", hasBlobUrl: false }],
     ]);
+
+    static registedFileTypes() {
+        return FileInfo.fileTypes;
+    };
+
 }

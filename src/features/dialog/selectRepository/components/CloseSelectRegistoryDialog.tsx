@@ -1,12 +1,12 @@
 import { Button } from "@mui/material"
-import { dialogStates } from "../../../../controller/dialog";
-import { repository } from "../../../../controller/repository";
+import { dialogController } from "../../../../controller/dialogController";
+import { repositoryController } from "../../../../controller/repositoryController";
 import { DialogNames } from "../../../../define/names/dialogNames";
 
 export const CloseSelectRegistoryDialog = () =>
 {
-    const state = dialogStates.useCurrentState();
-    const actions = repository.useActions();
+    const state = dialogController.useCurrentState();
+    const actions = repositoryController.useActions();
 
     return <>
     {

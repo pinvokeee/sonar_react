@@ -1,4 +1,5 @@
-import { selector, selectorFamily, useRecoilValue } from "recoil";
+import { useCallback } from "react";
+import { selector, selectorFamily, useRecoilValue, useSetRecoilState } from "recoil";
 import { AtomDialogState } from "../define/recoil/atoms";
 import { selectorKeys } from "../define/recoil/keys";
 import { DialogState } from "../features/dialog/types";
@@ -11,7 +12,19 @@ export const dialogStateSelector =
     }),
 }
 
-export const dialogStates = 
+export const dialogController = 
 {
+    useActions: () =>
+    {
+        const setDialogState = useSetRecoilState(AtomDialogState);
+        
+        return {
+            close: useCallback(() =>
+            {
+                setDialogState({ name: "" });
+            }, [])
+        }
+    },
+
     useCurrentState: () => useRecoilValue(dialogStateSelector.select),
 }

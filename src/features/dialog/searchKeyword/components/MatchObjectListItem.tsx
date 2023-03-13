@@ -1,37 +1,35 @@
+import { ListItem, ListItemButton, Stack, styled } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { FileSystemObject } from "../../../../class/fileSystem/fileSystemObject";
-import { FileObject } from "../../../../controller/fileObject";
+import { fileObjectContoller } from "../../../../controller/fileObjectContoller";
 
 type Props =
 {
-    path: string,
+    fileObj: FileSystemObject,
+
+    onClick: (selectedFileObj: FileSystemObject) => void,
 }
+
+const PathLabel = styled(Typography)(({theme}) =>
+(
+    {
+        fontSize: "10pt",
+        overflowWrap: "anywhere",   
+    }
+)
+)
 
 export const MatchObjectListItem = (props: Props) =>
 {
-    const actions = FileObject.useActions();
-    const [handle, setHandle] = useState<FileSystemObject>();
-
-    return <div>{props.path}</div>
-
-    // useEffect(() =>
-    // {
-    //     (async () =>
-    //     {
-    //         const h = await actions.getFileObject(props.path);
-
-    //         // console.log(h);
-
-    //     })();
-
-    //     // await actions.getFileObject(props.path).then(h =>            
-    //     // {
-    //     //     if (h == undefined) return;
-    //     //     console.log(h);
-    //     //     setHandle(h);
-    //     // });
-
-    // }, []);
-
-    return <></>;
+    return (
+        <ListItem disablePadding>
+            <ListItemButton onClick={() => props.onClick(props.fileObj)}>
+                <Stack>
+                <div>{props.fileObj.fileInfo?.name}</div>
+                <PathLabel>{props.fileObj.getStringPath()}</PathLabel>
+                </Stack>
+            </ListItemButton>
+        </ListItem>
+    )
 }

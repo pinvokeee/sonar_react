@@ -2,6 +2,9 @@ import { FileInfo } from "./fileInfo";
 
 type ObjectType = "file" | "directory";
 
+// @ts-ignore
+const pdf = pdfjsLib;
+
 export class FileSystemObject 
 {
     name: string = "";
@@ -17,7 +20,7 @@ export class FileSystemObject
         this.kind = kind;
         this.handle = handle;
 
-        this.fileInfo = new FileInfo(this.name);
+        if (this.kind == "file") this.fileInfo = new FileInfo(this.name);
     }
 
     async load()
@@ -34,7 +37,20 @@ export class FileSystemObject
         this.fileInfo.bytes = buffer;
         this.fileInfo.objectURL = contentType?.hasBlobUrl ? URL.createObjectURL(new Blob([buffer], { type: contentType.type })) : "";        
 
-        console.log(this.fileInfo.objectURL);
+        //PDFの場合
+        if (contentType?.name == "PDF"){
+
+            const texts: string[] = [];
+            const doc = await (pdf.getDocument(this.fileInfo.objectURL)).promise;
+
+            for (let i = 1; i < doc.numPages; i++)
+            {
+                const items = await (await doc.getPage(i)).getTextContent();
+                items.items.forEach((item: any) => texts.push(item.str))
+            }
+
+            this.fileInfo.cacheText = texts.join("");
+        }
     }
 
     getStringPath()

@@ -1,5 +1,5 @@
 import { ListItem, Button, ListItemText } from "@mui/material"
-import { repository, RepositoryHandleItem } from "../../../../controller/repository"
+import { repositoryController, RepositoryHandleItem } from "../../../../controller/repositoryController"
 
 type Props =
 {
@@ -8,7 +8,7 @@ type Props =
 
 export const RepositoryListItem = (props: Props) =>
 {
-    const actions = repository.useActions();
+    const actions = repositoryController.useActions();
 
     const load = () => actions.loadRepository(props.item);
     const del = () => actions.deleteRepository(props.item);

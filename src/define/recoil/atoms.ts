@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 import { FileSystemTreeNode } from "../../class/fileSystem/types";
 import { FileSystemObject } from "../../class/fileSystem/fileSystemObject";
-import { RepositoryHandleItem, RepositoryLoadingState } from "../../controller/repository";
+import { RepositoryHandleItem, RepositoryLoadingState } from "../../controller/repositoryController";
 import { DialogState } from "../../features/dialog/types";
 import { DialogNames } from "../names/dialogNames";
 import { atomKeys } from "./keys";

@@ -42,7 +42,7 @@ export class Directory
 
         for await (const [name, entry] of handle.entries())
         {
-            const isTarget = onFilter ? onFilter.call(this, new FileSystemObject(name, [], entry.kind )): true;
+            const isTarget = onFilter ? onFilter.call(this, new FileSystemObject(name, [], entry.kind)): true;
 
             if (isTarget)
             {
@@ -54,9 +54,9 @@ export class Directory
         return count;
     }
 
-    static readFromHandle = (handle: FileSystemDirectoryHandle, isReading?: boolean, onProgress?: (e: FileSystemObject) => void) =>
+    static readFromHandle = (handle: FileSystemDirectoryHandle, isBuffered?: boolean, onProgress?: (e: FileSystemObject) => void, onFilter?: (node: FileSystemObject) => boolean) =>
     {
-        return this.readEntries(handle, [], new Map(), isReading, onProgress);
+        return this.readEntries(handle, [], new Map(), isBuffered, onProgress, onFilter);
     }
 
     private static readEntries = async (targetHandle: FileSystemDirectoryHandle, currentPath: string[], outMap: Map<string, FileSystemObject>, isReading?: boolean, onProgress?: (e: FileSystemObject) => void, onFilter?: (node: FileSystemObject) => boolean) =>
@@ -65,7 +65,7 @@ export class Directory
         {
             const node = new FileSystemObject(name, [...currentPath, name], entry.kind, entry);
 
-            if (entry.kind == "directory") (await this.readEntries(entry, node.path, outMap, isReading, onProgress));
+            if (entry.kind == "directory") (await this.readEntries(entry, node.path, outMap, isReading, onProgress, onFilter));
 
             const isTarget = onFilter ? onFilter.call(this, node) : true;
 

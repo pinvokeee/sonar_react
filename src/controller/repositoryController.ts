@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { useCallback } from "react";
 import { selector, selectorFamily, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Directory } from "../class/fileSystem/directory";
+import { FileInfo } from "../class/fileSystem/fileInfo";
+import { FileSystemObject } from "../class/fileSystem/fileSystemObject";
 import { FileSystemTreeNode } from "../class/fileSystem/types";
 import { IndexedDBUtil } from "../class/indexeddb/indexeddb";
 import { DialogNames } from "../define/names/dialogNames";
 import { AtomDialogState, AtomFileObjects, AtomRepositoryHandleList, AtomRepositoryLoadingState } from "../define/recoil/atoms";
 import { selectorKeys } from "../define/recoil/keys";
 import { generateUuid } from "../util/util";
-import { FileObject } from "./fileObject";
+import { fileObjectContoller } from "./fileObjectContoller";
 
 export type RepositoryHandleItem =
 {
@@ -29,7 +31,7 @@ enum StoreName
     Repository = "repos",
 }
 
-export const repository =
+export const repositoryController =
 {
     useActions: () =>
     {
@@ -38,7 +40,7 @@ export const repository =
         // const setFileNodes = useSetRecoilState(AtomHandleNodes);
         const setLoadingState = useSetRecoilState(AtomRepositoryLoadingState);
 
-        const nodeActions = FileObject.useActions();
+        const nodeActions = fileObjectContoller.useActions();
 
         return {
 
@@ -78,13 +80,16 @@ export const repository =
             {
                 let count = 0;
 
+                const targetFileTypes = Array.from(FileInfo.registedFileTypes().keys());
+                const onFilter = (obj: FileSystemObject) : boolean => repositoryHelper.isReadTargetFile(targetFileTypes, obj);
+
                 const load = (handle: FileSystemDirectoryHandle) =>
                 {
                     setDialogState( { name: DialogNames.LoadingRepository });
 
-                    Directory.getAllFileEntriesAmount(handle).then(maximum => 
+                    Directory.getAllFileEntriesAmount(handle, onFilter).then(maximum => 
                     {
-                        console.log(maximum);
+                        // console.log(maximum);
                         setLoadingState((st) => ({ ...st, maximum }))
                     });
                     
@@ -92,7 +97,8 @@ export const repository =
                     {
                         // console.log(e);
                         if (e.kind == "file") setLoadingState((st) => ({ ...st, progress: count++, currentNode: `${e.path}` }));
-                    })
+
+                    }, onFilter)
                     .then(e => 
                     {
                         nodeActions.assignFromMap(e);
@@ -143,6 +149,24 @@ export const repository =
     
             return items;
         }
+    }
+}
+
+const repositoryHelper =
+{
+    isReadTargetFile: (allowFileExtensions: string[], targetFileObject: FileSystemObject) =>
+    {
+
+        /*読み込み対象の拡張子のファイル以外は弾く*/
+        if (targetFileObject.kind == "directory") return true;
+        if (targetFileObject.kind == "file")
+        {
+            const finfo = targetFileObject.fileInfo as FileInfo;
+
+            if (finfo.extension != "" && allowFileExtensions.indexOf(finfo.extension) > -1)  return true;
+        }
+
+        return false;
     }
 }
 

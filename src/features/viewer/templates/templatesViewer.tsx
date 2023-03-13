@@ -4,10 +4,10 @@ import Split from 'react-split'
 import { NodeSelecter } from "./NodeSelecter";
 
 import { TextViewer } from "../../../components/viewer/TextContent";
-import { MarkdownView } from "../../../components/viewer/Markdown";
+import { MarkdownView } from "../../../components/viewer/markdown/Markdown";
 import { ThdimensionList } from "./threeSelecter";
 import { selection } from "../../../controller/selectedNodes";
-import { FileObject } from "../../../controller/fileObject";
+import { fileObjectContoller } from "../../../controller/fileObjectContoller";
 import { FileSystemObject } from "../../../class/fileSystem/fileSystemObject";
 import { Frame } from "../../../components/viewer/Frame";
 import { ImageView } from "../../../components/viewer/ImageView";

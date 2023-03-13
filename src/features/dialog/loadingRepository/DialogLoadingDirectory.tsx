@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, LinearProgress, Typography } from "@mui/material"
-import { dialogStates } from "../../../controller/dialog";
-import { repositoryLoadingStateSelector } from "../../../controller/repository";
+import { dialogController } from "../../../controller/dialogController";
+import { repositoryLoadingStateSelector } from "../../../controller/repositoryController";
 import { DialogNames } from "../../../define/names/dialogNames";
 
 interface Props 
@@ -10,7 +10,7 @@ interface Props
 
 export const DialogLoadingRepository = (props : Props) =>
 {
-    const state = dialogStates.useCurrentState();
+    const state = dialogController.useCurrentState();
     const loadingState = repositoryLoadingStateSelector.useCurrentState();
 
     const getProgeres = () =>

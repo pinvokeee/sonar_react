@@ -1,29 +1,32 @@
+import { styled, SxProps, Theme } from "@mui/material";
 import { FileSystemObject } from "../../../class/fileSystem/fileSystemObject";
 import { Frame } from "../../../components/viewer/Frame";
 import { ImageView } from "../../../components/viewer/ImageView";
-import { MarkdownView } from "../../../components/viewer/Markdown";
+import { MarkdownView } from "../../../components/viewer/markdown/Markdown";
 import { PDFView } from "../../../components/viewer/PDFView";
 import { TextViewer } from "../../../components/viewer/TextContent";
 
 const utf8_decoder: TextDecoder = new TextDecoder();
 const sjis_decoder = new TextDecoder("shift-jis");
 
-export type Props =
+type Props =
 {
+    sx?: SxProps<Theme>, 
     object: FileSystemObject | undefined,
 }
 
+const DummyView = styled("div")(({theme}) =>
+(
+    {
+        // width: "100%",
+        height: "100%",
+    }
+));
+
 export const ObjectViewer = (props: Props) =>
 {
-    if (props.object == undefined) <></>;
-
-    return <>
-        {
-            props.object ? helper.viewComponent(props.object) : <></>
-        // a(h.selectedNodesNode)
-        // createTemplateTextView(utf8_decoder.decode(props.templatesHook.selectedTemplate?.bytes))
-        }
-    </>
+    if (props.object == undefined) <DummyView></DummyView>;
+    return <DummyView>{ props.object ? helper.viewComponent(props.object) : <></> }</DummyView>;
 }
 
 
@@ -44,7 +47,7 @@ const helper =
             if (handle.fileInfo.extension == "pdf") return helper.viewPDF(handle);
         }
 
-        return <></>
+        return <DummyView></DummyView>
     },
 
     viewText: (handle: FileSystemObject) =>

@@ -112,7 +112,6 @@ const Selector =
                 selectorHepler.getSubDirectroy(fileobjects, fileobjects.get(props.subdir) as FileSystemObject) : 
                 Array.from(fileobjects).map(([k, v]) => v);
 
-            console.log(a);
 
             const b = a.filter(obj => 
             {

@@ -1,3 +1,4 @@
+
 export const generateUuid = () =>
 {
     // https://github.com/GoogleChrome/chrome-platform-analytics/blob/master/src/internal/identifier.js
@@ -15,3 +16,6 @@ export const generateUuid = () =>
     }
     return chars.join("");
 }
+
+
+

@@ -11,6 +11,7 @@ export const selection =
         const [nodes, setNodes] = useRecoilState(AtomSelectedHandleNodes);
 
         return {
+            
             setSelection: useCallback((n: (string | undefined)[]) =>
             {
                 setNodes(n);
@@ -21,7 +22,14 @@ export const selection =
                 setNodes((ns) => 
                 {
                     const new_nodes = [...ns];
+
                     new_nodes[index] = path;
+
+                    for (let i = index + 1; i < new_nodes.length - 1; i++)
+                    {
+                        new_nodes[i] = undefined; 
+                    }
+
                     return new_nodes;
                 });
 

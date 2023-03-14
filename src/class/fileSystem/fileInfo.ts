@@ -1,10 +1,10 @@
+import { converter } from "../../util/converter";
+
 type ContentInfo = {
     name: string;
     type: string;
     hasBlobUrl: boolean;
 };
-
-const utf8_decoder: TextDecoder = new TextDecoder();
 
 export class FileInfo
 {
@@ -38,7 +38,7 @@ export class FileInfo
 
         const contentType = this.getContentType() as ContentInfo;
 
-        if (contentType.name == "TEXT") return utf8_decoder.decode(this.bytes);
+        if (contentType.name == "TEXT") return converter.toUTF8Text(this.bytes);
         if (contentType.name == "PDF") return this.cacheText;
 
         return "";

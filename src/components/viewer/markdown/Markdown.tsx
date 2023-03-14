@@ -1,21 +1,10 @@
 import { styled } from "@mui/material";
-import markdown from "markdown-it";
-import MarkdownItContainer from "markdown-it-container";
-import { code, cs1, markdownItPlugin } from "./customRender";
+import { converter } from "../../../util/converter";
 
 type Prop = 
 {
     source: string,
 }
-
-const md = new markdown(
-    {
-        html: true,
-        xhtmlOut: true,
-        linkify: true,
-
-    })
-    .use(MarkdownItContainer, "node", code)
 
 const View = styled("div")(({theme}) =>
 (
@@ -76,7 +65,7 @@ pre > p
 </style>
 `
 
-    const __html =  `${default_style}${md.render(props.source)}`;
+    const __html =  `${default_style}${converter.toMarkdown(props.source)}`;
     return <Frame sandbox="allow-same-origin allow-scripts allow-popups allow-modals" srcDoc={__html}>
         </Frame>
 }

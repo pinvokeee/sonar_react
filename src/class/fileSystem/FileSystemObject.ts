@@ -37,6 +37,11 @@ export class FileSystemObject
         this.fileInfo.bytes = buffer;
         this.fileInfo.objectURL = contentType?.hasBlobUrl ? URL.createObjectURL(new Blob([buffer], { type: contentType.type })) : "";        
 
+        //Markdownの場合
+        if (contentType?.name == "MARKDOWN"){
+            this.fileInfo.cacheText = await converter.toMarkdown(converter.toUTF8Text(this.fileInfo.bytes));
+        }
+
         //PDFの場合
         if (contentType?.name == "PDF"){
             this.fileInfo.cacheText = await converter.createPdfTextList(this.fileInfo.objectURL);

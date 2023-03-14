@@ -1,7 +1,7 @@
 import { List, styled } from "@mui/material";
 import { useCallback, useState } from "react";
 import { FileSystemObject } from "../../../../class/fileSystem/FileSystemObject";
-import { fileObjectContoller_odl } from "../../../../controller/fileObjectContoller";
+import { fileObjectContoller, fileObjectContoller_odl } from "../../../../controller/fileObjectContoller";
 import { selectionController } from "../../../../controller/selectionController";
 import { MatchObjectListItem } from "./MatchObjectListItem";
 
@@ -22,25 +22,23 @@ type Props =
 
 export const MatchObjectsList = (props: Props) =>
 {    
-    const select = selectionController.selectors.useGetSelectionPaths();
-    const h = fileObjectContoller_odl.selectors.useSearchFromKeyword(props.keyword, select[0] as string);
+    const fileSysObjMap = fileObjectContoller.useGetFileSysObjMap();
+    const selection = selectionController.useGetSelectionRange();
+    const firstFileSysObj = selection[0] ? fileSysObjMap.get(selection[0]) : undefined;
 
-    const onClick = useCallback((fileObj: FileSystemObject) =>
-    {
+    const h = fileSysObjMap.filterFromKeyword(props.keyword, firstFileSysObj);
+
+    const onClick = useCallback((fileObj: FileSystemObject) => {
         props.onClick(fileObj);
-
     }, [])
 
-    const [selectedPath, setSelectedPath] = useState();
+    const list: JSX.Element[] = [];
+
+    h.forEach((obj) => {
+        list.push(<MatchObjectListItem onClick={onClick} fileObj={obj}></MatchObjectListItem>);
+    });
 
     return (
-        <ScrollList>
-            {
-                h.map((obj) =>
-                {
-                    return <MatchObjectListItem onClick={onClick} fileObj={obj}></MatchObjectListItem>
-                })
-            }
-        </ScrollList>
+        <ScrollList>{list}</ScrollList>
     )
 }

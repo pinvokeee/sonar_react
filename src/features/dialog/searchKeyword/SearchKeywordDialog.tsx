@@ -78,6 +78,7 @@ export const DialogSearchFromKeyword = (props: Props) =>
     const dialogActions = dialog.useActions();
     const dialogState = dialog.useCurrentState();
     // const actions = searchDialog.useActions();
+    
     const [viewObject, setViewObject] = useState<FileSystemObject | undefined>(undefined);
     const [keyword, setKeyword] = useState("");
 

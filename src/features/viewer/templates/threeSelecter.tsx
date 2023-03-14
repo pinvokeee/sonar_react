@@ -46,13 +46,11 @@ export const ThdimensionList = (props: Prop) =>
     const selectAction = selectionController.useActions();
 
     const currentNest = selection.indexOf(undefined) - 1;
-    const index = Math.min(currentNest, selection.length - 1);
+    const index = currentNest <= -1 || currentNest > selection.length -1 ? selection.length - 2 : currentNest;
     
     const d1 = getSubDir(fileSysObjMap, selection[0]);
     const d2 = getSubDir(fileSysObjMap, selection[1]);
     const d3 = getFiles(fileSysObjMap, selection[index]);
-
-    console.log(selection);
 
     return <>
         <HSplitBox direction="vertical" sizes={[50, 50]} gutterSize={6} gutterStyle={GutterStyle}>

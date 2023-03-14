@@ -1,10 +1,11 @@
 import { atom } from "recoil";
 import { FileSystemTreeNode } from "../../class/fileSystem/types";
-import { FileSystemObject } from "../../class/fileSystem/fileSystemObject";
+import { FileSystemObject } from "../../class/fileSystem/FileSystemObject";
 import { RepositoryHandleItem, RepositoryLoadingState } from "../../controller/repositoryController";
 import { DialogState } from "../../features/dialog/types";
 import { DialogNames } from "../names/dialogNames";
-import { atomKeys } from "./keys";
+import { AtomKeys, atomKeys } from "./keys";
+import { FileSystemObjectMap } from "../../class/fileSystem/FileSystemObjectMap";
 
 /**
  * 表示中のダイアログの状態
@@ -37,6 +38,16 @@ export const AtomFileObjects = atom<Map<string, FileSystemObject>>({
     key: atomKeys.FILENODES.toString(),    
     default: new Map(),
 });
+
+/**
+ * NEW ファイルシステムのマップ
+ */
+export const AtomFileSysObjectMap = atom<FileSystemObjectMap>({
+    key: AtomKeys.FileSysObjectMap,    
+    default: new FileSystemObjectMap(),
+});
+
+
 
 /**
  * 木構造で保持するファイルノード配列

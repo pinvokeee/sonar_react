@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 import Split from 'react-split'
-import { fileObjectContoller } from "../../../controller/fileObjectContoller";
+import { fileObjectContoller_odl } from "../../../controller/fileObjectContoller";
 import { selection } from "../../../controller/selectedNodes";
 import { NodeSelecter } from "./NodeSelecter";
 
@@ -29,7 +29,7 @@ const isFile = (s: string) => s != "directory";
 
 export const ThdimensionList = (props: Prop) =>
 {   
-    const handles = fileObjectContoller.selectors.useFileNodesSelector();
+    const handles = fileObjectContoller_odl.selectors.useFileNodesSelector();
 
     const selectAction = selection.useActions();
     const selectedNodes = selection.selectors.useGetSelectionTreeNode();

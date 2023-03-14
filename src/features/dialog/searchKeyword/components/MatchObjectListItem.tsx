@@ -1,8 +1,8 @@
 import { ListItem, ListItemButton, Stack, styled } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
-import { FileSystemObject } from "../../../../class/fileSystem/fileSystemObject";
-import { fileObjectContoller } from "../../../../controller/fileObjectContoller";
+import { FileSystemObject } from "../../../../class/fileSystem/FileSystemObject";
+import { fileObjectContoller_odl } from "../../../../controller/fileObjectContoller";
 
 type Props =
 {

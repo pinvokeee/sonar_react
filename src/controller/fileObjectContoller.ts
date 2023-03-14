@@ -1,16 +1,41 @@
 import { useCallback } from "react";
 import { selector, selectorFamily, useRecoilCallback, useRecoilState, useRecoilValue } from "recoil";
-import { Directory } from "../class/fileSystem/directory";
+import { Directory } from "../class/fileSystem/_directory";
 import { FileInfo } from "../class/fileSystem/fileInfo";
 import { FileSystemTreeNode } from "../class/fileSystem/types";
-import { FileSystemObject } from "../class/fileSystem/fileSystemObject";
-import { AtomFileSystemTreeNodes, AtomFileObjects, AtomSelectedHandleNodes } from "../define/recoil/atoms";
-import { selectorKeys } from "../define/recoil/keys";
+import { FileSystemObject } from "../class/fileSystem/FileSystemObject";
+import { AtomFileSystemTreeNodes, AtomFileObjects, AtomSelectedHandleNodes, AtomFileSysObjectMap } from "../define/recoil/atoms";
+import { AtomKeys, selectorKeys } from "../define/recoil/keys";
+import { FileSystemObjectMap } from "../class/fileSystem/FileSystemObjectMap";
+
+export const fileObjectContoller = 
+{
+    useActions: () => {
+        
+        const [map, mapping] = useRecoilState(AtomFileObjects);
+
+        return {
+            assign: (newMap: FileSystemObjectMap) => mapping(newMap),
+        }
+    },
+
+    useGetFileSysObjMap: () => useRecoilValue(cselector.getFileSysObjMap),
+}
+
+const cselector = {
+    getFileSysObjMap: selector<FileSystemObjectMap>({
+        key: AtomKeys.Selecter.FileSysObjectMap,
+        get: ({get}) => get(AtomFileSysObjectMap)
+    }),
+}
+
+
+
 
 /**
  * 読み込んだファイルの実態
  */
-export const fileObjectContoller = 
+export const fileObjectContoller_odl = 
 {
     useActions: () =>
     {
@@ -55,8 +80,8 @@ export const fileObjectContoller =
 
     selectors:
     {
-        useFileNodesSelector: () => useRecoilValue(Selector.getDirectoryObject),
-        useTemplatesDirectoryNode: () => useRecoilValue(Selector.getDirectoryNode("テンプレート")),
+        useFileNodesSelector: () => useRecoilValue(Selector_old.getDirectoryObject),
+        useTemplatesDirectoryNode: () => useRecoilValue(Selector_old.getDirectoryNode("テンプレート")),
 
         useFileHandles: () => useRecoilValue(AtomFileObjects),
         useFileNodes: () => useRecoilValue(AtomFileSystemTreeNodes),
@@ -64,14 +89,14 @@ export const fileObjectContoller =
         useGetSubNodes: (parentNode: FileSystemObject) =>
         {
             const path = parentNode.path.join("/");
-            return useRecoilValue(Selector.getSubNodes(path));
+            return useRecoilValue(Selector_old.getSubNodes(path));
         },
 
-        useSearchFromKeyword: (keyword: string, subdir: string) => useRecoilValue(Selector.getFileObjectsFromKeyword({ keyword, subdir })),
+        useSearchFromKeyword: (keyword: string, subdir: string) => useRecoilValue(Selector_old.getFileObjectsFromKeyword({ keyword, subdir })),
     }
 }
 
-const Selector = 
+const Selector_old = 
 {
     getDirectoryObject: selector<Map<string, FileSystemObject>>({
         key: selectorKeys.SEL_FILENODES,

@@ -5,7 +5,7 @@ import { DialogNames } from "../../../define/names/dialogNames";
 import Split from 'react-split';
 import { ObjectViewer } from "../../viewer/templates/ObjectViewer";
 import { MatchObjectsList } from "./components/MatchObjectsList";
-import { FileSystemObject } from "../../../class/fileSystem/fileSystemObject";
+import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
 
 const GrassBackdrop = styled(Backdrop)(({theme})=>
 (

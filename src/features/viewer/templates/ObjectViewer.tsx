@@ -1,5 +1,5 @@
 import { styled, SxProps, Theme } from "@mui/material";
-import { FileSystemObject } from "../../../class/fileSystem/fileSystemObject";
+import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
 import { Frame } from "../../../components/viewer/Frame";
 import { ImageView } from "../../../components/viewer/ImageView";
 import { MarkdownView } from "../../../components/viewer/markdown/Markdown";

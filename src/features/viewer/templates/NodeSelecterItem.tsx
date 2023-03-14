@@ -1,7 +1,7 @@
 import { Accordion, AccordionDetails, AccordionSummary, Button, ListItemButton, Typography } from "@mui/material"
 import { useCallback, useState } from "react";
 import { FileSystemTreeNode } from "../../../class/fileSystem/types"
-import { FileSystemObject } from "../../../class/fileSystem/fileSystemObject";
+import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
 import SplitButton from "../../../components/elements/toolbar/SplitButton";
 
 type Props = 

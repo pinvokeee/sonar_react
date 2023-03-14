@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Accordion, AccordionSummary, Box, Button, List, ListItemButton, ListItemText, Paper, Stack, styled } from "@mui/material";
 import { FileSystemTreeNode } from '../../../class/fileSystem/types';
-import { FileSystemObject } from "../../../class/fileSystem/fileSystemObject";
-import { fileObjectContoller } from '../../../controller/fileObjectContoller';
+import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
+import { fileObjectContoller_odl } from '../../../controller/fileObjectContoller';
 import { NodeSelecterItem } from './NodeSelecterItem';
 
 export interface INodeLIstBoxProp
@@ -39,8 +39,8 @@ const Placeholder = styled("div")(({ theme }) =>
 
 export const NodeSelecter = (props : INodeLIstBoxProp) =>
 {
-    const ns = fileObjectContoller.selectors.useFileNodesSelector();
-    const actions = fileObjectContoller.useActions();
+    const ns = fileObjectContoller_odl.selectors.useFileNodesSelector();
+    const actions = fileObjectContoller_odl.useActions();
 
     const nodes = props.nodes;
     const handles = props.handles;

@@ -5,6 +5,21 @@
 //     SELECTED_TEMPLATE: "selectedTemplate",
 // }
 
+export class AtomKeys
+{
+    static StateDialog = "StateDialog";
+    static FileSysObjectMap = "FileSysObject";
+
+    static Selecter =
+    {
+        StateDialog: `Sel${this.StateDialog}`,
+        FileSysObjectMap:  `Sel${this.FileSysObjectMap}`,
+    }
+}
+
+
+
+
 export enum atomKeys
 {
     DIALOG_STATE,
@@ -13,6 +28,8 @@ export enum atomKeys
     SELECTION_NODES,
     FILENODES,
     FS_NODE_ARRAY,
+
+    FILESYSOBJECT_MAP,
 
     CURRENT_DIRECTORY,
     TEMPLATE_LIBRARY,

@@ -1,9 +1,9 @@
+import { converter } from "../../util/converter";
 import { FileInfo } from "./fileInfo";
 
-type ObjectType = "file" | "directory";
 
-// @ts-ignore
-const pdf = pdfjsLib;
+
+type ObjectType = "file" | "directory";
 
 export class FileSystemObject 
 {
@@ -39,17 +39,7 @@ export class FileSystemObject
 
         //PDFの場合
         if (contentType?.name == "PDF"){
-
-            const texts: string[] = [];
-            const doc = await (pdf.getDocument(this.fileInfo.objectURL)).promise;
-
-            for (let i = 1; i < doc.numPages; i++)
-            {
-                const items = await (await doc.getPage(i)).getTextContent();
-                items.items.forEach((item: any) => texts.push(item.str))
-            }
-
-            this.fileInfo.cacheText = texts.join("");
+            this.fileInfo.cacheText = await converter.createPdfTextList(this.fileInfo.objectURL);
         }
     }
 

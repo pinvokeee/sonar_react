@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useCallback } from "react";
 import { selector, selectorFamily, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { Directory } from "../class/fileSystem/directory";
+import { Directory } from "../class/fileSystem/_directory";
 import { FileInfo } from "../class/fileSystem/fileInfo";
-import { FileSystemObject } from "../class/fileSystem/fileSystemObject";
+import { FileSystemObject } from "../class/fileSystem/FileSystemObject";
 import { FileSystemTreeNode } from "../class/fileSystem/types";
 import { IndexedDBUtil } from "../class/indexeddb/indexeddb";
 import { DialogNames } from "../define/names/dialogNames";
 import { AtomDialogState, AtomFileObjects, AtomRepositoryHandleList, AtomRepositoryLoadingState } from "../define/recoil/atoms";
 import { selectorKeys } from "../define/recoil/keys";
 import { generateUuid } from "../util/util";
-import { fileObjectContoller } from "./fileObjectContoller";
+import { fileObjectContoller, fileObjectContoller_odl } from "./fileObjectContoller";
 
 export type RepositoryHandleItem =
 {
@@ -40,22 +40,21 @@ export const repositoryController =
         // const setFileNodes = useSetRecoilState(AtomHandleNodes);
         const setLoadingState = useSetRecoilState(AtomRepositoryLoadingState);
 
-        const nodeActions = fileObjectContoller.useActions();
+        // const nodeActions = fileObjectContoller_odl.useActions();
+
+        const actions = fileObjectContoller.useActions();
 
         return {
 
-            selectionRepository: useCallback(() =>
-            {
+            selectionRepository: useCallback(() => {
                 setDialogState( { name: DialogNames.ReSelectRepository } );
             }, []),
 
-            closeSelectionRepository: useCallback(() =>
-            {
+            closeSelectionRepository: useCallback(() => {
                 setDialogState( { name: DialogNames.Empty } );
             }, []),
 
-            registRepository: useCallback(() =>
-            {
+            registRepository: useCallback(() => {
                 Directory.asyncShowPickDialog().then(handle => 
                 {
                     IndexedDB.addItem<RepositoryHandleItem>(StoreName.Repository, { key: generateUuid(), modified: new Date(), handle })
@@ -87,21 +86,16 @@ export const repositoryController =
                 {
                     setDialogState( { name: DialogNames.LoadingRepository });
 
-                    Directory.getAllFileEntriesAmount(handle, onFilter).then(maximum => 
-                    {
-                        // console.log(maximum);
+                    Directory.getAllFileEntriesAmount(handle, onFilter).then(maximum => {
                         setLoadingState((st) => ({ ...st, maximum }))
                     });
                     
-                    Directory.readFromHandle(handle, true, (e) => 
-                    {
-                        // console.log(e);
+                    Directory.readFromHandle(handle, true, (e) => {
                         if (e.kind == "file") setLoadingState((st) => ({ ...st, progress: count++, currentNode: `${e.path}` }));
-
                     }, onFilter)
-                    .then(e => 
-                    {
-                        nodeActions.assignFromMap(e);
+                    .then(e => {
+
+                        // actions.assign(m);
 
                         // setFileNodes(e);
                         setDialogState( { name: DialogNames.Empty });

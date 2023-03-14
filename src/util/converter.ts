@@ -1,6 +1,6 @@
 import markdown from "markdown-it";
 import MarkdownItContainer from "markdown-it-container";
-import { code } from "../components/viewer/markdown/customRender";
+import { code, markdownItPlugin } from "../components/viewer/markdown/customRender";
 
 export class converter {
 
@@ -15,11 +15,12 @@ export class converter {
         xhtmlOut: true,
         linkify: true,
     })
-    .use(MarkdownItContainer, "node", code);
+    .use(MarkdownItContainer, "node", code)
+    .use(markdownItPlugin);
 
     static toUTF8Text = (bytes: ArrayBuffer) => this.utf8_decoder.decode(bytes);
     static toDocument = (source: string) => this.domparser.parseFromString(source, "text/html");
-    static toMarkdown = (source: string) => this.md.render(source);
+    static toMarkdown = (source: string, currentPath?: string) => this.md.render(source);
 
     static createPdfTextList = async (blobUrl: string) => {
 

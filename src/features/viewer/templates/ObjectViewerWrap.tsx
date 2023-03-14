@@ -1,38 +1,32 @@
 import { useMemo, useState } from "react";
 import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
-import { fileObjectContoller_odl } from "../../../controller/fileObjectContoller";
-import { selection } from "../../../controller/selectedNodes";
+import { fileObjectContoller, fileObjectContoller_odl } from "../../../controller/fileObjectContoller";
+import { selectionController } from "../../../controller/selectionController";
 import { ObjectViewer } from "./ObjectViewer";
 
-export const ObjectViewerWrap = () =>
-{
-    const selectedNodes = selection.selectors.useGetSelectionTreeNode();
+export const ObjectViewerWrap = () => {
 
-    const actions = fileObjectContoller_odl.useActions();
-    const [handle, setHandle] = useState<FileSystemObject | undefined>();
+    const fileSysObj = fileObjectContoller.useGetFileSysObjMap();
+    const selection = selectionController.useGetSelectionRange();
+    // const actions = fileObjectContoller.useActions();
+    // const [handle, setHandle] = useState<FileSystemObject | undefined>();
 
-    const h = useMemo(() => 
-    {
-        if (selectedNodes[3] == undefined) return;
+    // const h = useMemo(() => {
+    
+    //     if (selection[3] == undefined) {
+    //         setHandle(fileSysObj.get(selection[3]));
+    //         return ;
+    //     } 
 
-        actions.getFileObject(selectedNodes[3].path).then(h =>            
-        {
-            setHandle(h);    
-        });
-        
-    }, [selectedNodes[3]])
+    //     setHandle(fileSysObj.get(selection[3]));
+    
+    // }, [selection[3]])
 
-    // useEffect(() =>
-    // {
-    //     if (selectedNodes[3] == undefined) return;
+    const h = useMemo(() => {
+        if (selection[3] == undefined) return;
+        return fileSysObj.get(selection[3]);
+    }, [selection[3]])
 
-    //     actions.getFileObject(selectedNodes[3].path).then(h =>            
-    //     {
-    //         setHandle(h);    
-    //     });
-
-    // }, [selectedNodes[3]]);
-
-    return <ObjectViewer object={handle}></ObjectViewer>
+    return <ObjectViewer object={h}></ObjectViewer>
 
 }

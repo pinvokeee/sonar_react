@@ -2,7 +2,7 @@ import { List, styled } from "@mui/material";
 import { useCallback, useState } from "react";
 import { FileSystemObject } from "../../../../class/fileSystem/FileSystemObject";
 import { fileObjectContoller_odl } from "../../../../controller/fileObjectContoller";
-import { selection } from "../../../../controller/selectedNodes";
+import { selectionController } from "../../../../controller/selectionController";
 import { MatchObjectListItem } from "./MatchObjectListItem";
 
 const ScrollList = styled(List)(({theme}) =>
@@ -22,7 +22,7 @@ type Props =
 
 export const MatchObjectsList = (props: Props) =>
 {    
-    const select = selection.selectors.useGetSelectionPaths();
+    const select = selectionController.selectors.useGetSelectionPaths();
     const h = fileObjectContoller_odl.selectors.useSearchFromKeyword(props.keyword, select[0] as string);
 
     const onClick = useCallback((fileObj: FileSystemObject) =>

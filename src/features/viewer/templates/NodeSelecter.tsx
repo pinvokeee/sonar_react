@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Accordion, AccordionSummary, Box, Button, List, ListItemButton, ListItemText, Paper, Stack, styled } from "@mui/material";
-import { FileSystemTreeNode } from '../../../class/fileSystem/types';
 import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
 import { fileObjectContoller_odl } from '../../../controller/fileObjectContoller';
 import { NodeSelecterItem } from './NodeSelecterItem';
+import { FileSystemObjectMap } from '../../../class/fileSystem/FileSystemObjectMap';
 
 export interface INodeLIstBoxProp
 {
-    handles: Map<string, FileSystemObject>,
-    nodes: FileSystemTreeNode[],
+    handles: FileSystemObjectMap | undefined,
+    current: FileSystemObject | undefined,
     placeHolder?: string,
-    filter?: (type: string) => boolean,
-    onChange? : (selectedNode: FileSystemTreeNode) => void,
+    // filter?: (obj: FileSystemObjectMap) => boolean,
+    onChange? : (selectedNode: FileSystemObject) => void,
 }
 
 export const ScrollPanel = styled("div")(({ theme }) => 
@@ -39,37 +39,38 @@ const Placeholder = styled("div")(({ theme }) =>
 
 export const NodeSelecter = (props : INodeLIstBoxProp) =>
 {
-    const ns = fileObjectContoller_odl.selectors.useFileNodesSelector();
-    const actions = fileObjectContoller_odl.useActions();
+    // const ns = fileObjectContoller_odl.selectors.useFileNodesSelector();
+    // const actions = fileObjectContoller_odl.useActions();
 
-    const nodes = props.nodes;
     const handles = props.handles;
-    const filter = props.filter;
+    // const filter = props.filter;
 
-    const filteredNodes = filter ? nodes.filter((value) => filter?.call(this, handles.get(value.path)?.kind as string)) : nodes;
+    // const filteredNodes = filter ? nodes.filter((value) => filter?.call(this, handles.get(value.path)?.kind as string)) : nodes;
     
-    const act = (n: string) =>
+    const act = (obj: FileSystemObject) =>
     {
-        const handle = ns.get(n);
-        if (handle == undefined) return;
+        // const handle = ns.get(n);
+        // if (handle == undefined) return;
 
-        actions.load(handle).then(r => 
-        {
-            console.log(r);
-        });
+        // actions.load(handle).then(r => 
+        // {
+        //     console.log(r);
+        // });
+    }
+
+    const nodeItems: JSX.Element[] = [];
+
+    if (handles != undefined) {
+        handles.forEach((obj) =>  {
+            nodeItems.push(<NodeSelecterItem fileSysObjMap={handles} targetFileSysObj={obj} onChange={props.onChange} onClickAction={act}></NodeSelecterItem>)
+        });    
     }
 
     return (
         <div style={{ height: "100%", overflowWrap: 'anywhere', overflow: "auto", boxSizing: "border-box" }} >
         {
-            filteredNodes.length > 0 ?
-            
-            <List aria-label="secondary mailbox folder">
-            {
-                filteredNodes.map((node) => <NodeSelecterItem objects={handles} targetNode={node} onChange={props.onChange} onClickAction={act}></NodeSelecterItem>)
-            }
-
-            </List> :
+            nodeItems.length > 0 ?            
+            <List aria-label="secondary mailbox folder">{nodeItems}</List> :
             <Placeholder>{props.placeHolder}</Placeholder>
         }
         </div>

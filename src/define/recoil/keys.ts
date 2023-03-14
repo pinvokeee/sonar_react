@@ -9,11 +9,13 @@ export class AtomKeys
 {
     static StateDialog = "StateDialog";
     static FileSysObjectMap = "FileSysObject";
+    static Selection = "Selection";
 
     static Selecter =
     {
         StateDialog: `Sel${this.StateDialog}`,
         FileSysObjectMap:  `Sel${this.FileSysObjectMap}`,
+        Selection: `Sel${this.Selection}`,
     }
 }
 

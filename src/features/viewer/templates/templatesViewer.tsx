@@ -6,7 +6,7 @@ import { NodeSelecter } from "./NodeSelecter";
 import { TextViewer } from "../../../components/viewer/TextContent";
 import { MarkdownView } from "../../../components/viewer/markdown/Markdown";
 import { ThdimensionList } from "./threeSelecter";
-import { selection } from "../../../controller/selectedNodes";
+import { selectionController } from "../../../controller/selectionController";
 import { fileObjectContoller_odl } from "../../../controller/fileObjectContoller";
 import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
 import { Frame } from "../../../components/viewer/Frame";

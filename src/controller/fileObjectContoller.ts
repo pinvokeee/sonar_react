@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { selector, selectorFamily, useRecoilCallback, useRecoilState, useRecoilValue } from "recoil";
-import { Directory } from "../class/fileSystem/_directory";
+import { _Directory } from "../class/fileSystem/_directory";
 import { FileInfo } from "../class/fileSystem/fileInfo";
 import { FileSystemTreeNode } from "../class/fileSystem/types";
 import { FileSystemObject } from "../class/fileSystem/FileSystemObject";
@@ -12,10 +12,14 @@ export const fileObjectContoller =
 {
     useActions: () => {
         
-        const [map, mapping] = useRecoilState(AtomFileObjects);
+        // const [map, mapping] = useRecoilState(AtomFileObjects);
 
         return {
-            assign: (newMap: FileSystemObjectMap) => mapping(newMap),
+
+            assign: useRecoilCallback(({snapshot, set}) => async (newMap: FileSystemObjectMap) =>  {
+                set(AtomFileSysObjectMap, newMap);
+            }, [])
+
         }
     },
 
@@ -23,14 +27,13 @@ export const fileObjectContoller =
 }
 
 const cselector = {
+
     getFileSysObjMap: selector<FileSystemObjectMap>({
         key: AtomKeys.Selecter.FileSysObjectMap,
         get: ({get}) => get(AtomFileSysObjectMap)
     }),
+    
 }
-
-
-
 
 /**
  * 読み込んだファイルの実態
@@ -187,7 +190,7 @@ const selectorHepler =
                 name: value.name,
                 path: key,
                 parent: undefined,
-                children: Directory.getSubDirectories(Array.from(aa), value).map(m => bb(m)),
+                children: _Directory.getSubDirectories(Array.from(aa), value).map(m => bb(m)),
             }
 
             aa.delete(key);

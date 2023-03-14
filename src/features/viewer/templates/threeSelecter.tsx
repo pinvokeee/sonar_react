@@ -1,7 +1,9 @@
 import { styled } from "@mui/material";
+import { useMemo } from "react";
 import Split from 'react-split'
-import { fileObjectContoller_odl } from "../../../controller/fileObjectContoller";
-import { selection } from "../../../controller/selectedNodes";
+import { FileSystemObjectMap } from "../../../class/fileSystem/FileSystemObjectMap";
+import { fileObjectContoller, fileObjectContoller_odl } from "../../../controller/fileObjectContoller";
+import { selectionController } from "../../../controller/selectionController";
 import { NodeSelecter } from "./NodeSelecter";
 
 const HSplitBox = styled(Split)(({ theme }) => 
@@ -27,39 +29,53 @@ type Prop =
 const isDirectory = (s: string) => s == "directory";
 const isFile = (s: string) => s != "directory";
 
+const getSubDir = (map: FileSystemObjectMap, key: string | undefined) => {
+    if (key == undefined) return undefined;
+    return map.getSubDirectories(map.get(key), false);
+}
+
+const getFiles = (map: FileSystemObjectMap, key: string | undefined) => {
+    if (key == undefined) return undefined;
+    return map.getFiles(map.get(key), false);
+}
+
 export const ThdimensionList = (props: Prop) =>
 {   
-    const handles = fileObjectContoller_odl.selectors.useFileNodesSelector();
+    const fileSysObjMap = fileObjectContoller.useGetFileSysObjMap();
+    const selection = selectionController.useGetSelectionRange();
+    const selectAction = selectionController.useActions();
 
-    const selectAction = selection.useActions();
-    const selectedNodes = selection.selectors.useGetSelectionTreeNode();
-    const filerNode = [...selectedNodes].splice(0, selectedNodes.length - 1).reverse().find((v, index) => v != undefined);
+    const currentNest = selection.indexOf(undefined) - 1;
+    const index = Math.min(currentNest, selection.length - 1);
+    
+    const d1 = getSubDir(fileSysObjMap, selection[0]);
+    const d2 = getSubDir(fileSysObjMap, selection[1]);
+    const d3 = getFiles(fileSysObjMap, selection[index]);
+
+    console.log(selection);
 
     return <>
         <HSplitBox direction="vertical" sizes={[50, 50]} gutterSize={6} gutterStyle={GutterStyle}>
             <NodeSelecter 
-                filter={isDirectory} 
-                handles={handles}
-                nodes={ selectedNodes[0]?.children ? selectedNodes[0]?.children : [] }
+                handles={d1}
+                current={ undefined }
                 placeHolder="第一階層" 
-                onChange={ (node) => selectAction.setSelectionIndex(1, node.path) }/>
+                onChange={ (obj) => selectAction.setSelectionIndex(1, obj.getStringPath()) }/>
 
             <NodeSelecter 
-                filter={isDirectory} 
-                handles={handles}
-                nodes={ selectedNodes[1]?.children ? selectedNodes[1]?.children : [] }
+                handles={d2}
+                current={ undefined }
                 placeHolder="第二階層" 
-                onChange={ (node) => selectAction.setSelectionIndex(2, node.path) } />
+                onChange={ (obj) => selectAction.setSelectionIndex(2, obj.getStringPath()) }/>
 
         </HSplitBox>
         <HSplitBox direction="vertical"  gutterSize={6} gutterStyle={GutterStyle}>
             <div>
                 <NodeSelecter 
-                handles={handles} 
-                nodes={ filerNode?.children ? filerNode?.children : [] } 
-                filter={isFile}
+                handles={d3}
+                current={ undefined }
                 placeHolder="ドキュメント" 
-                onChange={ (node) => selectAction.setSelectionIndex(3, node.path) }  ></NodeSelecter>
+                onChange={ (obj) => selectAction.setSelectionIndex(3, obj.getStringPath()) }/>
             </div>
         </HSplitBox>
     </>

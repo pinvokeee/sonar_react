@@ -1,12 +1,12 @@
 import * as material from "@mui/material";
-import React, { useState } from "react";
-import { fileObjectContoller_odl } from "../../../controller/fileObjectContoller";
+import React, { useCallback, useMemo, useState } from "react";
+import { fileObjectContoller, fileObjectContoller_odl } from "../../../controller/fileObjectContoller";
 import SplitButton from "../../../components/elements/toolbar/SplitButton";
 import { FileSystemTreeNode } from "../../../class/fileSystem/types";
-import { selection } from "../../../controller/selectedNodes";
+import { selectionController } from "../../../controller/selectionController";
+import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
 
-type Props =
-{
+type Props = {
     sx?: material.SxProps<material.Theme>, 
 }
 
@@ -17,42 +17,35 @@ const Flex = material.styled("div")(({theme}) =>
     }
 ));
 
-const getText = (item: FileSystemTreeNode) =>
-{
+const getText = (item: FileSystemObject) => {
     if (item == undefined) return "";
     return item.name;
 }
 
-const getKey = (item: FileSystemTreeNode) =>
-{
+const getKey = (item: FileSystemObject) => {
     if (item == undefined || item.path == undefined) return "";
-    return item.path;
+    return item.getStringPath();
 }
 
 export const ServiceSelecter = (props : Props) =>
 {
-    const actions = fileObjectContoller_odl.useActions();
+    const fileSysMap = fileObjectContoller.useGetFileSysObjMap();
+    const selectable_service = useMemo(() => Array.from(fileSysMap.getSubDirectories(undefined, false)).map((([key, val]) => val)), [fileSysMap]);
 
-    const selectionPaths = selection.selectors.useGetSelectionPaths();
-    const selectedAction = selection.useActions();
+    const selection = selectionController.useGetSelectionRange();
+    const selectActions = selectionController.useActions();
 
-    const nodes = fileObjectContoller_odl.selectors.useFileNodesSelector();
-
-    const fsnodes = fileObjectContoller_odl.selectors.useFileNodes();
-    const topNodes = fsnodes.filter(node => nodes.get(node.path)?.kind == "directory");
-
-    const item = selectionPaths[0] ? nodes.get(selectionPaths[0]) : undefined;
-
-    const changeItem = (e: React.MouseEvent<HTMLLIElement, MouseEvent>, item: FileSystemTreeNode) =>
-    {
-        selectedAction.setSelection([item.path, undefined, undefined, undefined]);
-    }
+    const selectedItem = useMemo(() => selection[0] ? fileSysMap.get(selection[0]) :  undefined, [selection]);
+    
+    const changeItem = useCallback((e: React.MouseEvent<HTMLLIElement, MouseEvent>, item: FileSystemObject) => {
+        selectActions.setSelection([item.getStringPath(), undefined, undefined, undefined]);
+    }, []);
 
     return (
         <SplitButton 
         sx={{ flex: "1" }}
-        items={topNodes} 
-        selectedItem={item} 
+        items={selectable_service} 
+        selectedItem={selectedItem} 
         onGetKey={getKey} 
         onChange={changeItem} 
         onGetText={getText}>    

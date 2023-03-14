@@ -1,6 +1,6 @@
 import { Backdrop, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, List, ListItem, Stack } from "@mui/material"
 import { useMemo, useState } from "react";
-import { Directory } from "../../../class/fileSystem/_directory"
+import { _Directory } from "../../../class/fileSystem/_directory"
 import { FileSystemTreeNode } from "../../../class/fileSystem/types";
 import { dialogController, dialogStateSelector } from "../../../controller/dialogController";
 import { DialogNames } from "../../../define/names/dialogNames";

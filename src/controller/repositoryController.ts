@@ -1,115 +1,90 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useCallback } from "react";
-import { selector, selectorFamily, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { Directory } from "../class/fileSystem/_directory";
+import { RecoilState, useRecoilCallback, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { Directory } from "../class/fileSystem/Directory";
 import { FileInfo } from "../class/fileSystem/fileInfo";
 import { FileSystemObject } from "../class/fileSystem/FileSystemObject";
-import { FileSystemTreeNode } from "../class/fileSystem/types";
+import { FileSystemObjectMap } from "../class/fileSystem/FileSystemObjectMap";
 import { IndexedDBUtil } from "../class/indexeddb/indexeddb";
 import { DialogNames } from "../define/names/dialogNames";
-import { AtomDialogState, AtomFileObjects, AtomRepositoryHandleList, AtomRepositoryLoadingState } from "../define/recoil/atoms";
-import { selectorKeys } from "../define/recoil/keys";
+import { AtomDialogState, AtomFileSysObjectMap, AtomRepositoryHandleList, AtomRepositoryLoadingState } from "../define/recoil/atoms";
 import { generateUuid } from "../util/util";
-import { fileObjectContoller, fileObjectContoller_odl } from "./fileObjectContoller";
+import { fileObjectContoller } from "./fileObjectContoller";
 
-export type RepositoryHandleItem =
-{
+export type RepositoryHandleItem = {
     key: string,
     modified: Date,
     handle: FileSystemDirectoryHandle,
 }
 
-export type RepositoryLoadingState =
-{
+export type RepositoryLoadingState = {
     progress: number,
     maximum: number,
     currentNode: string,
 }
 
-enum StoreName
-{
-    Repository = "repos",
-}
 
-export const repositoryController =
-{
+export const repositoryController = {
+
     useActions: () =>
     {
-        const setDialogState = useSetRecoilState(AtomDialogState);
-        const setItems = useSetRecoilState(AtomRepositoryHandleList);
-        // const setFileNodes = useSetRecoilState(AtomHandleNodes);
-        const setLoadingState = useSetRecoilState(AtomRepositoryLoadingState);
-
-        // const nodeActions = fileObjectContoller_odl.useActions();
-
-        const actions = fileObjectContoller.useActions();
-
         return {
 
-            selectionRepository: useCallback(() => {
-                setDialogState( { name: DialogNames.ReSelectRepository } );
+            selectionRepository: useRecoilCallback(({ snapshot, set }) => async () => {
+                helper.openDialog(set);
             }, []),
 
-            closeSelectionRepository: useCallback(() => {
-                setDialogState( { name: DialogNames.Empty } );
+            closeSelectionRepository: useRecoilCallback(({ snapshot, set }) => async () => {                
+                helper.closeDialog(set);
             }, []),
 
-            registRepository: useCallback(() => {
-                Directory.asyncShowPickDialog().then(handle => 
-                {
+            registRepository: useRecoilCallback(({ snapshot, set }) => async () => {      
+                Directory.asyncShowPickDialog().then(handle => {
                     IndexedDB.addItem<RepositoryHandleItem>(StoreName.Repository, { key: generateUuid(), modified: new Date(), handle })
-                    .then(item =>
-                    {
-                        setItems((items) => [...items, item]);
+                    .then(item => {
+                        set(AtomRepositoryHandleList, (items) => [...items, item]);
                     });
                 })
     
             }, []),
            
-            deleteRepository: useCallback((item: RepositoryHandleItem) =>
-            {
-                IndexedDB.removeItem(StoreName.Repository, item.key).then(r =>
-                {
-                    setItems((list) => list.filter((i) => i.key != item.key));
+            deleteRepository: useRecoilCallback(({ snapshot, set }) => async (item: RepositoryHandleItem) => {
+                IndexedDB.removeItem(StoreName.Repository, item.key).then(r => {
+                    set(AtomRepositoryHandleList, (list) => list.filter((i) => i.key != item.key));
                 });
-    
             }, []),
 
-            loadRepository: useCallback((item: RepositoryHandleItem) =>
-            {
+            loadRepository: useRecoilCallback(({ snapshot, set }) => async (item: RepositoryHandleItem) => {
+
                 let count = 0;
 
                 const targetFileTypes = Array.from(FileInfo.registedFileTypes().keys());
-                const onFilter = (obj: FileSystemObject) : boolean => repositoryHelper.isReadTargetFile(targetFileTypes, obj);
+                const onFilter = (obj: FileSystemObject) : boolean => helper.isReadTargetFile(targetFileTypes, obj);
 
-                const load = (handle: FileSystemDirectoryHandle) =>
-                {
-                    setDialogState( { name: DialogNames.LoadingRepository });
+                const load = (handle: FileSystemDirectoryHandle) => {
+
+                    set(AtomDialogState, { name: DialogNames.LoadingRepository });
 
                     Directory.getAllFileEntriesAmount(handle, onFilter).then(maximum => {
-                        setLoadingState((st) => ({ ...st, maximum }))
+                        set(AtomRepositoryLoadingState, (st) => ({ ...st, maximum }))
                     });
                     
                     Directory.readFromHandle(handle, true, (e) => {
-                        if (e.kind == "file") setLoadingState((st) => ({ ...st, progress: count++, currentNode: `${e.path}` }));
+                        
+                        if (e.kind == "file") set(AtomRepositoryLoadingState, (st) => ({ ...st, progress: count++, currentNode: `${e.path}` }));
+
                     }, onFilter)
                     .then(e => {
-
-                        // actions.assign(m);
-
-                        // setFileNodes(e);
-                        setDialogState( { name: DialogNames.Empty });
+                        set(AtomFileSysObjectMap, e);
+                        helper.closeDialog(set);
                     });
                 }
 
-                setLoadingState({ currentNode: "", maximum: 0, progress: 0 });
+                set(AtomRepositoryLoadingState, { currentNode: "", maximum: 0, progress: 0 });
 
-                item.handle.queryPermission({ mode: "readwrite" }).then(result =>
-                {
-                    if (result != "granted") 
-                    {
-                        item.handle.requestPermission({ mode: "readwrite" }).then(result =>
-                        {
+                item.handle.queryPermission({ mode: "readwrite" }).then(result => {
+                    if (result != "granted") {
+                        item.handle.requestPermission({ mode: "readwrite" }).then(result => {
                             if (result == "granted") load(item.handle);
                         })
                     }
@@ -146,17 +121,22 @@ export const repositoryController =
     }
 }
 
-const repositoryHelper =
-{
-    isReadTargetFile: (allowFileExtensions: string[], targetFileObject: FileSystemObject) =>
-    {
+class helper {
+    
+    static openDialog(set: <T>(recoilVal: RecoilState<T>, valOrUpdater: T | ((currVal: T) => T)) => void) {
+        set(AtomDialogState, { name: DialogNames.ReSelectRepository } );
+    }
+
+    static closeDialog(set: <T>(recoilVal: RecoilState<T>, valOrUpdater: T | ((currVal: T) => T)) => void) {
+        set(AtomDialogState, { name: DialogNames.Empty });
+    }
+
+    static isReadTargetFile(allowFileExtensions: string[], targetFileObject: FileSystemObject) {
 
         /*読み込み対象の拡張子のファイル以外は弾く*/
         if (targetFileObject.kind == "directory") return true;
-        if (targetFileObject.kind == "file")
-        {
+        if (targetFileObject.kind == "file") {
             const finfo = targetFileObject.fileInfo as FileInfo;
-
             if (finfo.extension != "" && allowFileExtensions.indexOf(finfo.extension) > -1)  return true;
         }
 
@@ -164,13 +144,16 @@ const repositoryHelper =
     }
 }
 
-export const repositoryLoadingStateSelector = 
-{
-    useCurrentState: () => 
-    {
+export const repositoryLoadingStateSelector = {
+
+    useCurrentState: () => {
         const state = useRecoilValue(AtomRepositoryLoadingState); 
         return state;
     },
+}
+
+enum StoreName {
+    Repository = "repos",
 }
 
 /**

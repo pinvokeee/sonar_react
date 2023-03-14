@@ -1,24 +1,24 @@
 import { Accordion, AccordionDetails, AccordionSummary, Button, ListItemButton, Typography } from "@mui/material"
 import { useCallback, useState } from "react";
-import { FileSystemTreeNode } from "../../../class/fileSystem/types"
 import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
+import { FileSystemObjectMap } from "../../../class/fileSystem/FileSystemObjectMap";
 import SplitButton from "../../../components/elements/toolbar/SplitButton";
 
 type Props = 
 {
-    objects: Map<string, FileSystemObject>,
-    targetNode: FileSystemTreeNode,
-    onChange?: ((selectedNode: FileSystemTreeNode) => void),
-    onClickAction?: (path: string) => void,
+    fileSysObjMap: FileSystemObjectMap,
+    targetFileSysObj: FileSystemObject,
+    onChange?: ((changedFileSysObject: FileSystemObject) => void),
+    onClickAction?: (selectedFileSysObject: FileSystemObject) => void,
 }
 
 const menuItems = [
     "再読み込み", 
 ]
 
-const reload = (e: React.MouseEvent<HTMLLIElement, MouseEvent>, selectedNode: FileSystemTreeNode, newItem: any, action?: (path: string) => void) =>
+const reload = (e: React.MouseEvent<HTMLLIElement, MouseEvent>, selectedFileSysObj: FileSystemObject, newItem: any, action?: (selectedFileSysObject: FileSystemObject) => void) =>
 {
-    action?.call(this, selectedNode.path);
+    action?.call(this, selectedFileSysObj);
     e.stopPropagation();
 };
 
@@ -37,12 +37,12 @@ export const NodeSelecterItem = (props: Props) =>
     }
     
     return (
-    <ListItemButton key={props.targetNode.path} sx={{ boxSizing: "border-box" }} disableRipple={true} 
+    <ListItemButton key={props.targetFileSysObj.getStringPath()} sx={{ boxSizing: "border-box" }} disableRipple={true} 
         onMouseLeave={mouseLeave}
         onMouseEnter={mouseEnter}
-        onClick={() => props.onChange?.call(this, props.targetNode)}>
+        onClick={() => props.onChange?.call(this, props.targetFileSysObj)}>
         
-        {helper.getText(props.objects, props.targetNode.path) }
+        {helper.getText(props.fileSysObjMap, props.targetFileSysObj.getStringPath()) }
 
         {<SplitButton
             items={menuItems}
@@ -50,7 +50,7 @@ export const NodeSelecterItem = (props: Props) =>
             onGetText={ (e) => e }
             onGetKey={ (e) => e }
             selectedItem={undefined}
-            onChange={ (e, newItem) => reload(e, props.targetNode, newItem, props.onClickAction) }>
+            onChange={ (e, newItem) => reload(e, props.targetFileSysObj, newItem, props.onClickAction) }>
         </SplitButton>}
         
     </ListItemButton>

@@ -8,6 +8,28 @@ import { AtomKeys, atomKeys } from "./keys";
 import { FileSystemObjectMap } from "../../class/fileSystem/FileSystemObjectMap";
 
 /**
+ * NEW ファイルシステムのマップ
+ */
+export const AtomFileSysObjectMap = atom<FileSystemObjectMap>({
+    key: AtomKeys.FileSysObjectMap,    
+    default: new FileSystemObjectMap(),
+});
+
+/**
+ * NEW 選択可能・選択範囲を取得/設定する
+ */
+export const AtomSelection = atom<(string | undefined)[]>({
+    key: AtomKeys.Selection,    
+    default: [undefined, undefined, undefined, undefined],
+});
+
+
+
+
+
+
+
+/**
  * 表示中のダイアログの状態
  */
 export const AtomDialogState = atom<DialogState>({
@@ -38,15 +60,6 @@ export const AtomFileObjects = atom<Map<string, FileSystemObject>>({
     key: atomKeys.FILENODES.toString(),    
     default: new Map(),
 });
-
-/**
- * NEW ファイルシステムのマップ
- */
-export const AtomFileSysObjectMap = atom<FileSystemObjectMap>({
-    key: AtomKeys.FileSysObjectMap,    
-    default: new FileSystemObjectMap(),
-});
-
 
 
 /**

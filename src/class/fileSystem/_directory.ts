@@ -1,7 +1,7 @@
 import { FileInfo } from "./fileInfo";
 import { FileSystemObject } from "./FileSystemObject";
 
-export class Directory
+export class _Directory
 {
     static asyncShowPickDialog = async () => await window.showDirectoryPicker();
 

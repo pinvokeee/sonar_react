@@ -5,6 +5,7 @@ import { ImageView } from "../../../components/viewer/ImageView";
 import { MarkdownView } from "../../../components/viewer/markdown/Markdown";
 import { PDFView } from "../../../components/viewer/PDFView";
 import { TextViewer } from "../../../components/viewer/TextContent";
+import { repositoryController } from "../../../controller/repositoryController";
 
 const utf8_decoder: TextDecoder = new TextDecoder();
 const sjis_decoder = new TextDecoder("shift-jis");
@@ -61,10 +62,11 @@ const helper =
 
     viewMarkdown: (handle: FileSystemObject) =>
     {
+        const repoName = repositoryController.useSelectionRepositoryName();
         const text = utf8_decoder.decode(handle.fileInfo?.bytes);
 
         return <>
-            <MarkdownView source={text}></MarkdownView>
+            <MarkdownView path={[repoName, ...handle.path]} source={text}></MarkdownView>
         </>
     },
 

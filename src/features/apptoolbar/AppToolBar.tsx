@@ -2,13 +2,12 @@ import { AppBar, Toolbar, IconButton, Typography, Button, TextField, Input, Outl
 
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 import { SearchInput } from "./components/SearchInput";
-import { DialogLoadingRepository } from "../dialog/loadingRepository/DialogLoadingDirectory";
 import SearchIcon from '@mui/icons-material/Search';
 
 import { ServiceSelecter } from "./components/ServiceSelecter";
 import { repositoryController } from "../../controller/repositoryController";
 import { fileObjectContoller_odl } from "../../controller/fileObjectContoller";
-import { search } from "../../controller/search";
+import { dialogController } from "../../controller/dialogController";
 
 const Flex = styled("div")(({theme}) =>
 (
@@ -62,7 +61,9 @@ export const AppHeader = (props: Prop) =>
     const a = fileObjectContoller_odl.selectors.useFileHandles();
     const b = fileObjectContoller_odl.selectors.useFileNodes();
 
-    
+
+    const dialogAction = dialogController.useActions();
+
     const handleSelectRepos = async () =>
     {
       console.log(a, b);
@@ -94,8 +95,6 @@ export const AppHeader = (props: Prop) =>
       // const f = fileNode.useActions().loadFile(us[4]);
     }
 
-    const searchActions = search.useActions();
-
     return (
         <AppBar elevation={0} sx={{ width: "100vw" }} position="static" enableColorOnDark>          
             <Toolbar variant="dense" sx={{ justifyContent: "space-between" }}>
@@ -121,7 +120,7 @@ export const AppHeader = (props: Prop) =>
 
             <SearchInput sx={{ flex: 2 }}>
               <SearchIconEx></SearchIconEx>
-              <InputBox onFocus={() => searchActions.showDialog()} placeholder="キーワード検索 (Ctrl+K) / 全体検索（Ctrl+Q）" ></InputBox>
+              <InputBox readOnly onFocus={() => dialogAction.openSearchDialog()} placeholder="キーワード検索 (Ctrl+K) / 全体検索（Ctrl+Q）" ></InputBox>
             </SearchInput>
 
             <ButtonCase sx={{ flex: 1 }}>

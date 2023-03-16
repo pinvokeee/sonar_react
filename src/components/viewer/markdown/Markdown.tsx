@@ -4,6 +4,7 @@ import { converter } from "../../../util/converter";
 type Prop = 
 {
     source: string,
+    path: string[],
 }
 
 const View = styled("div")(({theme}) =>
@@ -64,7 +65,7 @@ pre > p
 }
 </style>
 `
-
+    converter.setPath(`/${props.path.slice(0, props.path.length - 1).join("/")}`);
     const __html =  `${default_style}${converter.toMarkdown(props.source)}`;
     return <Frame sandbox="allow-same-origin allow-scripts allow-popups allow-modals" srcDoc={__html}>
         </Frame>

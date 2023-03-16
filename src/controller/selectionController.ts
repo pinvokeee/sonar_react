@@ -10,7 +10,7 @@ export const selectionController =
     {
         return {
 
-            setSelection: useRecoilCallback(({ snapshot, set }) => async (n: (string | undefined)[]) => {                
+            setSelection: useRecoilCallback(({ snapshot, set }) => async (n: (string | undefined)[]) => {     
                 set(AtomSelection, n);
             }, []),
 

@@ -7,7 +7,7 @@ import { FileSystemObject } from "../class/fileSystem/FileSystemObject";
 import { FileSystemObjectMap } from "../class/fileSystem/FileSystemObjectMap";
 import { IndexedDBUtil } from "../class/indexeddb/indexeddb";
 import { DialogNames } from "../define/names/dialogNames";
-import { AtomDialogState, AtomFileSysObjectMap, AtomRepositoryHandleList, AtomRepositoryLoadingState } from "../define/recoil/atoms";
+import { AtomDialogState, AtomFileSysObjectMap, AtomRepositoryHandleList, AtomRepositoryLoadingState, AtomSelectRepository } from "../define/recoil/atoms";
 import { generateUuid } from "../util/util";
 import { fileObjectContoller } from "./fileObjectContoller";
 
@@ -40,6 +40,7 @@ export const repositoryController = {
 
             registRepository: useRecoilCallback(({ snapshot, set }) => async () => {      
                 Directory.asyncShowPickDialog().then(handle => {
+
                     IndexedDB.addItem<RepositoryHandleItem>(StoreName.Repository, { key: generateUuid(), modified: new Date(), handle })
                     .then(item => {
                         set(AtomRepositoryHandleList, (items) => [...items, item]);
@@ -63,6 +64,7 @@ export const repositoryController = {
 
                 const load = (handle: FileSystemDirectoryHandle) => {
 
+                    set(AtomSelectRepository, handle.name);
                     set(AtomDialogState, { name: DialogNames.LoadingRepository });
 
                     Directory.getAllFileEntriesAmount(handle, onFilter).then(maximum => {
@@ -95,8 +97,11 @@ export const repositoryController = {
         }
     },
 
+    useSelectionRepositoryName: () => useRecoilValue(AtomSelectRepository),
+
     selector:
     {
+    
         useGetRegistedHandleItems: () =>
         {
             const [items, setItems] = useRecoilState(AtomRepositoryHandleList); 

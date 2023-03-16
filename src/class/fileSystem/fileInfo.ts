@@ -39,9 +39,9 @@ export class FileInfo
         const contentType = this.getContentType() as ContentInfo;
 
         if (contentType.name == "TEXT") return converter.toUTF8Text(this.bytes);
-        if (contentType.name == "PDF") return this.cacheText;
+        // if (contentType.name == "PDF") return this.cacheText;
 
-        return "";
+        return this.cacheText;
     }
 
     static getNameSection = (fileName: string) => {

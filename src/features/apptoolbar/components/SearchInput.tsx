@@ -1,8 +1,5 @@
 import * as React from 'react';
 import { styled, alpha, SxProps, Theme } from '@mui/material/styles';
-import { InputBase, Typography } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import { search } from '../../../controller/search';
 
 const SearchInputBase = styled("div")(({ theme }) => (
     {

@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { selector, selectorFamily, useRecoilCallback, useRecoilState, useRecoilValue } from "recoil";
-import { _Directory } from "../class/fileSystem/_directory";
 import { FileInfo } from "../class/fileSystem/fileInfo";
 import { FileSystemTreeNode } from "../class/fileSystem/types";
 import { FileSystemObject } from "../class/fileSystem/FileSystemObject";
@@ -190,7 +189,8 @@ const selectorHepler =
                 name: value.name,
                 path: key,
                 parent: undefined,
-                children: _Directory.getSubDirectories(Array.from(aa), value).map(m => bb(m)),
+                children: [],
+                // children: Directory.getSubDirectories(Array.from(aa), value).map(m => bb(m)),
             }
 
             aa.delete(key);

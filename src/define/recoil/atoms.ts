@@ -23,8 +23,13 @@ export const AtomSelection = atom<(string | undefined)[]>({
     default: [undefined, undefined, undefined, undefined],
 });
 
-
-
+/**
+ * NEW 選択したレポジトリ
+ */
+export const AtomSelectRepository = atom<string>({
+    key: AtomKeys.SelectRepository,    
+    default: "",
+});
 
 
 

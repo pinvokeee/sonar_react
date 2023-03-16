@@ -1,5 +1,8 @@
 import { PluginSimple } from "markdown-it";
 import Token from "markdown-it/lib/token";
+import { encode } from "punycode";
+import { converter } from "../../../util/converter";
+import { generateUuid } from "../../../util/util";
 
 export const cs1 = {
     validate: (params : string) => params.trimEnd().match(/^note\s+(.*)$/),
@@ -49,40 +52,76 @@ export const code = {
 
 export const markdownItPlugin: PluginSimple = (md) => {
 
-    // md.core.process = (state) =>
-    // {  
-    //     let i, l, rules;
-    //     rules = md.core.ruler.getRules('');
+    const header: string[] = [];
 
-    //     console.log(state);
-    //     console.log(rules);
+    md.core.process = (state) =>
+    {  
+        header.length = 0;
 
-    //     for (i = 0, l = rules.length; i < l; i++) {
-    //       rules[i](state);
+        let i, l, rules;
+        rules = md.core.ruler.getRules('');
 
-    //     }
+        for (i = 0, l = rules.length; i < l; i++) {
+          rules[i](state);
+        }
+    }
 
-    // }
+    md.renderer.rules.heading_open = function (tokens, idx, options, env, self) { 
 
-    const defaultRender = md.renderer.rules.link_open || function (tokens, idx, options, env, self) {
+        const token = tokens[idx];
+
+        if (token.nesting == 1) {
+
+            const hash = tokens[idx + 1].content;
+            header.push(hash);
+            const count = header.filter(v => v == hash).length;
+
+            token.attrSet("id", `${hash}${count > 1 ? "-" + (count - 1) : ""}`);
+        }
+
         return self.renderToken(tokens, idx, options);
-    };
+    }
+
+    md.renderer.rules.html_block = function (tokens, idx, options, env, self) { 
+
+        const a = converter.toDocument(tokens[idx].content);
+        const iframe = a.querySelector("iframe");
+
+        if (iframe?.getAttribute("src")?.startsWith("/")) {
+            iframe.setAttribute("src", `/repository/${env["path"]}/${iframe.getAttribute("src")}`)
+        }
+
+        tokens[idx].content = a.body.innerHTML;
+
+        return tokens[idx].content;
+    }
+
+    md.renderer.rules.image = function (tokens, idx, options, env, self) {
+
+        const src = tokens[idx].attrGet("src");
+
+        if (src?.startsWith("/") && env["path"] != undefined) {
+            tokens[idx].attrSet("src", `/repository/${env["path"]}/${src}`);   
+        }
+
+        return self.renderToken(tokens, idx, options);
+    }
     
     md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
-        var aIndex = tokens[idx].attrIndex("target");
-        console.log(aIndex, tokens[idx]);
 
-        // // If you are sure other plugins can't add `target` - drop check below
-        // var aIndex = tokens[idx].attrIndex("target");
-    
-        // if (aIndex < 0) {
-        // tokens[idx].attrPush(["target", "_blank"]); // add new attribute
-        // } else {
-        // tokens[idx].attrs[aIndex][1] = "_blank"; // replace value of existing attr
-        // }
-    
-        // pass token to default renderer.
-        return defaultRender(tokens, idx, options, env, self);
+        const href = tokens[idx].attrGet("href");
+
+        if (href?.startsWith("#")) {
+            const id = decodeURI(href);
+            tokens[idx].attrSet("href", "javascript:void(0)");
+            tokens[idx].attrSet(`onClick`, `document.querySelector("${id}").scrollIntoViewIfNeeded(true);`);
+        }
+
+        if (href?.startsWith("/") && env["path"] != undefined) {
+            tokens[idx].attrSet("href", `/repository/${env["path"]}/${href}`);   
+        }
+
+        return self.renderToken(tokens, idx, options);
     };
 
   

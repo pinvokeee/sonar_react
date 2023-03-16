@@ -35,7 +35,10 @@ export const MatchObjectsList = (props: Props) =>
     const list: JSX.Element[] = [];
 
     h.forEach((obj) => {
-        list.push(<MatchObjectListItem onClick={onClick} fileObj={obj}></MatchObjectListItem>);
+
+        if (obj.kind == "file") {
+            list.push(<MatchObjectListItem keyword={props.keyword} onClick={onClick} fileObj={obj}></MatchObjectListItem>);
+        }
     });
 
     return (

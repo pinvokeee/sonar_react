@@ -20,7 +20,7 @@ export class converter {
 
     static toUTF8Text = (bytes: ArrayBuffer) => this.utf8_decoder.decode(bytes);
     static toDocument = (source: string) => this.domparser.parseFromString(source, "text/html");
-    static toMarkdown = (source: string, currentPath?: string) => this.md.render(source);
+    static toMarkdown = (source: string, currentPath?: string) => this.md.render(source, { path: this.RepoPath });
 
     static createPdfTextList = async (blobUrl: string) => {
 
@@ -33,5 +33,12 @@ export class converter {
         }
 
         return texts.join("");
+    }
+
+    private static RepoPath: string;
+
+    static setPath(path: string) {
+
+        this.RepoPath = path;
     }
 }

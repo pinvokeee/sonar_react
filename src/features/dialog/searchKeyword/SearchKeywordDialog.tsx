@@ -1,5 +1,5 @@
 import { Backdrop, Box, Button, Card, CardContent, CardHeader, Divider, styled, TextField, Typography } from "@mui/material";
-import { ChangeEvent, useCallback, useState } from "react";
+import { ChangeEvent, useCallback, useRef, useState } from "react";
 import { dialogController } from "../../../controller/dialogController";
 import { DialogNames } from "../../../define/names/dialogNames";
 import Split from 'react-split';
@@ -82,16 +82,21 @@ export const DialogSearchFromKeyword = (props: Props) =>
     const [viewObject, setViewObject] = useState<FileSystemObject | undefined>(undefined);
     const [keyword, setKeyword] = useState("");
 
+    const input = useRef<HTMLInputElement>(null);
+
     const isOpen = dialogState.name == DialogNames.SearchFromKeywords;
 
-    const handleChange = useCallback((value: string) =>
-    {
+    if (isOpen) {
+        console.log(input);
+        input?.current?.focus();
+    }
+
+    const handleChange = useCallback((value: string) => {
         setKeyword(value);
 
     }, []);
 
-    const onSearchResultItemClick = useCallback((fileObj: FileSystemObject) => 
-    {
+    const onSearchResultItemClick = useCallback((fileObj: FileSystemObject) => {
         setViewObject(fileObj);
     }, []);
 
@@ -104,7 +109,7 @@ export const DialogSearchFromKeyword = (props: Props) =>
             <CardContent sx={{ height: "100%" }}>
             <GridContainer>
                     <Box sx={{ display: "flex", }}>
-                        <TextField id="outlined-basic" fullWidth value={keyword} onInput={(e: ChangeEvent<HTMLInputElement>) => handleChange(e.target.value)} label="検索" />
+                        <TextField autoFocus ref={input} id="outlined-basic" fullWidth value={keyword} onInput={(e: ChangeEvent<HTMLInputElement>) => handleChange(e.target.value)} label="検索" />
                         <Button sx={{ marginLeft: "auto" }} onClick={(e) => dialogActions.close()}>閉じる</Button>
                     </Box>
 

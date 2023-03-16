@@ -1,0 +1,63 @@
+import { FileSystemObject } from "./FileSystemObject";
+import { FileInfo } from "./types";
+
+export class FileSystemObjectMap extends Map<string, FileSystemObject>
+{
+    getEntries(parentNode: FileSystemObject | undefined, hasChildDirectory: boolean, kind: "file" | "directory" | "all") {
+
+        const result: FileSystemObjectMap = new FileSystemObjectMap();
+
+        if (parentNode == undefined) {
+            this.forEach((val, key, map) => {
+                if (val.kind == kind && val.path.length == 1) result.set(key, val);
+            });
+            
+            return result;
+        }
+
+        this.forEach((val, key, map) => {
+
+            if (hasChildDirectory) {
+                if (val.kind == kind && val.getStringPath().startsWith(parentNode.getStringPath() + "/")) result.set(key, val);
+            }
+            else {
+                if (
+                    val.kind == kind && 
+                    val.getStringPath().startsWith(parentNode.getStringPath() + "/") && 
+                    parentNode.path.length + 1 == val.path.length) result.set(key, val);
+            }
+        });
+
+        return result;
+    }
+
+    getSubDirectories(parentNode: FileSystemObject | undefined, hasChildDirectory: boolean) {
+        return this.getEntries(parentNode, hasChildDirectory, "directory");
+    }
+
+    getFiles(parentNode: FileSystemObject | undefined, hasChildDirectory: boolean) {
+        return this.getEntries(parentNode, hasChildDirectory, "file");
+    }
+
+    filterFromKeyword(keyword: string, targetParentFileSystemObj?: FileSystemObject) {
+        
+        if (keyword.length == 0) return this;
+
+        const map = targetParentFileSystemObj != undefined ? 
+            this.getFiles(targetParentFileSystemObj, true) :
+            this;
+
+        const result = new FileSystemObjectMap();
+
+        this.forEach((val, key) => {
+
+            if (val.kind == "directory") return;
+            if (val.fileInfo == undefined) return;
+            
+            const info = val.fileInfo;
+            if (info.getText().indexOf(keyword) > -1) result.set(key, val);
+        });
+
+        return result;
+    }
+}

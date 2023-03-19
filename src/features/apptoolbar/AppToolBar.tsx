@@ -45,9 +45,9 @@ const AppToolBar = styled(AppBar)(({ theme }) =>
 (
   {
     width: "100%",
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: theme.palette.background.default,
     border: "0 0 4px 0",
-    borderBottom: `1px solid ${theme.palette.common.white}`,
+    borderBottom: `1px solid ${theme.palette.divider}`,
   }
 ));
 

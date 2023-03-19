@@ -245,7 +245,7 @@ export const TextViewer = (props: Prop) =>
         </View>
         <Divider></Divider>
         <ButtonSpace>
-            <Button sx={{ fontSize: "14pt", }} variant="outlined" onClick={() => copy(textBlocks)}>コピー</Button>
+            <Button sx={{ fontSize: "14pt", }} variant="contained" onClick={() => copy(textBlocks)}>コピー</Button>
         </ButtonSpace>
     </Container>
     </>

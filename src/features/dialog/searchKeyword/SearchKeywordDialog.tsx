@@ -73,6 +73,20 @@ const ResultContainer = styled("div")(({theme}) =>
     }
 ))
 
+
+const ButtonLC = styled(Button)(({theme}) =>
+(
+    {
+        textTransform: "none",
+    }
+))
+
+const styles = {
+    webButton: {
+      textTransform: 'none',
+    }
+  }
+
 type Props = 
 {
     children?: React.ReactNode
@@ -144,7 +158,7 @@ export const DialogSearchFromKeyword = (props: Props) =>
                                 selectedPath={selection}></MatchObjectsList>
                             </ResultContainer>
                             <Stack>
-                                <BoardTitle>プレビュー中: <Button onClick={handleClickPath}>/{viewObject?.getStringPath()}</Button></BoardTitle>
+                                <BoardTitle>プレビュー中: <ButtonLC size="small" onClick={handleClickPath}>/{viewObject?.getStringPath()}</ButtonLC></BoardTitle>
                                 <Divider></Divider>
                                 <ObjectViewer object={viewObject} highlightKeyword={keyword}></ObjectViewer>
                             </Stack>

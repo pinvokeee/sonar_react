@@ -62,7 +62,7 @@ export const App = () => {
 
       common: {
         white: "#333a45",
-        black: "#232730",
+        black: "#0E1625",
       },
 
       divider: "#343a46",

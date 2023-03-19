@@ -87,8 +87,6 @@ export const DialogSearchFromKeyword = (props: Props) =>
     const oselection = selectionController.useGetSelectionRange();
     const firstFileSysObj = oselection[0] ? fileSysObjMap.get(oselection[0]) : undefined;
 
-    console.log(oselection);
-
     const target =  fileSysObjMap.filterFromKeyword(keyword, false, firstFileSysObj);
 
     const dialog = dialogController;
@@ -112,8 +110,6 @@ export const DialogSearchFromKeyword = (props: Props) =>
     const handleClickPath = useCallback(() =>
     {
         if (viewObject == undefined) return;
-        console.log(viewObject.getStringRootPath());
-        // selection_action.setSelection(['テンプレート', 'テンプレート/aaaaaa', 'テンプレート/aaaaaa/doc1', 'テンプレート/aaaaaa/doc1/test.md']);
         selection_action.setSelection(viewObject.getStringRootPath());
         dialogActions.close();
 

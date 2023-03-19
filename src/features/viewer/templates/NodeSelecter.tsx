@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Accordion, AccordionSummary, Box, Button, List, ListItemButton, ListItemText, Paper, Stack, styled } from "@mui/material";
 import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
-import { fileObjectContoller_odl } from '../../../controller/fileObjectContoller';
+import { fileObjectContoller, fileObjectContoller_odl } from '../../../controller/fileObjectContoller';
 import { NodeSelecterItem } from './NodeSelecterItem';
 import { FileSystemObjectMap } from '../../../class/fileSystem/FileSystemObjectMap';
 
@@ -37,20 +37,20 @@ const Placeholder = styled("div")(({ theme }) =>
     }
 ));
 
-export const NodeSelecter = (props : INodeLIstBoxProp) =>
-{
+export const NodeSelecter = (props : INodeLIstBoxProp) => {
 
+    const ns = fileObjectContoller.useGetFileSysObjMap();
+    const actions = fileObjectContoller.useActions();
     const handles = props.handles;
 
     const act = (obj: FileSystemObject) =>
     {
-        // const handle = ns.get(n);
+        const handle = ns.get(obj.getStringPath());
         // if (handle == undefined) return;
 
-        // actions.load(handle).then(r => 
-        // {
-        //     console.log(r);
-        // });
+        handle?.load().then(h => {
+            actions.assign(new FileSystemObjectMap(ns));
+        });
     }
 
     const nodeItems: JSX.Element[] = [];

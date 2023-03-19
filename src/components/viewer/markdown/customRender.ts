@@ -22,7 +22,6 @@ export const code = {
 
     validate: (params : string) =>
     {
-        console.log(params);
         return params.trim().match(/^テンプレ($|\s+(.*)$)/);
     },
             
@@ -100,8 +99,18 @@ export const markdownItPlugin: PluginSimple = (md) => {
 
         const src = tokens[idx].attrGet("src");
 
-        if (src?.startsWith("/") && env["path"] != undefined) {
+        if ((src?.startsWith("/")) && env["path"] != undefined) {
             tokens[idx].attrSet("src", `/repository/${env["path"]}/${src}`);   
+        }
+
+        if ((src?.startsWith("./")) && env["path"] != undefined) {
+            const p = src.slice(2, src.length);
+            tokens[idx].attrSet("src", `./repository/${env["path"]}/${p}`);   
+        }
+
+        if ((src?.startsWith("../")) && env["path"] != undefined) {
+            const p = src.slice(3, src.length);
+            tokens[idx].attrSet("src", `../repository/${env["path"]}/${p}`);   
         }
 
         return self.renderToken(tokens, idx, options);
@@ -121,23 +130,16 @@ export const markdownItPlugin: PluginSimple = (md) => {
             tokens[idx].attrSet("href", `/repository/${env["path"]}/${href}`);   
         }
 
+        if ((href?.startsWith("./")) && env["path"] != undefined) {
+            const p = href.slice(2, href.length);
+            tokens[idx].attrSet("href", `./repository/${env["path"]}/${p}`);   
+        }
+
+        if ((href?.startsWith("../")) && env["path"] != undefined) {
+            const p = href.slice(3, href.length);
+            tokens[idx].attrSet("href", `../repository/${env["path"]}/${p}`);   
+        }
         return self.renderToken(tokens, idx, options);
     };
 
-  
-    // md.core.ruler.before("block", "test", (state) =>
-    // {
-    //     console.log({...state});
-
-    //     return false;
-    // });
-
-    // md.inline.ruler2.push("test", (state) =>
-    // {
-
-
-    //     return false; 
-    // });
-
-    // md.core.ruler.after("linkify", "test", );
 };

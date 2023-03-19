@@ -10,8 +10,8 @@ export interface INodeLIstBoxProp
     handles: FileSystemObjectMap | undefined,
     current: FileSystemObject | undefined,
     placeHolder?: string,
-    // filter?: (obj: FileSystemObjectMap) => boolean,
     onChange? : (selectedNode: FileSystemObject) => void,
+    selection?: string,
 }
 
 export const ScrollPanel = styled("div")(({ theme }) => 
@@ -24,7 +24,7 @@ export const ScrollPanel = styled("div")(({ theme }) =>
 const Placeholder = styled("div")(({ theme }) =>
 (
     {
-        color: 'lightgray',
+        color: theme.palette.text.disabled,
         fontWeight: "bold",
         fontSize: "20pt",
         height: "100%",
@@ -39,14 +39,9 @@ const Placeholder = styled("div")(({ theme }) =>
 
 export const NodeSelecter = (props : INodeLIstBoxProp) =>
 {
-    // const ns = fileObjectContoller_odl.selectors.useFileNodesSelector();
-    // const actions = fileObjectContoller_odl.useActions();
 
     const handles = props.handles;
-    // const filter = props.filter;
 
-    // const filteredNodes = filter ? nodes.filter((value) => filter?.call(this, handles.get(value.path)?.kind as string)) : nodes;
-    
     const act = (obj: FileSystemObject) =>
     {
         // const handle = ns.get(n);
@@ -62,7 +57,14 @@ export const NodeSelecter = (props : INodeLIstBoxProp) =>
 
     if (handles != undefined) {
         handles.forEach((obj) =>  {
-            nodeItems.push(<NodeSelecterItem fileSysObjMap={handles} targetFileSysObj={obj} onChange={props.onChange} onClickAction={act}></NodeSelecterItem>)
+
+            const isSelected = props.selection ? props.selection == obj.getStringPath() : false;
+            
+            nodeItems.push(<NodeSelecterItem isSelected={isSelected}
+                 fileSysObjMap={handles} 
+                 targetFileSysObj={obj} 
+                 onChange={props.onChange} 
+                 onClickAction={act}></NodeSelecterItem>)
         });    
     }
 

@@ -1,0 +1,31 @@
+.gutter.gutter-horizontal
+{
+    background-color: #333a45;
+    cursor: col-resize;
+}
+
+.gutter.gutter-horizontal:active
+{
+    background-color: #007fd4;
+}
+
+.gutter.gutter-horizontal:hover
+{
+    background-color: #007fd4;
+}
+
+.gutter.gutter-vertical
+{
+    background-color: #333a45;
+    cursor: row-resize;
+}
+
+.gutter.gutter-vertical:active
+{
+    background-color: #007fd4;
+}
+
+.gutter.gutter-vertical:hover
+{
+    background-color: #007fd4;
+}

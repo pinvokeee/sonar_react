@@ -1,5 +1,5 @@
 import { converter } from "../../util/converter";
-import { FileInfo } from "./fileInfo";
+import { FileInfo } from "./FileInfo";
 
 
 
@@ -38,12 +38,19 @@ export class FileSystemObject
         this.fileInfo.objectURL = contentType?.hasBlobUrl ? URL.createObjectURL(new Blob([buffer], { type: contentType.type })) : "";        
 
         //Markdownの場合
-        if (contentType?.name == "MARKDOWN"){
-            this.fileInfo.cacheText = await converter.toMarkdown(converter.toUTF8Text(this.fileInfo.bytes));
+        if (contentType?.name == "MARKDOWN") {
+            const src = converter.toMarkdown(converter.toUTF8Text(this.fileInfo.bytes));
+            this.fileInfo.cacheText = converter.toDocument(src).body.innerText;
+        }
+
+        //Markdownの場合
+        if (contentType?.name == "HTML") {
+            const src = converter.toUTF8Text(this.fileInfo.bytes);
+            this.fileInfo.cacheText = converter.toDocument(src).body.innerText;
         }
 
         //PDFの場合
-        if (contentType?.name == "PDF"){
+        if (contentType?.name == "PDF") {
             this.fileInfo.cacheText = await converter.createPdfTextList(this.fileInfo.objectURL);
         }
     }
@@ -51,5 +58,26 @@ export class FileSystemObject
     getStringPath()
     {
         return this.path.join("/");
+    }
+
+    getStringRootPath()
+    {
+        const file = this.path.slice(-1);
+        const root = [];
+        let lastPath = "";
+
+        while (root.length < 4) root.push(undefined);
+
+        for (let i = 0; i < this.path.length - 1; i++)
+        {
+            const p = `${lastPath}/${this.path[i]}`;
+            root[i] = p.slice(1, p.length);
+            lastPath = p;
+        }
+
+        const fpath = `${lastPath}/${this.path[this.path.length - 1]}`;
+        root[root.length - 1] = fpath.slice(1, fpath.length);
+        
+        return root;
     }
 }

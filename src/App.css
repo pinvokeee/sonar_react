@@ -1,4 +1,33 @@
+::-webkit-scrollbar {
+  width: 12px; /* 横幅 */
+  height: 12px; /* 横幅 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #949bae; /* ハンドルの色 */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-corner
+{
+  background-color: transparent; /* 背景色 */
+}
+
+::-webkit-scrollbar-track:hover {
+  /* background-color: rgba(255, 255, 255, 0.25); */
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent; /* 背景色 */
+}
+
 .App {
+  /* text-align: center; */
+  /* scrollbar-width: "thin"; */
+}
+
+
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +64,4 @@
   to {
     transform: rotate(360deg);
   }
-}
+} */

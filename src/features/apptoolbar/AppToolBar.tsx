@@ -41,80 +41,35 @@ const SearchIconEx = styled(SearchIcon)(({ theme }) =>
   }
 ));
 
+const AppToolBar = styled(AppBar)(({ theme }) => 
+(
+  {
+    width: "100%",
+    backgroundColor: theme.palette.common.black,
+    border: "0 0 4px 0",
+    borderBottom: `1px solid ${theme.palette.common.white}`,
+  }
+));
+
 type Prop = 
 {
   children?: React.ReactNode,
 }
 
-export const AppHeader = (props: Prop) =>
+export const ViewerHeader = (props: Prop) =>
 {    
     const reposActions = repositoryController.useActions();
-
-    // const options = topNodes.map(n => n.name);
-
-    // const onChangeTopNodeIndex = (index : number) =>
-    // {
-    //   fileNodeAction.useSelectTopNode(topNodes[index]);
-    // }
-    const actions = fileObjectContoller_odl.useActions()
-
-    const a = fileObjectContoller_odl.selectors.useFileHandles();
-    const b = fileObjectContoller_odl.selectors.useFileNodes();
-
 
     const dialogAction = dialogController.useActions();
 
     const handleSelectRepos = async () =>
     {
-      console.log(a, b);
 
-      // console.log(us);
-      // actions.a();
-
-      // console.log(us);
-      // const f = actions.loadFile(us.nodes[17]);
-
-      // reposActions.selectionRepository();
-
-      // const a = us[0];
-
-      // if (a.children != null)
-      // {
-      //   // const h = (a.children[0].handle as FileSystemFileHandle);
-        
-      //   // a.children[0].file.binary = await (await h.getFile()).arrayBuffer();
-
-      //   // actions.loadFile(a.children[0]).then(r =>
-      //   //   {
-      //   //     console.log(r, a);            
-      //   //   })
-
-
-      // }
-      
-      // const f = fileNode.useActions().loadFile(us[4]);
     }
 
     return (
-        <AppBar elevation={0} sx={{ width: "100vw" }} position="static" enableColorOnDark>          
+        <AppToolBar elevation={0} position="static">          
             <Toolbar variant="dense" sx={{ justifyContent: "space-between" }}>
-{/* 
-            <SplitButton sx={{ width: 0, flex: 1 }} 
-                onChangeSelectedIndex={ (index) => fileNodeAction.useSelectTopNode(topNodes[index]) } /> */}
-
-
-                {/* <Button onClick={(e) => fileNodeAction.useSelectTopNode()}>TEST</Button> */}
-{/* 
-            <SplitButton sx={{ width: 0, flex: 1 }} isOpen={o} selectedText="">
-            {
-              topNodes.map(node => 
-              {
-                return <MenuItem key={node.name} onClick={a}>{node.name}</MenuItem>
-              })
-            }
-            </SplitButton> */}
-
-            {/* sx={{ flex: "1 1 auto" }} */}
 
             <ServiceSelecter></ServiceSelecter>
 
@@ -133,6 +88,6 @@ export const AppHeader = (props: Prop) =>
 
           </Toolbar>
           
-        </AppBar>
+        </AppToolBar>
     );
   }

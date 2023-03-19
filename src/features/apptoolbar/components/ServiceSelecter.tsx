@@ -18,7 +18,7 @@ const Flex = material.styled("div")(({theme}) =>
 ));
 
 const getText = (item: FileSystemObject) => {
-    if (item == undefined) return "";
+    if (item == undefined) return undefined;
     return item.name;
 }
 
@@ -46,6 +46,7 @@ export const ServiceSelecter = (props : Props) =>
         sx={{ flex: "1" }}
         items={selectable_service} 
         selectedItem={selectedItem} 
+        emptyText={"<第一階層>"}
         onGetKey={getKey} 
         onChange={changeItem} 
         onGetText={getText}>    

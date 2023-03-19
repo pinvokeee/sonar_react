@@ -1,48 +1,7 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, List, ListItemButton, ListItemText, styled } from "@mui/material";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import Split from 'react-split'
-import { NodeSelecter } from "./NodeSelecter";
-
-import { TextViewer } from "../../../components/viewer/TextContent";
-import { MarkdownView } from "../../../components/viewer/markdown/Markdown";
-import { ThdimensionList } from "./threeSelecter";
-import { selectionController } from "../../../controller/selectionController";
-import { fileObjectContoller_odl } from "../../../controller/fileObjectContoller";
-import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
-import { Frame } from "../../../components/viewer/Frame";
-import { ImageView } from "../../../components/viewer/ImageView";
-import { PDFView } from "../../../components/viewer/PDFView";
-import { ObjectViewer } from "./ObjectViewer";
+import { ThdimensionList } from "./ThdimensionList";
 import { ObjectViewerWrap } from "./ObjectViewerWrap";
-
-export const HSplitBox = styled(Split)(({ theme }) => 
-(
-    {
-        height: "100%",
-    }
-));
-
-export const VSplitBox = styled(Split)(({ theme }) => 
-(
-    {
-        // display: "grid",
-        // gridTemplateRows: "auto auto minmax(0, 1fr)",
-        display: "flex",
-        flexDirection: "row",
-        // width: "100%",
-        height: "100%",
-        // maxHeight: "100vh",
-    }
-));
-
-export const GutterStyle = (dimension : "width" | "height", gutterSize : number) => 
-{
-    const bgcolor = "#eee";
-    return {
-        backgroundColor: bgcolor,
-        [dimension]: gutterSize + "px",
-    }
-}
+import { SplitBoxHorizontal } from "../../../components/elements/SplitBox";
+import { Box, styled } from "@mui/material";
 
 export const ScrollPanel = styled("div")(({ theme }) => 
 (
@@ -56,17 +15,14 @@ export type Prop =
     // object: FileSystemHandleData,
 }
 
-
 export const TemplatesViewer = (props: Prop) =>
 {
     return (
-        <>
-            <VSplitBox direction="horizontal" minSize={100} sizes={[20, 20, 60]} gutterAlign="center" gutterSize={6} gutterStyle={GutterStyle}>
-                <ThdimensionList></ThdimensionList>
-                <Box>
-                    <ObjectViewerWrap></ObjectViewerWrap>
-                </Box>                
-            </VSplitBox>
-        </>
+        <SplitBoxHorizontal sizes={[20, 20, 60]} gutterSize={6}>
+            <ThdimensionList></ThdimensionList>
+            <Box>
+                <ObjectViewerWrap></ObjectViewerWrap>
+            </Box>
+        </SplitBoxHorizontal>
     );
 }

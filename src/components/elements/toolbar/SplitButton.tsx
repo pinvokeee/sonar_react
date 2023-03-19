@@ -11,10 +11,19 @@ type Props =
 
     items: any[],
     selectedItem: any,
-    onGetText: (item: any) => string,
+    emptyText?: string,
+    onGetText: (item: any) => string | undefined,
     onGetKey: (item: any) => string,
     onChange: (event: React.MouseEvent<HTMLLIElement, MouseEvent>, newValue: any) => void,
 }
+
+const DisabledText = styled("div")(({theme}) => 
+(
+    {
+        fontWeight: "bold",
+        color: theme.palette.text.disabled,
+    }
+));
 
 const Flex = styled("div")(({theme}) => 
 (
@@ -25,7 +34,8 @@ const Flex = styled("div")(({theme}) =>
 
 type SplitButtonLabelProps = 
 {
-    text: string,
+    text: string | undefined,
+    emptyText?: string,
     onClick: (event: React.MouseEvent<HTMLElement>) => void,
 }
 
@@ -37,11 +47,11 @@ const SplitButtonLabel = (props: SplitButtonLabelProps) =>
     whiteSpace={"nowrap"} 
     color="inherit" 
     sx={{ userSelect: "none", textAlign: "left", margin: "auto 0 auto 0", cursor: "pointer" }}
-    // sx={{ userSelect: "none", textAlign: "left", padding:"6px", cursor: "pointer" }}
     >
-    {props.text}
+    {props.text ? props.text : <DisabledText>{props.emptyText}</DisabledText>}
     </Typography>
 }
+
 
 export const SplitButton = (props : Props) =>
 {
@@ -68,7 +78,7 @@ export const SplitButton = (props : Props) =>
     return (
         <Flex sx={props.sx}>
 
-            <SplitButtonLabel text={props.onGetText(props.selectedItem)} onClick={handleMenu}></SplitButtonLabel>
+            <SplitButtonLabel emptyText={props.emptyText}  text={props.onGetText(props.selectedItem)} onClick={handleMenu}></SplitButtonLabel>
             <IconButton onClick={handleMenu} color="inherit">                
                 <ArrowDropDownIcon color="inherit" />
             </IconButton>
@@ -82,7 +92,9 @@ export const SplitButton = (props : Props) =>
                 onClose={handleClose} >
                     {
                         props.items.map((item, index) =>(
-                        <MenuItem key={props.onGetKey(item)} onClick={(event) => selectionMenu(event, item) }>{props.onGetText(item)}</MenuItem>))
+                        <MenuItem key={props.onGetKey(item)} onClick={(event) => selectionMenu(event, item) }>
+                            {props.onGetText(item)}
+                        </MenuItem>))
                     }
             </Menu>
         </Flex>

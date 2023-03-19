@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
 import { fileObjectContoller, fileObjectContoller_odl } from "../../../controller/fileObjectContoller";
 import { selectionController } from "../../../controller/selectionController";
-import { ObjectViewer } from "./ObjectViewer";
+import { ObjectViewer } from "../../../components/viewer/ObjectViewer";
 
 export const ObjectViewerWrap = () => {
 

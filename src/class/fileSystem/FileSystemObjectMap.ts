@@ -39,9 +39,9 @@ export class FileSystemObjectMap extends Map<string, FileSystemObject>
         return this.getEntries(parentNode, hasChildDirectory, "file");
     }
 
-    filterFromKeyword(keyword: string, targetParentFileSystemObj?: FileSystemObject) {
+    filterFromKeyword(keyword: string, isContentOnly: boolean, targetParentFileSystemObj?: FileSystemObject) {
         
-        if (keyword.length == 0) return this;
+        if (keyword.length == 0) return new FileSystemObjectMap();
 
         const map = targetParentFileSystemObj != undefined ? 
             this.getFiles(targetParentFileSystemObj, true) :
@@ -55,7 +55,7 @@ export class FileSystemObjectMap extends Map<string, FileSystemObject>
             if (val.fileInfo == undefined) return;
             
             const info = val.fileInfo;
-            if (info.getText().indexOf(keyword) > -1) result.set(key, val);
+            if ((!isContentOnly && val.name.indexOf(keyword) > -1) || info.getText().indexOf(keyword) > -1) result.set(key, val);
         });
 
         return result;

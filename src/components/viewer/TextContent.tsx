@@ -1,4 +1,7 @@
-import { Box, Button, styled } from "@mui/material";
+import { Box, Button, styled, useTheme } from "@mui/material";
+import Divider from "@mui/material/Divider";
+import { TextParser } from "../../util/textParser";
+import { Highlight } from "../elements/Highlight";
 
 const Container = styled("div")((theme) => 
 (
@@ -41,6 +44,7 @@ const Block = styled(Pre)(({ theme }) =>
 const BlockInfo = styled(Pre)(({ theme }) =>
 (
     {
+        color: theme.palette.background.default,
         backgroundColor: "#fdf9e2",
         padding: "8px",
     }
@@ -58,17 +62,20 @@ const ButtonSpace = styled("div")(({theme}) =>
 type CopyBlockProp =
 {
     text: string,
+    keyword?: string,
 }
 
 const CopyBlock = (props: CopyBlockProp) =>
 {
+    const theme = useTheme();
+
     return <>
-        <Box sx={{ border: "solid 1px gray", padding: "8px", position: "relative" }}>    
+        <Box sx={{ border: `solid 1px ${theme.palette.divider}`, padding: "8px", position: "relative" }}>    
             {/* <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 
             </Box> */}
-            <Button sx={{ position: "absolute", right: 8 }} onClick={ () => navigator.clipboard.writeText(props.text) }>コピー</Button>
-            <Block>{props.text}</Block>
+            <Button variant="contained" sx={{ position: "absolute", right: 8 }} onClick={ () => navigator.clipboard.writeText(props.text) }>コピー</Button>
+            <Block><Highlighter text={props.text} keyword={props.keyword} /></Block>
         </Box>
     </>
 }
@@ -161,7 +168,26 @@ const createTextblocks = (source: string) =>
     return blocks;
 }
 
-const createTemplateTextView = (blocks: Textblock[]) =>
+type HighlighterProps = 
+{
+    text: string,
+    keyword?: string,
+}
+
+const Highlighter = (props: HighlighterProps) =>
+{  
+    console.log(props.keyword);
+    if (props.keyword == undefined) return <>{props.text}</>;
+
+    const el = TextParser.parseMatchedText(props.text, props.keyword);
+
+    return <>{el.map(item => {
+        if (item.type == "matched") return <Highlight>{item.text}</Highlight>
+        return <>{item.text}</>;
+    })}</>;
+}
+
+const createTemplateTextView = (blocks: Textblock[], keyword?: string) =>
 {
     const elements = [];
 
@@ -169,12 +195,12 @@ const createTemplateTextView = (blocks: Textblock[]) =>
 
     for (const block of blocks)
     {
-        if (block.kind == "info") elements.push(<BlockInfo>{block.text}</BlockInfo>);
-        if (block.kind == "copy") elements.push(<CopyBlock text={ block.text }/>);
-        if (block.kind == "text") elements.push(<Block>{block.text}</Block>);
+        if (block.kind == "info") elements.push(<BlockInfo><Highlighter text={block.text} keyword={keyword}/></BlockInfo>);
+        if (block.kind == "copy") elements.push(<CopyBlock text={ block.text } keyword={keyword}/>);
+        if (block.kind == "text") elements.push(<Block><Highlighter text={block.text} keyword={keyword} /></Block>);
         // if (block.kind == "html") elements.push(<HtmlBlock text={ block.text }></HtmlBlock>);
-        if (block.kind == "blue") elements.push(<BlockInfo sx={{ color: "blue" }}>{block.text}</BlockInfo>);
-        if (block.kind == "red") elements.push(<BlockInfo sx={{ color: "red" }}>{block.text}</BlockInfo>);
+        if (block.kind == "blue") elements.push(<BlockInfo sx={{ color: "blue" }}><Highlighter text={block.text} keyword={keyword} /></BlockInfo>);
+        if (block.kind == "red") elements.push(<BlockInfo sx={{ color: "red" }}><Highlighter text={block.text} keyword={keyword} /></BlockInfo>);
 
         pre = block;
     }
@@ -182,10 +208,6 @@ const createTemplateTextView = (blocks: Textblock[]) =>
     return elements;
 }
 
-type Prop = 
-{
-    text: string,
-}
 
 type Textblock = 
 {
@@ -206,15 +228,22 @@ const copy = (textblocks: Textblock[]) =>
     });
 }
 
+type Prop = 
+{
+    text: string,
+    keyword?: string,
+}
+
 export const TextViewer = (props: Prop) =>
 {
     const textBlocks = createTextblocks(props.text);
-    
+
     return <>
     <Container>
         <View>
-            {createTemplateTextView(textBlocks)}
+            {createTemplateTextView(textBlocks, props.keyword)}
         </View>
+        <Divider></Divider>
         <ButtonSpace>
             <Button sx={{ fontSize: "14pt", }} variant="outlined" onClick={() => copy(textBlocks)}>コピー</Button>
         </ButtonSpace>

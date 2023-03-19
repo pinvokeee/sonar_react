@@ -1,11 +1,12 @@
-import { styled, SxProps, Theme } from "@mui/material";
-import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
-import { Frame } from "../../../components/viewer/Frame";
-import { ImageView } from "../../../components/viewer/ImageView";
-import { MarkdownView } from "../../../components/viewer/markdown/Markdown";
-import { PDFView } from "../../../components/viewer/PDFView";
-import { TextViewer } from "../../../components/viewer/TextContent";
-import { repositoryController } from "../../../controller/repositoryController";
+import { createTheme, styled, SxProps, Theme, ThemeProvider } from "@mui/material";
+import { FileSystemObject } from "../../class/fileSystem/FileSystemObject";
+import { Frame } from "./Frame";
+import { ImageView } from "./ImageView";
+import { MarkdownView } from "./markdown/Markdown";
+import { PDFView } from "./PDFView";
+import { TextViewer } from "./TextContent";
+import { repositoryController } from "../../controller/repositoryController";
+import { XlsxView } from "./XlsxView";
 
 const utf8_decoder: TextDecoder = new TextDecoder();
 const sjis_decoder = new TextDecoder("shift-jis");
@@ -14,6 +15,7 @@ type Props =
 {
     sx?: SxProps<Theme>, 
     object: FileSystemObject | undefined,
+    highlightKeyword?: string,
 }
 
 const DummyView = styled("div")(({theme}) =>
@@ -27,17 +29,22 @@ const DummyView = styled("div")(({theme}) =>
 export const ObjectViewer = (props: Props) =>
 {
     if (props.object == undefined) <DummyView></DummyView>;
-    return <DummyView>{ props.object ? helper.viewComponent(props.object) : <></> }</DummyView>;
+    return (
+        <DummyView>
+            { props.object ? helper.viewComponent(props.object, props.highlightKeyword) : <></> }        
+        </DummyView>
+    );
 }
 
 
 const helper = 
 {
-    viewComponent: (handle: FileSystemObject) =>
+    viewComponent: (handle: FileSystemObject, highlightKeyword?: string) =>
     {
         if (handle.kind == "file" && handle.fileInfo?.bytes != undefined)
         {
-            if (handle.fileInfo.extension == "txt") return helper.viewText(handle);
+            if (handle.fileInfo.extension == "xlsx") return helper.viewExcel(handle);
+            if (handle.fileInfo.extension == "txt") return helper.viewText(handle, highlightKeyword);
             if (handle.fileInfo.extension == "md") return helper.viewMarkdown(handle);
             if (handle.fileInfo.extension == "html" || handle.fileInfo.extension == "htm" || handle.fileInfo.extension == "mht") return helper.viewHtmlView(handle);
             if (handle.fileInfo.extension == "png" 
@@ -51,12 +58,12 @@ const helper =
         return <DummyView></DummyView>
     },
 
-    viewText: (handle: FileSystemObject) =>
+    viewText: (handle: FileSystemObject, highlightKeyword?: string) =>
     {
         const text = utf8_decoder.decode(handle.fileInfo?.bytes);
 
         return <>
-            <TextViewer text={text}></TextViewer>
+            <TextViewer text={text} keyword={highlightKeyword}></TextViewer>
         </>
     },
 
@@ -91,16 +98,15 @@ const helper =
         const arr = handle.fileInfo?.bytes as ArrayBuffer;
 
         return <PDFView objectUrl={handle.fileInfo.objectURL}></PDFView>
+    },
 
-        // const bytes = new Uint8Array(arr);
-        // const bin = new Array(bytes.length);
-        
-        // bytes.forEach((b, index) => bin[index] = String.fromCharCode(b));
-        
-        // // URL.createObjectURL(blob)
+    viewExcel: (handle: FileSystemObject) => {
 
-        // return <embed type={"application/pdf"} src={`data:application/pdf;base64,${window.btoa(bin.join(""))}`}></embed>
+        if (handle.fileInfo == undefined) return <></>
+        if (handle.fileInfo?.bytes == undefined) return <></>
 
-        // // return <iframe src={`data:application/pdf;base64, ${window.btoa(bin.join(""))}`}></iframe>
+
+        console.log(handle);
+        return <XlsxView objectUrl={handle.fileInfo.objectURL}></XlsxView>
     }
 }

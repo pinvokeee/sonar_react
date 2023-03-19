@@ -5,7 +5,8 @@ const SearchInputBase = styled("div")(({ theme }) => (
     {
         position: "relative",
         padding: 3,
-        backgroundColor: alpha(theme.palette.common.white, 0.15),
+        backgroundColor: theme.palette.common.white,
+        // backgroundColor: alpha(theme.palette.common.white, 0.15),
         borderRadius: theme.shape.borderRadius,
         width: "600px",
         color: "inherit",

@@ -2,25 +2,17 @@ import { styled } from "@mui/material";
 import { useMemo } from "react";
 import Split from 'react-split'
 import { FileSystemObjectMap } from "../../../class/fileSystem/FileSystemObjectMap";
+import { SplitBoxVertical } from "../../../components/elements/SplitBox";
 import { fileObjectContoller, fileObjectContoller_odl } from "../../../controller/fileObjectContoller";
 import { selectionController } from "../../../controller/selectionController";
 import { NodeSelecter } from "./NodeSelecter";
 
-const HSplitBox = styled(Split)(({ theme }) => 
-(
-    {
-        height: "100%",
-    }
-));
-
-const GutterStyle = (dimension : "width" | "height", gutterSize : number) => 
-{
-    const bgcolor = "#eee";
-    return {
-        backgroundColor: bgcolor,
-        [dimension]: gutterSize + "px",
-    }
-}
+// const HSplitBox = styled(Split)(({ theme }) => 
+// (
+//     {
+//         height: "100%",
+//     }
+// ));
 
 type Prop =
 {
@@ -53,28 +45,31 @@ export const ThdimensionList = (props: Prop) =>
     const d3 = getFiles(fileSysObjMap, selection[index]);
 
     return <>
-        <HSplitBox direction="vertical" sizes={[50, 50]} gutterSize={6} gutterStyle={GutterStyle}>
+        <SplitBoxVertical sizes={[50, 50]} gutterSize={6}>
             <NodeSelecter 
                 handles={d1}
+                selection={selection[1]}
                 current={ undefined }
-                placeHolder="第一階層" 
+                placeHolder="<第二階層>" 
                 onChange={ (obj) => selectAction.setSelectionIndex(1, obj.getStringPath()) }/>
 
             <NodeSelecter 
                 handles={d2}
+                selection={selection[2]}
                 current={ undefined }
-                placeHolder="第二階層" 
+                placeHolder="<第三階層>" 
                 onChange={ (obj) => selectAction.setSelectionIndex(2, obj.getStringPath()) }/>
 
-        </HSplitBox>
-        <HSplitBox direction="vertical"  gutterSize={6} gutterStyle={GutterStyle}>
+        </SplitBoxVertical>
+        <SplitBoxVertical gutterSize={6}>
             <div>
                 <NodeSelecter 
                 handles={d3}
+                selection={selection[3]}
                 current={ undefined }
-                placeHolder="ドキュメント" 
+                placeHolder="ファイル一覧" 
                 onChange={ (obj) => selectAction.setSelectionIndex(3, obj.getStringPath()) }/>
             </div>
-        </HSplitBox>
+        </SplitBoxVertical>
     </>
 }

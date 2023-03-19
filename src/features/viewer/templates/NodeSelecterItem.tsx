@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Button, ListItemButton, Typography } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Badge, Button, Chip, ListItemButton, Stack, styled, Typography } from "@mui/material"
 import { useCallback, useState } from "react";
 import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
 import { FileSystemObjectMap } from "../../../class/fileSystem/FileSystemObjectMap";
@@ -10,6 +10,7 @@ type Props =
     targetFileSysObj: FileSystemObject,
     onChange?: ((changedFileSysObject: FileSystemObject) => void),
     onClickAction?: (selectedFileSysObject: FileSystemObject) => void,
+    isSelected: boolean,
 }
 
 const menuItems = [
@@ -21,6 +22,19 @@ const reload = (e: React.MouseEvent<HTMLLIElement, MouseEvent>, selectedFileSysO
     action?.call(this, selectedFileSysObj);
     e.stopPropagation();
 };
+
+// const Badge = styled("span")(({theme}) =>
+// (
+//     {
+//         borderRadius: "4px",
+//         padding: "0 8px 0 8px",
+//         display: "inline",
+//         backgroundColor: theme.palette.info.main,
+//         color: theme.palette.info.contrastText,
+//         fontSize: "10pt",
+//     }
+// )
+// )
 
 export const NodeSelecterItem = (props: Props) =>
 {
@@ -37,12 +51,25 @@ export const NodeSelecterItem = (props: Props) =>
     }
     
     return (
-    <ListItemButton key={props.targetFileSysObj.getStringPath()} sx={{ boxSizing: "border-box" }} disableRipple={true} 
+    <ListItemButton
+        selected={props.isSelected}
+        key={props.targetFileSysObj.getStringPath()} sx={{ boxSizing: "border-box" }} disableRipple={true} 
         onMouseLeave={mouseLeave}
         onMouseEnter={mouseEnter}
         onClick={() => props.onChange?.call(this, props.targetFileSysObj)}>
         
-        {helper.getText(props.fileSysObjMap, props.targetFileSysObj.getStringPath()) }
+        <Stack direction="column" gap={1}>
+            {helper.getText(props.fileSysObjMap, props.targetFileSysObj.getStringPath()) }
+            {
+                props.targetFileSysObj.kind == "file" ? 
+                <Stack direction="row">
+                    <Chip label={props.targetFileSysObj.fileInfo?.getContentType()?.jname} 
+                    color="primary" 
+                    size="small" 
+                    variant="outlined" />
+                </Stack> : <></>
+            }
+        </Stack>
 
         {<SplitButton
             items={menuItems}

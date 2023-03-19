@@ -2,6 +2,7 @@ import { converter } from "../../util/converter";
 
 type ContentInfo = {
     name: string;
+    jname: string,
     type: string;
     hasBlobUrl: boolean;
 };
@@ -52,17 +53,18 @@ export class FileInfo
     };
 
     private static fileTypes = new Map<string, ContentInfo>([
-        ["txt", { name: "TEXT", type: "text/plain", hasBlobUrl: false },],
-        ["csv", { name: "CSV", type: "text/csv", hasBlobUrl: false }],
-        ["html", { name: "HTML", type: "text/html", hasBlobUrl: false },],
-        ["pdf", { name: "PDF", type: "application/pdf", hasBlobUrl: true },],
-        ["jpg", { name: "IMG", type: "image/jpeg", hasBlobUrl: true },],
-        ["jpeg", { name: "IMG", type: "image/jpeg", hasBlobUrl: true },],
-        ["png", { name: "IMG", type: "image/png", hasBlobUrl: true },],
-        ["gif", { name: "IMG", type: "image/gif", hasBlobUrl: true },],
-        ["bmp", { name: "IMG", type: "image/bmp", hasBlobUrl: true },],
-        ["md", { name: "MARKDOWN", type: "", hasBlobUrl: false }],
-        ["", { name: "UNKNOWN", type: "", hasBlobUrl: false }],
+        ["txt", { name: "TEXT", jname: "テキスト", type: "text/plain", hasBlobUrl: false },],
+        ["csv", { name: "CSV", jname: "CSV", type: "text/csv", hasBlobUrl: false }],
+        ["html", { name: "HTML", jname: "HTML形式", type: "text/html", hasBlobUrl: false },],
+        ["pdf", { name: "PDF", jname: "PDF", type: "application/pdf", hasBlobUrl: true },],
+        ["jpg", { name: "IMG", jname: "画像/JPG",  type: "image/jpeg", hasBlobUrl: true },],
+        ["jpeg", { name: "IMG", jname: "画像/JPEG", type: "image/jpeg", hasBlobUrl: true },],
+        ["png", { name: "IMG", jname: "画像/PNG", type: "image/png", hasBlobUrl: true },],
+        ["gif", { name: "IMG", jname: "画像/GIF", type: "image/gif", hasBlobUrl: true },],
+        ["bmp", { name: "IMG", jname: "画像/BMP", type: "image/bmp", hasBlobUrl: true },],
+        ["xlsx", { name: "XLSX", jname: "Excel", type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", hasBlobUrl: true },],
+        ["md", { name: "MARKDOWN", jname: "Mardkdown", type: "", hasBlobUrl: false }],
+        ["", { name: "UNKNOWN", jname: "不明", type: "", hasBlobUrl: false }],
     ]);
 
     static registedFileTypes() {

@@ -44,7 +44,7 @@ const Block = styled(Pre)(({ theme }) =>
 const BlockInfo = styled(Pre)(({ theme }) =>
 (
     {
-        color: theme.palette.background.default,
+        // color: theme.palette,
         backgroundColor: "#fdf9e2",
         padding: "8px",
     }
@@ -53,9 +53,10 @@ const BlockInfo = styled(Pre)(({ theme }) =>
 const ButtonSpace = styled("div")(({theme}) =>
 (
     {
-        // fontSize: "16pt",
+        display: "flex",
+        flexDirection: "row-reverse",
+        backgroundColor: theme.palette.secondary.light,
         padding: "8px",
-        textAlign: "right",
     }
 ));
 
@@ -74,7 +75,7 @@ const CopyBlock = (props: CopyBlockProp) =>
             {/* <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 
             </Box> */}
-            <Button variant="contained" sx={{ position: "absolute", right: 8 }} onClick={ () => navigator.clipboard.writeText(props.text) }>コピー</Button>
+            <Button variant="text" sx={{ position: "absolute", right: 8 }} onClick={ () => navigator.clipboard.writeText(props.text) }>コピー</Button>
             <Block><Highlighter text={props.text} keyword={props.keyword} /></Block>
         </Box>
     </>
@@ -243,7 +244,6 @@ export const TextViewer = (props: Prop) =>
         <View>
             {createTemplateTextView(textBlocks, props.keyword)}
         </View>
-        <Divider></Divider>
         <ButtonSpace>
             <Button sx={{ fontSize: "14pt", }} variant="contained" onClick={() => copy(textBlocks)}>コピー</Button>
         </ButtonSpace>

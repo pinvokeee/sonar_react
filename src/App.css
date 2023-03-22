@@ -1,11 +1,13 @@
 ::-webkit-scrollbar {
-  width: 12px; /* 横幅 */
-  height: 12px; /* 横幅 */
+  width: 10px; /* 横幅 */
+  height: 10px; /* 横幅 */
+  background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #949bae; /* ハンドルの色 */
-  border-radius: 4px;
+
+  background-color: #d4e8d0; /* ハンドルの色 */
+  /* border-radius: 4px; */
 }
 
 ::-webkit-scrollbar-corner

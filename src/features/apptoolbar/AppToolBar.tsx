@@ -44,10 +44,10 @@ const SearchIconEx = styled(SearchIcon)(({ theme }) =>
 const AppToolBar = styled(AppBar)(({ theme }) => 
 (
   {
+    backgroundColor: theme.palette.primary.light,
     width: "100%",
-    backgroundColor: theme.palette.background.default,
     border: "0 0 4px 0",
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    // borderBottom: `1px solid ${theme.palette.divider}`,
   }
 ));
 
@@ -79,6 +79,11 @@ export const ViewerHeader = (props: Prop) =>
             </SearchInput>
 
             <ButtonCase sx={{ flex: 1 }}>
+            <Tooltip title="リポジトリを再選択">
+                <IconButton color="inherit" onClick={ () => handleSelectRepos() }>
+                  <DriveFolderUploadIcon></DriveFolderUploadIcon>
+                </IconButton>
+              </Tooltip>
               <Tooltip title="リポジトリを再選択">
                 <IconButton color="inherit" onClick={ () => handleSelectRepos() }>
                   <DriveFolderUploadIcon></DriveFolderUploadIcon>

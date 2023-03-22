@@ -1,31 +1,27 @@
+.gutter
+{
+    background-color: transparent;
+}
+
+.gutter:active
+{
+    background-color:#bcebf2;
+}
+
+.gutter:hover
+{
+    background-color:#bcebf2;
+}
+
 .gutter.gutter-horizontal
 {
-    background-color: #333a45;
+    /* right: 0; */
+    height: 100%;
     cursor: col-resize;
-}
-
-.gutter.gutter-horizontal:active
-{
-    background-color: #007fd4;
-}
-
-.gutter.gutter-horizontal:hover
-{
-    background-color: #007fd4;
 }
 
 .gutter.gutter-vertical
 {
-    background-color: #333a45;
+    width: 100%;
     cursor: row-resize;
-}
-
-.gutter.gutter-vertical:active
-{
-    background-color: #007fd4;
-}
-
-.gutter.gutter-vertical:hover
-{
-    background-color: #007fd4;
 }

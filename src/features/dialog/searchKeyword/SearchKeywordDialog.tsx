@@ -9,12 +9,13 @@ import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
 import { SplitBoxHorizontal, SplitBoxVertical } from "../../../components/elements/SplitBox";
 import { fileObjectContoller } from "../../../controller/fileObjectContoller";
 import { selectionController } from "../../../controller/selectionController";
+import { AddressBar } from "./components/AddressBar";
 
 const GrassBackdrop = styled(Backdrop)(({theme})=>
 (
     {
         backgroundColor: "rgba(111, 126, 140, 0.2)",
-        zIndex: 1,
+        zIndex: 25,
         backdropFilter: "blur(4px)"
     }
 ));
@@ -49,7 +50,7 @@ const Board = styled("div")(({ theme }) =>
     {
         height: "100%",
         border: "solid 1px white",
-        borderRadius: "6px",
+        // borderRadius: "6px",
         borderColor: theme.palette.divider,
     }
 ));
@@ -57,12 +58,23 @@ const Board = styled("div")(({ theme }) =>
 const BoardTitle = styled("div")(({ theme }) =>
 (
     {
+        // minHeight: "65px",
         padding: "8px",
         fontSize: "9pt",
         // borderColor: theme.palette.divider,
     }
 ));
 
+
+// const BoardTitleWrapper = styled("div")(({ theme }) =>
+// (
+//     {
+//         minHeight: "65px",
+//         padding: "8px",
+//         fontSize: "9pt",
+//         // borderColor: theme.palette.divider,
+//     }
+// ));
 
 const ResultContainer = styled("div")(({theme}) =>
 (
@@ -73,19 +85,16 @@ const ResultContainer = styled("div")(({theme}) =>
     }
 ))
 
-
-const ButtonLC = styled(Button)(({theme}) =>
+const PreviewContainer = styled("div")((theme) => 
 (
     {
-        textTransform: "none",
+        display: "grid",
+        width: "100%",
+        height: "100%",
+        gridTemplateRows: "auto auto minmax(0, 1fr)",
     }
-))
+));
 
-const styles = {
-    webButton: {
-      textTransform: 'none',
-    }
-  }
 
 type Props = 
 {
@@ -134,7 +143,7 @@ export const DialogSearchFromKeyword = (props: Props) =>
     return <>
     { !isOpen ? <></> :  
         <GrassBackdrop open={isOpen}>
-        <Card sx={{ textAlign: "left", width: "90%", height: "90%", }}>
+        <Card sx={{ textAlign: "left", width: "90%", height: "90%"}}>
             <CardContent sx={{ height: "100%" }}>
             <GridContainer>
                     
@@ -157,11 +166,12 @@ export const DialogSearchFromKeyword = (props: Props) =>
                                 keyword={keyword} 
                                 selectedPath={selection}></MatchObjectsList>
                             </ResultContainer>
-                            <Stack>
-                                <BoardTitle>プレビュー中: <ButtonLC size="small" onClick={handleClickPath}>/{viewObject?.getStringPath()}</ButtonLC></BoardTitle>
+                            <PreviewContainer>
+                                <BoardTitle>プレビュー</BoardTitle>
                                 <Divider></Divider>
+                                <AddressBar text={viewObject?.getStringPath()} onClick={handleClickPath}></AddressBar>
                                 <ObjectViewer object={viewObject} highlightKeyword={keyword}></ObjectViewer>
-                            </Stack>
+                            </PreviewContainer>
                         </SplitBoxHorizontal>
                     </Board>
 

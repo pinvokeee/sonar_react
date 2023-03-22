@@ -47,32 +47,83 @@ export const AppTheme = styled("div")(({ theme }) =>
 export const App = () => {
     
   const theme = createTheme({
-    palette: {
-            
-      background: {
-        default: "#23272f",
-        paper: "#23272f",
+
+    palette:
+    {
+      primary:
+      {
+        main: "#206c2f",
+        // light: "#d4e8d0",
       },
       
-      text: {
-        primary:  "#ebecf0",
-        secondary: "#f6f7f9",
-        disabled: "#949bae",
+      secondary:
+      {
+        main: "#526350",
+        light: "#d4e8d0",
       },
 
-      common: {
-        white: "#333a45",
-        black: "#0E1625",
+      tertiary:
+      {
+        main: "#39656b",
       },
 
-      divider: "#343a46",
-      
-      // primary: {
-      //   main: "#232730",
-      // },
+      background: 
+      {
+        default: "#fcfdf7",
+        paper: "#fcfdf7",
+      },
 
+      text: 
+      {
+        primary: "#201a1b",
+        secondary: "#514347",
+      },
+
+      success:
+      {
+        main: "#a6f5a8",
+      },
+
+      info:
+      {
+        main: "#bcebf2",
+      },
+
+      error:
+      {
+        main: "#ba1a1a",
+      },
+
+      divider: "#002106",
 
     }
+
+    // palette: {
+            
+    //   background: {
+    //     default: "#23272f",
+    //     paper: "#23272f",
+    //   },
+      
+    //   text: {
+    //     primary:  "#ebecf0",
+    //     secondary: "#f6f7f9",
+    //     disabled: "#949bae",
+    //   },
+
+    //   common: {
+    //     white: "#333a45",
+    //     black: "#0E1625",
+    //   },
+
+    //   divider: "#343a46",
+      
+    //   // primary: {
+    //   //   main: "#232730",
+    //   // },
+
+
+    // }
   });
 
   const theme2 = createTheme({
@@ -101,4 +152,17 @@ export const App = () => {
   )
 }
 
+declare module '@mui/material/styles' {
+
+  interface Palette {
+    tertiary: Palette['primary'];
+    
+  }
+
+  interface PaletteOptions {
+    tertiary: PaletteOptions['primary'];
+  }
+}
+
 export default App;
+

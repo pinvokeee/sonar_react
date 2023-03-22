@@ -34,6 +34,15 @@ const Placeholder = styled("div")(({ theme }) =>
         textAlign: "center",
         justifyContent: "center",
         userSelect: "none",
+        backgroundColor: "inherit",
+    }
+));
+
+const ObjectList = styled(List)(({ theme }) =>
+(
+    {
+        // backgroundColor: theme.palette.primary.light,
+        // backgroundColor: "inherit",
     }
 ));
 
@@ -72,7 +81,7 @@ export const NodeSelecter = (props : INodeLIstBoxProp) => {
         <div style={{ height: "100%", overflowWrap: 'anywhere', overflow: "auto", boxSizing: "border-box" }} >
         {
             nodeItems.length > 0 ?            
-            <List aria-label="secondary mailbox folder">{nodeItems}</List> :
+            <ObjectList aria-label="secondary mailbox folder">{nodeItems}</ObjectList> :
             <Placeholder>{props.placeHolder}</Placeholder>
         }
         </div>

@@ -2,12 +2,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { Accordion, AccordionSummary, Box, Button, List, ListItemButton, ListItemText, Paper, Stack, styled } from "@mui/material";
 import { FileSystemObject } from "../../../class/fileSystem/FileSystemObject";
 import { fileObjectContoller, fileObjectContoller_odl } from '../../../controller/fileObjectContoller';
-import { NodeSelecterItem } from './NodeSelecterItem';
+import { ExplorerItem } from './ExplorerItem';
 import { FileSystemObjectMap } from '../../../class/fileSystem/FileSystemObjectMap';
 
-export interface INodeLIstBoxProp
+export interface ExplorerProps
 {
-    handles: FileSystemObjectMap | undefined,
+    pathes: string[] | undefined,
     current: FileSystemObject | undefined,
     placeHolder?: string,
     onChange? : (selectedNode: FileSystemObject) => void,
@@ -46,11 +46,11 @@ const ObjectList = styled(List)(({ theme }) =>
     }
 ));
 
-export const NodeSelecter = (props : INodeLIstBoxProp) => {
+export const Explorer = (props : ExplorerProps) => {
 
     const ns = fileObjectContoller.useGetFileSysObjMap();
     const actions = fileObjectContoller.useActions();
-    const handles = props.handles;
+    const handles = props.pathes;
 
     const act = (obj: FileSystemObject) =>
     {
@@ -65,15 +65,16 @@ export const NodeSelecter = (props : INodeLIstBoxProp) => {
     const nodeItems: JSX.Element[] = [];
 
     if (handles != undefined) {
-        handles.forEach((obj) =>  {
+        handles.forEach((path) =>  {
 
+            const obj = ns.get(path) as FileSystemObject;
             const isSelected = props.selection ? props.selection == obj.getStringPath() : false;
             
-            nodeItems.push(<NodeSelecterItem isSelected={isSelected}
-                 fileSysObjMap={handles} 
+            nodeItems.push(<ExplorerItem isSelected={isSelected}
+                 fileSysObjMap={ns} 
                  targetFileSysObj={obj} 
                  onChange={props.onChange} 
-                 onClickAction={act}></NodeSelecterItem>)
+                 onClickAction={act}></ExplorerItem>)
         });    
     }
 

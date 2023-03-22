@@ -6,7 +6,7 @@ import { SplitBoxVertical } from "../../../components/elements/SplitBox";
 import { WindowCase } from "../../../components/elements/WindowCase";
 import { fileObjectContoller, fileObjectContoller_odl } from "../../../controller/fileObjectContoller";
 import { selectionController } from "../../../controller/selectionController";
-import { NodeSelecter } from "./NodeSelecter";
+import { Explorer } from "./Explorer";
 
 // const HSplitBox = styled(Split)(({ theme }) => 
 // (
@@ -22,14 +22,14 @@ type Prop =
 const isDirectory = (s: string) => s == "directory";
 const isFile = (s: string) => s != "directory";
 
-const getSubDir = (map: FileSystemObjectMap, key: string | undefined) => {
+const getSubDirMap = (map: FileSystemObjectMap, key: string | undefined) => {
     if (key == undefined) return undefined;
-    return map.getSubDirectories(map.get(key), false);
+    return map.getSubDirectoriesMap(map.get(key), false);
 }
 
-const getFiles = (map: FileSystemObjectMap, key: string | undefined) => {
+const getFilesMap = (map: FileSystemObjectMap, key: string | undefined) => {
     if (key == undefined) return undefined;
-    return map.getFiles(map.get(key), false);
+    return map.getFilesMap(map.get(key), false);
 }
 
 const Division = styled("div")(({ theme }) =>
@@ -58,15 +58,15 @@ export const ThdimensionList = (props: Prop) =>
     const currentNest = selection.indexOf(undefined) - 1;
     const index = currentNest <= -1 || currentNest > selection.length -1 ? selection.length - 2 : currentNest;
     
-    const d1 = getSubDir(fileSysObjMap, selection[0]);
-    const d2 = getSubDir(fileSysObjMap, selection[1]);
-    const d3 = getFiles(fileSysObjMap, selection[index]);
+    const d1 = getSubDirMap(fileSysObjMap, selection[0]);
+    const d2 = getSubDirMap(fileSysObjMap, selection[1]);
+    const d3 = getFilesMap(fileSysObjMap, selection[index]);
 
     return <>
         <SplitBoxVertical sizes={[50, 50]} gutterSize={6}>
             <Container title="第二階層">
-                <NodeSelecter 
-                handles={d1}
+                <Explorer 
+                pathes={d1}
                 selection={selection[1]}
                 current={ undefined }
                 placeHolder="<第二階層>" 
@@ -74,8 +74,8 @@ export const ThdimensionList = (props: Prop) =>
             </Container>
             
             <Container title="第三階層">
-                <NodeSelecter 
-                handles={d2}
+                <Explorer 
+                pathes={d2}
                 selection={selection[2]}
                 current={ undefined }
                 placeHolder="<第三階層>" 
@@ -85,8 +85,8 @@ export const ThdimensionList = (props: Prop) =>
         </SplitBoxVertical>
         <SplitBoxVertical gutterSize={6}>
             <Container title="ファイル一覧">
-                <NodeSelecter 
-                handles={d3}
+                <Explorer 
+                pathes={d3}
                 selection={selection[3]}
                 current={ undefined }
                 placeHolder="ファイル一覧" 

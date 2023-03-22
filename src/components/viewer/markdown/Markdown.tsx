@@ -5,6 +5,7 @@ type Prop =
 {
     source: string,
     path: string[],
+    highlightKeyword?: string,
 }
 
 const View = styled("div")(({theme}) =>
@@ -67,6 +68,12 @@ pre > p
 `
     converter.setPath(`/${props.path.slice(0, props.path.length - 1).join("/")}`);
     const __html =  `${default_style}${converter.toMarkdown(props.source)}`;
+
+    if (props.highlightKeyword != undefined)
+    {
+        console.log(converter.toDocument(__html));
+    }
+
     return (
         <Frame style={{ backgroundColor: "white" }} sandbox="allow-same-origin allow-scripts allow-popups allow-modals" srcDoc={__html}>
         </Frame>

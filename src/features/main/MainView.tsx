@@ -1,7 +1,7 @@
 import { styled } from "@mui/material";
 import { SplitBoxHorizontal } from "../../components/elements/SplitBox"
 import { ViewerHeader } from "../apptoolbar";
-import { SheetToolBar } from "../apptoolbar/SheetToolBar";
+import { SheetToolBar } from "../checksheet/SheetToolBar";
 import { Sheet } from "../checksheet/Sheet"
 import { TemplatesViewer } from "../viewer/templates/TemplatesViewer"
 

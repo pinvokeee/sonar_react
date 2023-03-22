@@ -36,10 +36,21 @@ export class FileSystemObjectMap extends Map<string, FileSystemObject>
         return new FileSystemObjectMap(list);
     }
 
+    getSubDirectoriesMap(parentNode: FileSystemObject | undefined, hasChildDirectory: boolean) {
+        const list = Array.from(this.getEntries(parentNode, hasChildDirectory, "directory")).sort();
+        return list.map(([key, obj]) => key);
+    }
+
     getFiles(parentNode: FileSystemObject | undefined, hasChildDirectory: boolean) {
         const list = Array.from(this.getEntries(parentNode, hasChildDirectory, "file")).sort();
         return new FileSystemObjectMap(list);
     }
+
+    getFilesMap(parentNode: FileSystemObject | undefined, hasChildDirectory: boolean) {
+        const list = Array.from(this.getEntries(parentNode, hasChildDirectory, "file")).sort();
+        return list.map(([key, obj]) => key);
+    }
+
 
     filterFromKeyword(keyword: string, isContentOnly: boolean, targetParentFileSystemObj?: FileSystemObject) {
         

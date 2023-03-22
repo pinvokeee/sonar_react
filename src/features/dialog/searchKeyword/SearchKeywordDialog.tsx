@@ -91,7 +91,7 @@ const PreviewContainer = styled("div")((theme) =>
         display: "grid",
         width: "100%",
         height: "100%",
-        gridTemplateRows: "auto auto minmax(0, 1fr)",
+        gridTemplateRows: "auto auto auto minmax(0, 1fr)",
     }
 ));
 

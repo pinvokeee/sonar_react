@@ -1,5 +1,6 @@
-import { Paper, styled } from "@mui/material";
-import { SheetToolBar } from "../apptoolbar/SheetToolBar";
+import { Button, Drawer, Paper, styled } from "@mui/material";
+import { useCallback, useState } from "react";
+import { SheetToolBar } from "./SheetToolBar";
 
 const SingleContainer = styled("div")(({ theme }) => 
 (
@@ -10,12 +11,32 @@ const SingleContainer = styled("div")(({ theme }) =>
   }
 ));
 
-export const Sheet = () =>
-{
-    return (
-    <SingleContainer>
-        <SheetToolBar></SheetToolBar>
+const SizingDrawer = styled(Drawer)(({ theme }) => 
+(
+  {
+    '& .MuiDrawer-paper': {
+      position: "relative",
+      zIndex: "0",
+    },
+  }
+));
+
+export const Sheet = () => {
+
+  const [isOpen, setOpenState] = useState(true);
+
+  const handleToggle = useCallback(() => {
+    setOpenState(state => !state);
+  }, [])
+
+  return (
+    <SizingDrawer anchor="left" sx={{position: "relative"}} open={isOpen} variant="persistent">
+        <SingleContainer> 
+          <SheetToolBar>
+            <Button >aaa</Button>
+          </SheetToolBar>
         <Paper></Paper>
-    </SingleContainer>
-    );
+      </SingleContainer>
+    </SizingDrawer>
+  );
 }

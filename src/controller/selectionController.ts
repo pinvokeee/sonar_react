@@ -30,7 +30,13 @@ export const selectionController =
         }
     },
 
-    useGetSelectionRange: () => useRecoilValue(cselector.getSelection),
+    useGetSelectionRange: () => 
+    {
+        const selection = useRecoilValue(cselector.getSelection);
+        if (selection.length == 0) return ["ドキュメント"];
+        
+        return selection;
+    },
 
     selectors:
     {

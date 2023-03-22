@@ -45,7 +45,7 @@ const helper =
         {
             if (handle.fileInfo.extension == "xlsx") return helper.viewExcel(handle);
             if (handle.fileInfo.extension == "txt") return helper.viewText(handle, highlightKeyword);
-            if (handle.fileInfo.extension == "md") return helper.viewMarkdown(handle);
+            if (handle.fileInfo.extension == "md") return helper.viewMarkdown(handle, highlightKeyword);
             if (handle.fileInfo.extension == "html" || handle.fileInfo.extension == "htm" || handle.fileInfo.extension == "mht") return helper.viewHtmlView(handle);
             if (handle.fileInfo.extension == "png" 
             || handle.fileInfo.extension == "jpg" 
@@ -67,13 +67,13 @@ const helper =
         </>
     },
 
-    viewMarkdown: (handle: FileSystemObject) =>
+    viewMarkdown: (handle: FileSystemObject, highlightKeyword?: string) =>
     {
         const repoName = repositoryController.useSelectionRepositoryName();
         const text = utf8_decoder.decode(handle.fileInfo?.bytes);
 
         return <>
-            <MarkdownView path={[repoName, ...handle.path]} source={text}></MarkdownView>
+            <MarkdownView path={[repoName, ...handle.path]} source={text} highlightKeyword={highlightKeyword}></MarkdownView>
         </>
     },
 

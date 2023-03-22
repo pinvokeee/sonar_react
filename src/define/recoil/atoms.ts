@@ -80,7 +80,7 @@ export const AtomFileSystemTreeNodes = atom<FileSystemTreeNode[]>({
  */
 export const AtomSelectedHandleNodes = atom<(string | undefined)[]>({
     key: atomKeys.SELECTION_NODES.toString(),    
-    default: [undefined, undefined, undefined, undefined],
+    default: [],
 });
 
 

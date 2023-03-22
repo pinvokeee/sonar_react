@@ -62,7 +62,9 @@ export const repositoryController = {
                 const targetFileTypes = Array.from(FileInfo.registedFileTypes().keys());
                 const onFilter = (obj: FileSystemObject) : boolean => helper.isReadTargetFile(targetFileTypes, obj);
 
-                const load = (handle: FileSystemDirectoryHandle) => {
+                const load = async (parentHandle: FileSystemDirectoryHandle, folderName?: string) => {
+
+                    const handle = folderName ? await parentHandle.getDirectoryHandle(folderName) : parentHandle;
 
                     set(AtomSelectRepository, handle.name);
                     set(AtomDialogState, { name: DialogNames.LoadingRepository });

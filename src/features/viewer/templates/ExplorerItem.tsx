@@ -36,7 +36,7 @@ const reload = (e: React.MouseEvent<HTMLLIElement, MouseEvent>, selectedFileSysO
 // )
 // )
 
-export const NodeSelecterItem = (props: Props) =>
+export const ExplorerItem = (props: Props) =>
 {
     const [mouseState, setState] = useState<boolean>(false);
 

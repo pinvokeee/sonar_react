@@ -11,9 +11,16 @@ const ToolBarEx = styled(Toolbar)(({ theme }) =>
   }
 ));
 
-export const SheetToolBar = () => {
+type Props = 
+{
+  children?: React.ReactNode,
+}
+
+export const SheetToolBar = (props: Props) => {
    
     return (
-        <ToolBarEx variant="dense" sx={{ justifyContent: "space-between" }}>aa</ToolBarEx>
+        <ToolBarEx variant="dense" sx={{ justifyContent: "space-between" }}>
+          {props.children}
+        </ToolBarEx>
     );
 }

@@ -1,9 +1,10 @@
-import { Chip, Divider, ListItem, ListItemButton, Stack, styled } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Chip, Divider, ListItem, ListItemButton, Stack, styled } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FileInfo } from "../../../../class/fileSystem/FileInfo";
 import { FileSystemObject } from "../../../../class/fileSystem/FileSystemObject";
 import { Highlight } from "../../../../components/elements/Highlight";
+import { ObjectViewer } from "../../../../components/viewer/ObjectViewer";
 import { fileObjectContoller_odl } from "../../../../controller/fileObjectContoller";
 import { TextParser } from "../../../../util/textParser";
 
@@ -85,20 +86,30 @@ export const MatchObjectListItem = (props: Props) =>
 
     return (
         <ListItem>
-            <ListItemButton selected={props.isSelected} sx={{flexDirection: "row"}} onClick={onClick}>
-                <Stack>
-                    <TitleLabel>{title}</TitleLabel>
-                    <WrapBox>
-                        {a}
-                    </WrapBox>
-                    <Stack direction="row">
-                        <Chip 
-                        label={props.fileObj.fileInfo?.getContentType()?.jname} 
-                        variant="outlined" 
-                        size="small" 
-                        color="primary"></Chip>
-                    </Stack>
-                </Stack>
+            <ListItemButton selected={props.isSelected} sx={{ flexDirection: "row"}} onClick={onClick}>
+                
+
+                    <Accordion  TransitionProps={{ unmountOnExit: true }}  sx={{width: "100%", }}>
+                        <AccordionSummary  >
+                            <Stack>
+                                <TitleLabel>{title}</TitleLabel>
+                                <WrapBox>
+                                    {a}
+                                </WrapBox>
+                                <Stack direction="row">
+                                    <Chip 
+                                    label={props.fileObj.fileInfo?.getContentType()?.jname} 
+                                    variant="outlined" 
+                                    size="small" 
+                                    color="primary"></Chip>
+                                </Stack>
+                            </Stack>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <ObjectViewer object={props.fileObj} highlightKeyword={props.keyword}></ObjectViewer>
+                        </AccordionDetails>
+                    </Accordion>
+
             </ListItemButton>
         </ListItem>
     )

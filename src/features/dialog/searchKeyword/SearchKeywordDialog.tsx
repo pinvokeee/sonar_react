@@ -155,7 +155,17 @@ export const DialogSearchFromKeyword = (props: Props) =>
                 <MainContainer>
 
                     <Board>
-                        <SplitBoxHorizontal sizes={[40, 60]}>
+                        <ResultContainer>
+                                <BoardTitle>検索結果 - {target.size}件</BoardTitle>
+                                <Divider></Divider>
+                                <MatchObjectsList 
+                                key={keyword} 
+                                objectMap={target} 
+                                onClick={onSearchResultItemClick} 
+                                keyword={keyword} 
+                                selectedPath={selection}></MatchObjectsList>
+                            </ResultContainer>
+                        {/* <SplitBoxHorizontal sizes={[40, 60]}>
                             <ResultContainer>
                                 <BoardTitle>検索結果 - {target.size}件</BoardTitle>
                                 <Divider></Divider>
@@ -172,7 +182,7 @@ export const DialogSearchFromKeyword = (props: Props) =>
                                 <AddressBar text={viewObject?.getStringPath()} onClick={handleClickPath}></AddressBar>
                                 <ObjectViewer object={viewObject} highlightKeyword={keyword}></ObjectViewer>
                             </PreviewContainer>
-                        </SplitBoxHorizontal>
+                        </SplitBoxHorizontal> */}
                     </Board>
 
                 </MainContainer>

@@ -69,6 +69,7 @@ export const Explorer = (props : ExplorerProps) => {
 
             const obj = ns.get(path) as FileSystemObject;
             const isSelected = props.selection ? props.selection == obj.getStringPath() : false;
+            console.log(props.selection, obj.getStringPath());
             
             nodeItems.push(<ExplorerItem isSelected={isSelected}
                  fileSysObjMap={ns} 

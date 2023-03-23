@@ -62,6 +62,13 @@ export class FileSystemObject
 
     getStringRootPath()
     {
+        const root = this.path.map((value, index) => `${index > 0 ? `${this.path.slice(0, index).join("/")}/` : ""}${value}`);
+        console.log("Q", root);
+        return root;
+    }
+
+    _getStringRootPath()
+    {
         const file = this.path.slice(-1);
         const root = [];
         let lastPath = "";

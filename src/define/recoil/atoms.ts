@@ -18,9 +18,9 @@ export const AtomFileSysObjectMap = atom<FileSystemObjectMap>({
 /**
  * NEW 選択可能・選択範囲を取得/設定する
  */
-export const AtomSelection = atom<(string | undefined)[]>({
+export const AtomSelection = atom<string[]>({
     key: AtomKeys.Selection,    
-    default: [undefined, undefined, undefined, undefined],
+    default: [],
 });
 
 /**

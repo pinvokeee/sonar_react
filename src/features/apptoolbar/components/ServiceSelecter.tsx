@@ -18,7 +18,7 @@ const Flex = material.styled("div")(({theme}) =>
 ));
 
 const getText = (item: FileSystemObject) => {
-    if (item == undefined) return undefined;
+    if (item == undefined || item.path == undefined) return "";
     return item.name;
 }
 
@@ -30,15 +30,17 @@ const getKey = (item: FileSystemObject) => {
 export const ServiceSelecter = (props : Props) =>
 {
     const fileSysMap = fileObjectContoller.useGetFileSysObjMap();
-    const selectable_service = useMemo(() => Array.from(fileSysMap.getSubDirectories(undefined, false)).map((([key, val]) => val)), [fileSysMap]);
 
+    const docObj = fileSysMap.getDirectoryFromName("ドキュメント");
+    const selectable_service = useMemo(() => fileSysMap.getSubDirectories(docObj, false), [fileSysMap]);
+    
     const selection = selectionController.useGetSelectionRange();
     const selectActions = selectionController.useActions();
-
-    const selectedItem = useMemo(() => selection[0] ? fileSysMap.get(selection[0]) :  undefined, [selection]);
+    
+    const selectedItem = useMemo(() => selection[1] ? fileSysMap.get(selection[1]) :  undefined, [selection]);
     
     const changeItem = useCallback((e: React.MouseEvent<HTMLLIElement, MouseEvent>, item: FileSystemObject) => {
-        selectActions.setSelection([item.getStringPath(), undefined, undefined, undefined]);
+        selectActions.setSelection(item.getStringRootPath());
     }, []);
 
     return (

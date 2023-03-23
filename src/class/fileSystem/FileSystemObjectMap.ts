@@ -33,24 +33,30 @@ export class FileSystemObjectMap extends Map<string, FileSystemObject>
 
     getSubDirectories(parentNode: FileSystemObject | undefined, hasChildDirectory: boolean) {
         const list = Array.from(this.getEntries(parentNode, hasChildDirectory, "directory")).sort();
-        return new FileSystemObjectMap(list);
+        return list.map(([key, obj]) => obj);
     }
 
-    getSubDirectoriesMap(parentNode: FileSystemObject | undefined, hasChildDirectory: boolean) {
+    getSubDirectoryPaths(parentNode: FileSystemObject | undefined, hasChildDirectory: boolean) {
         const list = Array.from(this.getEntries(parentNode, hasChildDirectory, "directory")).sort();
         return list.map(([key, obj]) => key);
     }
 
     getFiles(parentNode: FileSystemObject | undefined, hasChildDirectory: boolean) {
         const list = Array.from(this.getEntries(parentNode, hasChildDirectory, "file")).sort();
-        return new FileSystemObjectMap(list);
+        return list.map(([key, obj]) => obj);
     }
 
-    getFilesMap(parentNode: FileSystemObject | undefined, hasChildDirectory: boolean) {
+    getFilePaths(parentNode: FileSystemObject | undefined, hasChildDirectory: boolean) {
         const list = Array.from(this.getEntries(parentNode, hasChildDirectory, "file")).sort();
         return list.map(([key, obj]) => key);
     }
 
+    getDirectoryFromName(name: string, parentNode?: FileSystemObject | undefined) {
+        const list = Array.from(this.getEntries(parentNode, false, "directory")).sort();
+        const item = list.find(([key, val]) => val.path[0] == name);
+        console.log(item);
+        return item ? item[1] : undefined;
+    }
 
     filterFromKeyword(keyword: string, isContentOnly: boolean, targetParentFileSystemObj?: FileSystemObject) {
         

@@ -10,18 +10,18 @@ export const selectionController =
     {
         return {
 
-            setSelection: useRecoilCallback(({ snapshot, set }) => async (n: (string | undefined)[]) => {     
+            setSelection: useRecoilCallback(({ snapshot, set }) => async (n: string[]) => {     
                 set(AtomSelection, n);
             }, []),
 
-            setSelectionIndex: useRecoilCallback(({ snapshot, set}) => async (index: number, path: string | undefined) => 
+            setSelectionIndex: useRecoilCallback(({ snapshot, set}) => async (index: number, path: string) => 
             {
                 set(AtomSelection, (ns) => {
 
                     const new_nodes = [...ns];
                     new_nodes[index] = path;
 
-                    for (let i = index + 1; i < new_nodes.length; i++) new_nodes[i] = undefined; 
+                    // for (let i = index + 1; i < new_nodes.length; i++) new_nodes[i] = undefined; 
 
                     return new_nodes;
                 });
@@ -68,7 +68,7 @@ export const selectionController =
 
 const cselector = 
 {    
-    getSelection: selector<(string | undefined)[]>({
+    getSelection: selector<string[]>({
         key: AtomKeys.Selecter.Selection,
         get: ({get}) => get(AtomSelection)
     }),

@@ -10,9 +10,9 @@ export const ObjectViewerWrap = () => {
     const selection = selectionController.useGetSelectionRange();
 
     const h = useMemo(() => {
-        if (selection[3] == undefined) return;
-        return fileSysObj.get(selection[3]);
-    }, [selection[3]])
+        if (fileSysObj.get(selection[selection.length - 1])?.kind == "directory") return;
+        return fileSysObj.get(selection[selection.length - 1]);
+    }, [selection]);
 
     return <ObjectViewer object={h}></ObjectViewer>
 

@@ -7,7 +7,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import { TabContext, TabList } from '@mui/lab';
 import { useMemo, useState } from 'react';
 
-import { TemplatesViewer } from './features/viewer/templates/s';
+import { TemplatesViewer } from './features/viewer/templates/TemplatesViewer';
 import { ViewerHeader } from './features/apptoolbar/AppToolBar';
 
 import { atom, RecoilRoot, useRecoilState, useRecoilValue } from 'recoil';

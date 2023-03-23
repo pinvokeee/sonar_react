@@ -1,4 +1,4 @@
-import { FileInfo } from "./s";
+import { FileInfo } from "./FileInfo";
 import { FileSystemObject } from "./FileSystemObject";
 import { FileSystemObjectMap } from "./FileSystemObjectMap";
 

@@ -1,7 +1,7 @@
 import { Chip, Divider, ListItem, ListItemButton, Stack, styled } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FileInfo } from "../../../../class/fileSystem/s";
+import { FileInfo } from "../../../../class/fileSystem/FileInfo";
 import { FileSystemObject } from "../../../../class/fileSystem/FileSystemObject";
 import { Highlight } from "../../../../components/elements/Highlight";
 import { fileObjectContoller_odl } from "../../../../controller/fileObjectContoller";

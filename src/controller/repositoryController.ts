@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useCallback } from "react";
 import { RecoilState, useRecoilCallback, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Directory } from "../class/fileSystem/Directory";
-import { FileInfo } from "../class/fileSystem/FileInfo";
+import { FileInfo } from "../class/fileSystem/fileInfo";
 import { FileSystemObject } from "../class/fileSystem/FileSystemObject";
 import { FileSystemObjectMap } from "../class/fileSystem/FileSystemObjectMap";
 import { IndexedDBUtil } from "../class/indexeddb/indexeddb";

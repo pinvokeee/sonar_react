@@ -33,7 +33,7 @@ export class FileInfo
         return FileInfo.fileTypes.get(this.extension);
     };
 
-    getText(){
+    getText() {
 
         if (this.bytes == undefined) return "";    
 

@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { selector, selectorFamily, useRecoilCallback, useRecoilState, useRecoilValue } from "recoil";
-import { FileInfo } from "../class/fileSystem/FileInfo";
+import { FileInfo } from "../class/fileSystem/fileInfo";
 import { FileSystemTreeNode } from "../class/fileSystem/types";
 import { FileSystemObject } from "../class/fileSystem/FileSystemObject";
 import { AtomFileSystemTreeNodes, AtomFileObjects, AtomSelectedHandleNodes, AtomFileSysObjectMap } from "../define/recoil/atoms";

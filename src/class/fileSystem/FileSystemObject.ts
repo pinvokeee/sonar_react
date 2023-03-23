@@ -1,5 +1,5 @@
 import { converter } from "../../util/converter";
-import { FileInfo } from "./FileInfo";
+import { FileInfo } from "./s";
 
 
 

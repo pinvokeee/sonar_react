@@ -3,7 +3,7 @@ import { SplitBoxHorizontal } from "../../components/elements/SplitBox"
 import { ViewerHeader } from "../apptoolbar";
 import { SheetToolBar } from "../checksheet/SheetToolBar";
 import { Sheet } from "../checksheet/Sheet"
-import { TemplatesViewer } from "../viewer/templates/TemplatesViewer"
+import { TemplatesViewer } from "../viewer/templates/s"
 
 const SingleContainer = styled("div")(({ theme }) => 
 (
